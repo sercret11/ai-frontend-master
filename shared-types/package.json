@@ -1,0 +1,67 @@
+{
+  "name": "@ai-frontend/shared-types",
+  "version": "1.0.0",
+  "description": "Shared TypeScript type definitions for AI Frontend Master",
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "import": "./index.ts"
+    },
+    "./session": {
+      "types": "./types/session.ts",
+      "import": "./types/session.ts"
+    },
+    "./tool": {
+      "types": "./types/tool.ts",
+      "import": "./types/tool.ts"
+    },
+    "./runtime": {
+      "types": "./types/runtime.ts",
+      "import": "./types/runtime.ts"
+    },
+    "./prompt": {
+      "types": "./types/prompt.ts",
+      "import": "./types/prompt.ts"
+    },
+    "./constants": {
+      "types": "./constants.ts",
+      "import": "./constants.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "typescript",
+    "types",
+    "shared",
+    "frontend",
+    "ai"
+  ],
+  "author": "FrontendMaster Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.0",
+    "typescript": "^5.3.3",
+    "zod": "^4.3.6"
+  },
+  "peerDependencies": {
+    "@types/react": "^18.2.0",
+    "react": "^18.2.0",
+    "zod": "^4.3.6"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  }
+}

@@ -1,0 +1,2870 @@
+﻿[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+[Server] Loading configuration...
+[SessionStorage] Checkpoint scheduler started
+[SessionStorage] Initialized database: /app/data/ai-frontend-master.db
+[FileStorage] Initialized file storage
+
+============================================================
+ AI Frontend Master - Backend Server
+ Port: 3001                                            
+ Host: 0.0.0.0                                         
+ Environment: production                              
+ Frontend URL: https://vpsairobot.com              
+ Default AI: openai                                     
+ Default Model: gpt-5.3-codex                          
+ Ready to accept connections...
+============================================================
+  
+[REQUEST] [req-1772026351911-x0er5t] GET /health - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026382001-j2le34] GET /health - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026382598-rw9khx] OPTIONS /api/runtime/sessions/new/stream - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026382600-nbi1wg] POST /api/runtime/sessions/new/stream - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[2026-02-25T13:33:02.630Z] [context-manager] [INFO] Cleanup tasks started {
+  cacheCleanupInterval: '5 minutes',
+  sessionCleanupInterval: '1 hour',
+  sessionTTL: '24 hours'
+}
+[2026-02-25T13:33:02.634Z] [context-manager] [INFO] ContextManager initialized { sectionsDir: './prompt-docs', mode: 'lazy', enableCache: true }
+[2026-02-25T13:33:02.641Z] [prompt-builder] [INFO] Building prompt with hybrid strategy { hasAgent: true, mode: 'implementer', hasUserQuery: true }
+[REQUEST] [req-1772026382645-5xk1hv] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[2026-02-25T13:33:02.647Z] [prompt-builder] [DEBUG] Core system prompt loaded { coreTokens: 179 }
+[2026-02-25T13:33:02.656Z] [prompt-builder] [INFO] Sections retrieved {
+  selectedCount: 2,
+  excludedCount: 0,
+  sectionBudgetTokens: 127,
+  sectionTokens: 127,
+  estimatedSectionTokens: 1350,
+  tokenDriftRatio: 0.09,
+  selectionDetails: { p0Count: 1, p1Count: 1, p2Count: 0, p3Count: 0 }
+}
+[2026-02-25T13:33:02.658Z] [prompt-builder] [INFO] Prompt built successfully {
+  coreTokens: 179,
+  sectionBudgetTokens: 127,
+  sectionTokens: 127,
+  totalTokens: 518,
+  buildTime: 17,
+  targetMet: true,
+  staticEstimatedTotal: 1733,
+  runtimeDriftRatio: 0.3
+}
+[LLM] System prompt length: 3330
+[LLM] System prompt preview: # FrontendMaster System Prompt Core
+
+You are FrontendMaster, a production-focused frontend engineering agent.
+
+## Mission
+
+- Convert user intent into complete, runnable frontend solutions.
+- Prefer direct execution over abstract planning once requirements are clear.
+- Keep implementation pragmatic: clear architecture, maintainable code, and deterministic verification.
+
+## Working Contract
+
+- Clarify assumptions with concrete defaults when the request is underspecified.
+- Preserve existing projec
+[LLM] Available tools: [ 'read', 'grep', 'glob' ]
+[LLM] Tool: read description length: 92
+[LLM] Tool: grep description length: 109
+[LLM] Tool: glob description length: 112
+[LLM] Detected third-party OpenAI-compatible baseURL, keeping responses endpoint by default (model=gpt-5.3-codex)
+[LLM] Starting stream with: {
+  agentId: 'code-architect',
+  modelProvider: 'openai',
+  modelId: 'gpt-5.3-codex',
+  apiKey: '***',
+  baseURL: 'https://vpsairobot.com/v1',
+  messagesCount: 1,
+  toolsCount: 3,
+  reasoningEffort: 'medium'
+}
+[LLM] Tool choice strategy: {
+  toolChoice: 'auto',
+  shouldReducePrototypeToolSet: false,
+  shouldPrioritizeWritePhase: false,
+  shouldRequirePrototypeToolUsage: false,
+  effectiveMode: 'implementer',
+  enabledTools: [ 'read', 'grep', 'glob' ]
+}
+[REQUEST] [req-1772026384652-1c9s5z] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026386651-93wbkp] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026388651-f9x8gu] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+docker : [LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot conn
+ect to API: Client network socket disconnected before secure TLS connection was established
+At line:2 char:1
++ docker logs --since 20m ai-frontend-backend 2>&1 | Out-File -FilePath ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ([LLM] Stream em...was established:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+[2026-02-25T13:33:08.790Z] [prompt-builder] [INFO] Building prompt with hybrid strategy { hasAgent: true, mode: 'implementer', hasUserQuery: true }
+[2026-02-25T13:33:08.791Z] [prompt-builder] [DEBUG] Core system prompt loaded { coreTokens: 179 }
+[2026-02-25T13:33:08.799Z] [prompt-builder] [INFO] Sections retrieved {
+  selectedCount: 2,
+  excludedCount: 0,
+  sectionBudgetTokens: 127,
+  sectionTokens: 127,
+  estimatedSectionTokens: 1350,
+  tokenDriftRatio: 0.09,
+  selectionDetails: { p0Count: 1, p1Count: 1, p2Count: 0, p3Count: 0 }
+}
+[2026-02-25T13:33:08.800Z] [prompt-builder] [INFO] Prompt built successfully {
+  coreTokens: 179,
+  sectionBudgetTokens: 127,
+  sectionTokens: 127,
+  totalTokens: 518,
+  buildTime: 10,
+  targetMet: true,
+  staticEstimatedTotal: 1733,
+  runtimeDriftRatio: 0.3
+}
+[LLM] System prompt length: 3330
+[LLM] System prompt preview: # FrontendMaster System Prompt Core
+
+You are FrontendMaster, a production-focused frontend engineering agent.
+
+## Mission
+
+- Convert user intent into complete, runnable frontend solutions.
+- Prefer direct execution over abstract planning once requirements are clear.
+- Keep implementation pragmatic: clear architecture, maintainable code, and deterministic verification.
+
+## Working Contract
+
+- Clarify assumptions with concrete defaults when the request is underspecified.
+- Preserve existing projec
+[LLM] Available tools: [ 'read', 'grep', 'glob' ]
+[LLM] Tool: read description length: 92
+[LLM] Tool: grep description length: 109
+[LLM] Tool: glob description length: 112
+[LLM] Detected third-party OpenAI-compatible baseURL, keeping responses endpoint by default (model=gpt-5.3-codex)
+[LLM] Starting stream with: {
+  agentId: 'code-architect',
+  modelProvider: 'openai',
+  modelId: 'gpt-5.3-codex',
+  apiKey: '***',
+  baseURL: 'https://vpsairobot.com/v1',
+  messagesCount: 1,
+  toolsCount: 3,
+  reasoningEffort: 'medium'
+}
+[LLM] Tool choice strategy: {
+  toolChoice: 'auto',
+  shouldReducePrototypeToolSet: false,
+  shouldPrioritizeWritePhase: false,
+  shouldRequirePrototypeToolUsage: false,
+  effectiveMode: 'implementer',
+  enabledTools: [ 'read', 'grep', 'glob' ]
+}
+[REQUEST] [req-1772026390652-pn8ffr] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026392652-jnwntx] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026394651-1wigl1] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 4096,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'auto',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] Stream failed: NoOutputGeneratedError [AI_NoOutputGeneratedError]: No output generated. Check the stream for erro
+rs.
+    at Object.flush (/app/node_modules/ai/src/generate-text/stream-text.ts:1060:17)
+    at invokePromiseCallback (node:internal/webstreams/util:181:10)
+    at Object.<anonymous> (node:internal/webstreams/util:186:23)
+    at transformStreamDefaultSinkCloseAlgorithm (node:internal/webstreams/transformstream:613:43)
+    at node:internal/webstreams/transformstream:371:11
+    at writableStreamDefaultControllerProcessClose (node:internal/webstreams/writablestream:1153:28)
+    at writableStreamDefaultControllerAdvanceQueueIfNeeded (node:internal/webstreams/writablestream:1242:5)
+    at writableStreamDefaultControllerClose (node:internal/webstreams/writablestream:1209:3)
+    at writableStreamClose (node:internal/webstreams/writablestream:713:3)
+    at writableStreamDefaultWriterClose (node:internal/webstreams/writablestream:1082:10) {
+  cause: undefined,
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_NoOutputGeneratedError)]: true
+}
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+[2026-02-25T13:33:14.840Z] [prompt-builder] [INFO] Building prompt with hybrid strategy { hasAgent: true, mode: 'creator', hasUserQuery: true }
+[2026-02-25T13:33:14.841Z] [prompt-builder] [INFO] Building prompt with hybrid strategy { hasAgent: true, mode: 'implementer', hasUserQuery: true }
+[2026-02-25T13:33:14.841Z] [prompt-builder] [INFO] Building prompt with hybrid strategy { hasAgent: true, mode: 'implementer', hasUserQuery: true }
+[2026-02-25T13:33:14.841Z] [prompt-builder] [INFO] Building prompt with hybrid strategy { hasAgent: true, mode: 'implementer', hasUserQuery: true }
+[2026-02-25T13:33:14.841Z] [prompt-builder] [DEBUG] Core system prompt loaded { coreTokens: 179 }
+[2026-02-25T13:33:14.842Z] [prompt-builder] [DEBUG] Core system prompt loaded { coreTokens: 179 }
+[2026-02-25T13:33:14.842Z] [prompt-builder] [DEBUG] Core system prompt loaded { coreTokens: 179 }
+[2026-02-25T13:33:14.842Z] [prompt-builder] [DEBUG] Core system prompt loaded { coreTokens: 179 }
+[2026-02-25T13:33:14.864Z] [prompt-builder] [INFO] Sections retrieved {
+  selectedCount: 9,
+  excludedCount: 0,
+  sectionBudgetTokens: 594,
+  sectionTokens: 594,
+  estimatedSectionTokens: 5350,
+  tokenDriftRatio: 0.11,
+  selectionDetails: { p0Count: 3, p1Count: 4, p2Count: 2, p3Count: 0 }
+}
+[2026-02-25T13:33:14.865Z] [prompt-builder] [INFO] Prompt built successfully {
+  coreTokens: 179,
+  sectionBudgetTokens: 594,
+  sectionTokens: 594,
+  totalTokens: 1011,
+  buildTime: 24,
+  targetMet: true,
+  staticEstimatedTotal: 5733,
+  runtimeDriftRatio: 0.18
+}
+[LLM] System prompt length: 6637
+[LLM] System prompt preview: # FrontendMaster System Prompt Core
+
+You are FrontendMaster, a production-focused frontend engineering agent.
+
+## Mission
+
+- Convert user intent into complete, runnable frontend solutions.
+- Prefer direct execution over abstract planning once requirements are clear.
+- Keep implementation pragmatic: clear architecture, maintainable code, and deterministic verification.
+
+## Working Contract
+
+- Clarify assumptions with concrete defaults when the request is underspecified.
+- Preserve existing projec
+[LLM] Available tools: [ 'read', 'write', 'grep', 'glob', 'bash', 'apply_diff' ]
+[LLM] Tool: read description length: 92
+[LLM] Tool: write description length: 172
+[LLM] Tool: grep description length: 109
+[LLM] Tool: glob description length: 112
+[LLM] Tool: bash description length: 83
+[LLM] Tool: apply_diff description length: 469
+[LLM] Detected third-party OpenAI-compatible baseURL, keeping responses endpoint by default (model=gpt-5.3-codex)
+[LLM] Starting stream with: {
+  agentId: 'frontend-implementer',
+  modelProvider: 'openai',
+  modelId: 'gpt-5.3-codex',
+  apiKey: '***',
+  baseURL: 'https://vpsairobot.com/v1',
+  messagesCount: 1,
+  toolsCount: 6,
+  reasoningEffort: 'medium'
+}
+[LLM] Tool choice strategy: {
+  toolChoice: 'required',
+  shouldReducePrototypeToolSet: true,
+  shouldPrioritizeWritePhase: true,
+  shouldRequirePrototypeToolUsage: true,
+  effectiveMode: 'implementer',
+  enabledTools: [ 'write', 'apply_diff' ]
+}
+[2026-02-25T13:33:14.869Z] [prompt-builder] [INFO] Sections retrieved {
+  selectedCount: 9,
+  excludedCount: 0,
+  sectionBudgetTokens: 594,
+  sectionTokens: 594,
+  estimatedSectionTokens: 5350,
+  tokenDriftRatio: 0.11,
+  selectionDetails: { p0Count: 3, p1Count: 4, p2Count: 2, p3Count: 0 }
+}
+[2026-02-25T13:33:14.870Z] [prompt-builder] [INFO] Prompt built successfully {
+  coreTokens: 179,
+  sectionBudgetTokens: 594,
+  sectionTokens: 594,
+  totalTokens: 1011,
+  buildTime: 29,
+  targetMet: true,
+  staticEstimatedTotal: 5733,
+  runtimeDriftRatio: 0.18
+}
+[LLM] System prompt length: 6637
+[LLM] System prompt preview: # FrontendMaster System Prompt Core
+
+You are FrontendMaster, a production-focused frontend engineering agent.
+
+## Mission
+
+- Convert user intent into complete, runnable frontend solutions.
+- Prefer direct execution over abstract planning once requirements are clear.
+- Keep implementation pragmatic: clear architecture, maintainable code, and deterministic verification.
+
+## Working Contract
+
+- Clarify assumptions with concrete defaults when the request is underspecified.
+- Preserve existing projec
+[LLM] Available tools: [ 'read', 'write', 'grep', 'glob', 'bash', 'apply_diff' ]
+[LLM] Tool: read description length: 92
+[LLM] Tool: write description length: 172
+[LLM] Tool: grep description length: 109
+[LLM] Tool: glob description length: 112
+[LLM] Tool: bash description length: 83
+[LLM] Tool: apply_diff description length: 469
+[LLM] Detected third-party OpenAI-compatible baseURL, keeping responses endpoint by default (model=gpt-5.3-codex)
+[LLM] Starting stream with: {
+  agentId: 'frontend-implementer',
+  modelProvider: 'openai',
+  modelId: 'gpt-5.3-codex',
+  apiKey: '***',
+  baseURL: 'https://vpsairobot.com/v1',
+  messagesCount: 1,
+  toolsCount: 6,
+  reasoningEffort: 'medium'
+}
+[LLM] Tool choice strategy: {
+  toolChoice: 'required',
+  shouldReducePrototypeToolSet: true,
+  shouldPrioritizeWritePhase: true,
+  shouldRequirePrototypeToolUsage: true,
+  effectiveMode: 'implementer',
+  enabledTools: [ 'write', 'apply_diff' ]
+}
+[2026-02-25T13:33:14.875Z] [prompt-builder] [INFO] Sections retrieved {
+  selectedCount: 9,
+  excludedCount: 0,
+  sectionBudgetTokens: 594,
+  sectionTokens: 594,
+  estimatedSectionTokens: 5350,
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 4096,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'auto',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] Stream failed: NoOutputGeneratedError [AI_NoOutputGeneratedError]: No output generated. Check the stream for erro
+rs.
+    at Object.flush (/app/node_modules/ai/src/generate-text/stream-text.ts:1060:17)
+    at invokePromiseCallback (node:internal/webstreams/util:181:10)
+    at Object.<anonymous> (node:internal/webstreams/util:186:23)
+    at transformStreamDefaultSinkCloseAlgorithm (node:internal/webstreams/transformstream:613:43)
+    at node:internal/webstreams/transformstream:371:11
+    at writableStreamDefaultControllerProcessClose (node:internal/webstreams/writablestream:1153:28)
+    at writableStreamDefaultControllerAdvanceQueueIfNeeded (node:internal/webstreams/writablestream:1242:5)
+    at writableStreamDefaultControllerClose (node:internal/webstreams/writablestream:1209:3)
+    at writableStreamClose (node:internal/webstreams/writablestream:713:3)
+    at writableStreamDefaultWriterClose (node:internal/webstreams/writablestream:1082:10) {
+  cause: undefined,
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_NoOutputGeneratedError)]: true
+}
+  tokenDriftRatio: 0.11,
+  selectionDetails: { p0Count: 3, p1Count: 4, p2Count: 2, p3Count: 0 }
+}
+[2026-02-25T13:33:14.875Z] [prompt-builder] [INFO] Prompt built successfully {
+  coreTokens: 179,
+  sectionBudgetTokens: 594,
+  sectionTokens: 594,
+  totalTokens: 1011,
+  buildTime: 34,
+  targetMet: true,
+  staticEstimatedTotal: 5733,
+  runtimeDriftRatio: 0.18
+}
+[LLM] System prompt length: 6637
+[LLM] System prompt preview: # FrontendMaster System Prompt Core
+
+You are FrontendMaster, a production-focused frontend engineering agent.
+
+## Mission
+
+- Convert user intent into complete, runnable frontend solutions.
+- Prefer direct execution over abstract planning once requirements are clear.
+- Keep implementation pragmatic: clear architecture, maintainable code, and deterministic verification.
+
+## Working Contract
+
+- Clarify assumptions with concrete defaults when the request is underspecified.
+- Preserve existing projec
+[LLM] Available tools: [ 'read', 'write', 'grep', 'glob', 'bash', 'apply_diff' ]
+[LLM] Tool: read description length: 92
+[LLM] Tool: write description length: 172
+[LLM] Tool: grep description length: 109
+[LLM] Tool: glob description length: 112
+[LLM] Tool: bash description length: 83
+[LLM] Tool: apply_diff description length: 469
+[LLM] Detected third-party OpenAI-compatible baseURL, keeping responses endpoint by default (model=gpt-5.3-codex)
+[LLM] Starting stream with: {
+  agentId: 'frontend-implementer',
+  modelProvider: 'openai',
+  modelId: 'gpt-5.3-codex',
+  apiKey: '***',
+  baseURL: 'https://vpsairobot.com/v1',
+  messagesCount: 1,
+  toolsCount: 6,
+  reasoningEffort: 'medium'
+}
+[LLM] Tool choice strategy: {
+  toolChoice: 'required',
+  shouldReducePrototypeToolSet: true,
+  shouldPrioritizeWritePhase: true,
+  shouldRequirePrototypeToolUsage: true,
+  effectiveMode: 'implementer',
+  enabledTools: [ 'write', 'apply_diff' ]
+}
+[2026-02-25T13:33:14.886Z] [prompt-builder] [INFO] Sections retrieved {
+  selectedCount: 9,
+  excludedCount: 0,
+  sectionBudgetTokens: 744,
+  sectionTokens: 744,
+  estimatedSectionTokens: 5410,
+  tokenDriftRatio: 0.14,
+  selectionDetails: { p0Count: 4, p1Count: 3, p2Count: 1, p3Count: 1 }
+}
+[2026-02-25T13:33:14.887Z] [prompt-builder] [INFO] Prompt built successfully {
+  coreTokens: 179,
+  sectionBudgetTokens: 744,
+  sectionTokens: 744,
+  totalTokens: 1162,
+  buildTime: 47,
+  targetMet: true,
+  staticEstimatedTotal: 5793,
+  runtimeDriftRatio: 0.2
+}
+[LLM] System prompt length: 7449
+[LLM] System prompt preview: # FrontendMaster System Prompt Core
+
+You are FrontendMaster, a production-focused frontend engineering agent.
+
+## Mission
+
+- Convert user intent into complete, runnable frontend solutions.
+- Prefer direct execution over abstract planning once requirements are clear.
+- Keep implementation pragmatic: clear architecture, maintainable code, and deterministic verification.
+
+## Working Contract
+
+- Clarify assumptions with concrete defaults when the request is underspecified.
+- Preserve existing projec
+[LLM] Available tools: [
+  'read',
+  'write',
+  'webfetch',
+  'design_search',
+  'apply_diff',
+  'get_color_palette',
+  'get_design_style',
+  'get_typography_pair',
+  'get_component_list'
+]
+[LLM] Tool: read description length: 92
+[LLM] Tool: write description length: 172
+[LLM] Tool: webfetch description length: 115
+[LLM] Tool: design_search description length: 124
+[LLM] Tool: apply_diff description length: 469
+[LLM] Tool: get_color_palette description length: 77
+[LLM] Tool: get_design_style description length: 67
+[LLM] Tool: get_typography_pair description length: 66
+[LLM] Tool: get_component_list description length: 67
+[LLM] Detected third-party OpenAI-compatible baseURL, keeping responses endpoint by default (model=gpt-5.3-codex)
+[LLM] Starting stream with: {
+  agentId: 'frontend-creator',
+  modelProvider: 'openai',
+  modelId: 'gpt-5.3-codex',
+  apiKey: '***',
+  baseURL: 'https://vpsairobot.com/v1',
+  messagesCount: 1,
+  toolsCount: 9,
+  reasoningEffort: 'medium'
+}
+[LLM] Tool choice strategy: {
+  toolChoice: 'required',
+  shouldReducePrototypeToolSet: true,
+  shouldPrioritizeWritePhase: true,
+  shouldRequirePrototypeToolUsage: true,
+  effectiveMode: 'creator',
+  enabledTools: [ 'write', 'apply_diff' ]
+}
+[REQUEST] [req-1772026396652-ikkyor] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026398652-dz2oqp] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026400652-ks5mai] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 8192,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'required',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] No output generated under toolChoice=required, fallback to toolChoice=auto and retry once
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 8192,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'required',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] No output generated under toolChoice=required, fallback to toolChoice=auto and retry once
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 8192,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'required',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] No output generated under toolChoice=required, fallback to toolChoice=auto and retry once
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 128000,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'required',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] No output generated under toolChoice=required, fallback to toolChoice=auto and retry once
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 8192,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'auto',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] Stream failed: NoOutputGeneratedError [AI_NoOutputGeneratedError]: No output generated. Check the stream for erro
+rs.
+    at Object.flush (/app/node_modules/ai/src/generate-text/stream-text.ts:1060:17)
+    at invokePromiseCallback (node:internal/webstreams/util:181:10)
+    at Object.<anonymous> (node:internal/webstreams/util:186:23)
+    at transformStreamDefaultSinkCloseAlgorithm (node:internal/webstreams/transformstream:613:43)
+    at node:internal/webstreams/transformstream:371:11
+    at writableStreamDefaultControllerProcessClose (node:internal/webstreams/writablestream:1153:28)
+    at writableStreamDefaultControllerAdvanceQueueIfNeeded (node:internal/webstreams/writablestream:1242:5)
+    at writableStreamDefaultControllerClose (node:internal/webstreams/writablestream:1209:3)
+    at writableStreamClose (node:internal/webstreams/writablestream:713:3)
+    at writableStreamDefaultWriterClose (node:internal/webstreams/writablestream:1082:10) {
+  cause: undefined,
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_NoOutputGeneratedError)]: true
+}
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+[REQUEST] [req-1772026402653-6pom1t] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026404652-22gcyz] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026406652-wfryj0] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 8192,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'auto',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] Stream failed: NoOutputGeneratedError [AI_NoOutputGeneratedError]: No output generated. Check the stream for erro
+rs.
+    at Object.flush (/app/node_modules/ai/src/generate-text/stream-text.ts:1060:17)
+    at invokePromiseCallback (node:internal/webstreams/util:181:10)
+    at Object.<anonymous> (node:internal/webstreams/util:186:23)
+    at transformStreamDefaultSinkCloseAlgorithm (node:internal/webstreams/transformstream:613:43)
+    at node:internal/webstreams/transformstream:371:11
+    at writableStreamDefaultControllerProcessClose (node:internal/webstreams/writablestream:1153:28)
+    at writableStreamDefaultControllerAdvanceQueueIfNeeded (node:internal/webstreams/writablestream:1242:5)
+    at writableStreamDefaultControllerClose (node:internal/webstreams/writablestream:1209:3)
+    at writableStreamClose (node:internal/webstreams/writablestream:713:3)
+    at writableStreamDefaultWriterClose (node:internal/webstreams/writablestream:1082:10) {
+  cause: undefined,
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_NoOutputGeneratedError)]: true
+}
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 8192,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'auto',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] Stream failed: NoOutputGeneratedError [AI_NoOutputGeneratedError]: No output generated. Check the stream for erro
+rs.
+    at Object.flush (/app/node_modules/ai/src/generate-text/stream-text.ts:1060:17)
+    at invokePromiseCallback (node:internal/webstreams/util:181:10)
+    at Object.<anonymous> (node:internal/webstreams/util:186:23)
+    at transformStreamDefaultSinkCloseAlgorithm (node:internal/webstreams/transformstream:613:43)
+    at node:internal/webstreams/transformstream:371:11
+    at writableStreamDefaultControllerProcessClose (node:internal/webstreams/writablestream:1153:28)
+    at writableStreamDefaultControllerAdvanceQueueIfNeeded (node:internal/webstreams/writablestream:1242:5)
+    at writableStreamDefaultControllerClose (node:internal/webstreams/writablestream:1209:3)
+    at writableStreamClose (node:internal/webstreams/writablestream:713:3)
+    at writableStreamDefaultWriterClose (node:internal/webstreams/writablestream:1082:10) {
+  cause: undefined,
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_NoOutputGeneratedError)]: true
+}
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 128000,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'auto',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] Stream failed: NoOutputGeneratedError [AI_NoOutputGeneratedError]: No output generated. Check the stream for erro
+rs.
+    at Object.flush (/app/node_modules/ai/src/generate-text/stream-text.ts:1060:17)
+    at invokePromiseCallback (node:internal/webstreams/util:181:10)
+    at Object.<anonymous> (node:internal/webstreams/util:186:23)
+    at transformStreamDefaultSinkCloseAlgorithm (node:internal/webstreams/transformstream:613:43)
+    at node:internal/webstreams/transformstream:371:11
+    at writableStreamDefaultControllerProcessClose (node:internal/webstreams/writablestream:1153:28)
+    at writableStreamDefaultControllerAdvanceQueueIfNeeded (node:internal/webstreams/writablestream:1242:5)
+    at writableStreamDefaultControllerClose (node:internal/webstreams/writablestream:1209:3)
+    at writableStreamClose (node:internal/webstreams/writablestream:713:3)
+    at writableStreamDefaultWriterClose (node:internal/webstreams/writablestream:1082:10) {
+  cause: undefined,
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_NoOutputGeneratedError)]: true
+}
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+[2026-02-25T13:33:26.980Z] [prompt-builder] [INFO] Building prompt with hybrid strategy { hasAgent: true, mode: 'implementer', hasUserQuery: true }
+[2026-02-25T13:33:26.980Z] [prompt-builder] [DEBUG] Core system prompt loaded { coreTokens: 179 }
+[2026-02-25T13:33:26.999Z] [prompt-builder] [INFO] Sections retrieved {
+  selectedCount: 9,
+  excludedCount: 0,
+  sectionBudgetTokens: 594,
+  sectionTokens: 594,
+  estimatedSectionTokens: 5350,
+  tokenDriftRatio: 0.11,
+  selectionDetails: { p0Count: 3, p1Count: 4, p2Count: 2, p3Count: 0 }
+}
+[2026-02-25T13:33:27.000Z] [prompt-builder] [INFO] Prompt built successfully {
+  coreTokens: 179,
+  sectionBudgetTokens: 594,
+  sectionTokens: 594,
+  totalTokens: 1011,
+  buildTime: 20,
+  targetMet: true,
+  staticEstimatedTotal: 5733,
+  runtimeDriftRatio: 0.18
+}
+[LLM] System prompt length: 6637
+[LLM] System prompt preview: # FrontendMaster System Prompt Core
+
+You are FrontendMaster, a production-focused frontend engineering agent.
+
+## Mission
+
+- Convert user intent into complete, runnable frontend solutions.
+- Prefer direct execution over abstract planning once requirements are clear.
+- Keep implementation pragmatic: clear architecture, maintainable code, and deterministic verification.
+
+## Working Contract
+
+- Clarify assumptions with concrete defaults when the request is underspecified.
+- Preserve existing projec
+[LLM] Available tools: [ 'read', 'write', 'grep', 'glob', 'bash', 'apply_diff' ]
+[LLM] Tool: read description length: 92
+[LLM] Tool: write description length: 172
+[LLM] Tool: grep description length: 109
+[LLM] Tool: glob description length: 112
+[LLM] Tool: bash description length: 83
+[LLM] Tool: apply_diff description length: 469
+[LLM] Detected third-party OpenAI-compatible baseURL, keeping responses endpoint by default (model=gpt-5.3-codex)
+[LLM] Starting stream with: {
+  agentId: 'frontend-implementer',
+  modelProvider: 'openai',
+  modelId: 'gpt-5.3-codex',
+  apiKey: '***',
+  baseURL: 'https://vpsairobot.com/v1',
+  messagesCount: 1,
+  toolsCount: 6,
+  reasoningEffort: 'medium'
+}
+[LLM] Tool choice strategy: {
+  toolChoice: 'required',
+  shouldReducePrototypeToolSet: true,
+  shouldPrioritizeWritePhase: true,
+  shouldRequirePrototypeToolUsage: true,
+  effectiveMode: 'implementer',
+  enabledTools: [ 'write', 'apply_diff' ]
+}
+[REQUEST] [req-1772026408653-o8asx3] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026410652-7cwf40] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026412089-h36z0s] GET /health - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026412652-m41okf] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026414653-lniebx] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026416652-vj7zkc] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026418652-3ffep0] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 8192,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'required',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] No output generated under toolChoice=required, fallback to toolChoice=auto and retry once
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 8192,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+[2026-02-25T13:33:39.068Z] [prompt-builder] [INFO] Building prompt with hybrid strategy { hasAgent: true, mode: 'implementer', hasUserQuery: true }
+[2026-02-25T13:33:39.068Z] [prompt-builder] [DEBUG] Core system prompt loaded { coreTokens: 179 }
+[2026-02-25T13:33:39.095Z] [prompt-builder] [INFO] Sections retrieved {
+  selectedCount: 9,
+  excludedCount: 0,
+  sectionBudgetTokens: 594,
+  sectionTokens: 594,
+  estimatedSectionTokens: 5350,
+  tokenDriftRatio: 0.11,
+  selectionDetails: { p0Count: 3, p1Count: 4, p2Count: 2, p3Count: 0 }
+}
+[2026-02-25T13:33:39.095Z] [prompt-builder] [INFO] Prompt built successfully {
+  coreTokens: 179,
+  sectionBudgetTokens: 594,
+  sectionTokens: 594,
+  totalTokens: 1011,
+  buildTime: 27,
+  targetMet: true,
+  staticEstimatedTotal: 5733,
+  runtimeDriftRatio: 0.18
+}
+[LLM] System prompt length: 6637
+[LLM] System prompt preview: # FrontendMaster System Prompt Core
+
+You are FrontendMaster, a production-focused frontend engineering agent.
+
+## Mission
+
+- Convert user intent into complete, runnable frontend solutions.
+- Prefer direct execution over abstract planning once requirements are clear.
+- Keep implementation pragmatic: clear architecture, maintainable code, and deterministic verification.
+
+## Working Contract
+
+- Clarify assumptions with concrete defaults when the request is underspecified.
+- Preserve existing projec
+[LLM] Available tools: [ 'read', 'write', 'grep', 'glob', 'bash', 'apply_diff' ]
+[LLM] Tool: read description length: 92
+[LLM] Tool: write description length: 172
+[LLM] Tool: grep description length: 109
+[LLM] Tool: glob description length: 112
+[LLM] Tool: bash description length: 83
+[LLM] Tool: apply_diff description length: 469
+[LLM] Detected third-party OpenAI-compatible baseURL, keeping responses endpoint by default (model=gpt-5.3-codex)
+[LLM] Starting stream with: {
+  agentId: 'frontend-implementer',
+  modelProvider: 'openai',
+  modelId: 'gpt-5.3-codex',
+  apiKey: '***',
+  baseURL: 'https://vpsairobot.com/v1',
+  messagesCount: 1,
+  toolsCount: 6,
+  reasoningEffort: 'medium'
+}
+[LLM] Tool choice strategy: {
+  toolChoice: 'required',
+  shouldReducePrototypeToolSet: true,
+  shouldPrioritizeWritePhase: true,
+  shouldRequirePrototypeToolUsage: true,
+  effectiveMode: 'implementer',
+  enabledTools: [ 'write', 'apply_diff' ]
+}
+[REQUEST] [req-1772026420652-51uf6g] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026422652-u582hl] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026424652-4henx0] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'auto',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] Stream failed: NoOutputGeneratedError [AI_NoOutputGeneratedError]: No output generated. Check the stream for erro
+rs.
+    at Object.flush (/app/node_modules/ai/src/generate-text/stream-text.ts:1060:17)
+    at invokePromiseCallback (node:internal/webstreams/util:181:10)
+    at Object.<anonymous> (node:internal/webstreams/util:186:23)
+    at transformStreamDefaultSinkCloseAlgorithm (node:internal/webstreams/transformstream:613:43)
+    at node:internal/webstreams/transformstream:371:11
+    at writableStreamDefaultControllerProcessClose (node:internal/webstreams/writablestream:1153:28)
+    at writableStreamDefaultControllerAdvanceQueueIfNeeded (node:internal/webstreams/writablestream:1242:5)
+    at writableStreamDefaultControllerClose (node:internal/webstreams/writablestream:1209:3)
+    at writableStreamClose (node:internal/webstreams/writablestream:713:3)
+    at writableStreamDefaultWriterClose (node:internal/webstreams/writablestream:1082:10) {
+  cause: undefined,
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_NoOutputGeneratedError)]: true
+}
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 8192,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'required',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] No output generated under toolChoice=required, fallback to toolChoice=auto and retry once
+[LLM] Stream emitted error event: RetryError [AI_RetryError]: Failed after 3 attempts. Last error: Cannot connect to AP
+I: Client network socket disconnected before secure TLS connection was established
+    at _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:111:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+    at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+    at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+  cause: undefined,
+  reason: 'maxRetriesExceeded',
+  errors: [
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+[REQUEST] [req-1772026426653-56vsk2] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026428653-5p5op7] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026430653-1hsfmq] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    },
+    APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TLS connect
+ion was established
+        at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+        at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+        at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses
+-language-model.ts:951:50)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+        at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+        at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+        at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+        at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+      cause: [Error],
+      url: 'https://vpsairobot.com/v1/responses',
+      requestBodyValues: [Object],
+      statusCode: undefined,
+      responseHeaders: undefined,
+      responseBody: undefined,
+      isRetryable: true,
+      data: undefined,
+      [Symbol(vercel.ai.error)]: true,
+      [Symbol(vercel.ai.error.AI_APICallError)]: true
+    }
+  ],
+  lastError: APICallError [AI_APICallError]: Cannot connect to API: Client network socket disconnected before secure TL
+S connection was established
+      at handleFetchError (/app/node_modules/@ai-sdk/provider-utils/src/handle-fetch-error.ts:51:14)
+      at postToApi (/app/node_modules/@ai-sdk/provider-utils/src/post-to-api.ts:164:11)
+      at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+      at async OpenAIResponsesLanguageModel.doStream (/app/node_modules/@ai-sdk/openai/src/responses/openai-responses-l
+anguage-model.ts:951:50)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:1628:27)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24)
+      at async _retryWithExponentialBackoff (/app/node_modules/ai/src/util/retry-with-exponential-backoff.ts:96:12)
+      at async streamStep (/app/node_modules/ai/src/generate-text/stream-text.ts:1580:17)
+      at async fn (/app/node_modules/ai/src/generate-text/stream-text.ts:2085:9)
+      at async <anonymous> (/app/node_modules/ai/src/telemetry/record-span.ts:32:24) {
+    cause: Error: Client network socket disconnected before secure TLS connection was established
+        at TLSSocket.onConnectEnd (node:_tls_wrap:1748:19)
+        at TLSSocket.emit (node:events:536:35)
+[REQUEST] [req-1772026432653-adl8rr] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026434653-ztdf27] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026436653-eolmg0] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026438653-9ly38t] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026440653-n4c7yl] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026442166-xdf7d3] GET /health - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026442653-h8xg2i] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026444652-qraqwv] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026446653-9snfzb] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026448652-a03kpq] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026450653-g888o8] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026452653-zxehd0] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026454653-3rdqlx] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026456653-7jjch5] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026458653-nz2n2z] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026460653-qsb7zk] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026462653-herzv6] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026464654-y66e88] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026466654-w9nfwi] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026468654-l4py9o] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026470653-0thst0] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026472241-yxxm8p] GET /health - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026472654-irxhx5] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026474654-fmiuvd] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026476653-el63yr] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026478653-zp66ri] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026480653-je4kvy] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+[REQUEST] [req-1772026482653-wwtjzv] GET /api/sessions/0a25e0f5-a126-422d-8715-76edce316257/files? - Origin: http://localhost:5190
+[CORS] Checking origin: http://localhost:5190
+[CORS] Origin allowed: http://localhost:5190
+        at endReadableNT (node:internal/streams/readable:1698:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+      code: 'ECONNRESET',
+      path: undefined,
+      host: 'vpsairobot.com',
+      port: 443,
+      localAddress: null
+    },
+    url: 'https://vpsairobot.com/v1/responses',
+    requestBodyValues: {
+      model: 'gpt-5.3-codex',
+      input: [Array],
+      temperature: undefined,
+      top_p: undefined,
+      max_output_tokens: 8192,
+      conversation: undefined,
+      max_tool_calls: undefined,
+      metadata: undefined,
+      parallel_tool_calls: false,
+      previous_response_id: undefined,
+      store: true,
+      user: undefined,
+      instructions: undefined,
+      service_tier: undefined,
+      include: undefined,
+      prompt_cache_key: undefined,
+      prompt_cache_retention: undefined,
+      safety_identifier: undefined,
+      top_logprobs: undefined,
+      truncation: undefined,
+      reasoning: [Object],
+      tools: [Array],
+      tool_choice: 'auto',
+      stream: true
+    },
+    statusCode: undefined,
+    responseHeaders: undefined,
+    responseBody: undefined,
+    isRetryable: true,
+    data: undefined,
+    [Symbol(vercel.ai.error)]: true,
+    [Symbol(vercel.ai.error.AI_APICallError)]: true
+  },
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_RetryError)]: true
+}
+[LLM] Stream failed: NoOutputGeneratedError [AI_NoOutputGeneratedError]: No output generated. Check the stream for erro
+rs.
+    at Object.flush (/app/node_modules/ai/src/generate-text/stream-text.ts:1060:17)
+    at invokePromiseCallback (node:internal/webstreams/util:181:10)
+    at Object.<anonymous> (node:internal/webstreams/util:186:23)
+    at transformStreamDefaultSinkCloseAlgorithm (node:internal/webstreams/transformstream:613:43)
+    at node:internal/webstreams/transformstream:371:11
+    at writableStreamDefaultControllerProcessClose (node:internal/webstreams/writablestream:1153:28)
+    at writableStreamDefaultControllerAdvanceQueueIfNeeded (node:internal/webstreams/writablestream:1242:5)
+    at writableStreamDefaultControllerClose (node:internal/webstreams/writablestream:1209:3)
+    at writableStreamClose (node:internal/webstreams/writablestream:713:3)
+    at writableStreamDefaultWriterClose (node:internal/webstreams/writablestream:1082:10) {
+  cause: undefined,
+  [Symbol(vercel.ai.error)]: true,
+  [Symbol(vercel.ai.error.AI_NoOutputGeneratedError)]: true
+}

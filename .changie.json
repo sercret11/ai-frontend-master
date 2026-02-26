@@ -1,0 +1,83 @@
+# Changelog Configuration
+
+# 配置信息
+bugs:
+  url: https://github.com/your-org/ai-frontend-master/issues
+
+# 标记配置
+tagFormat: 'v$version'
+
+# Git 资源
+gitRawCommitsOpts:
+  # 从哪个分支查找提交记录
+  from: ''
+
+# Git 相关配置
+gitTagVer:
+  # 前缀正则
+  prefix: ''
+
+# 解析配置
+parserOpts:
+  # 提交类型关键字
+  types:
+    - feat:     # 新功能
+      - '✨'
+      - '新增'
+    - fix:      # Bug 修复
+      - '🐛'
+      - '修复'
+    - docs:     # 文档更新
+      - '📝'
+      - '文档'
+    - style:    # 代码格式调整
+      - '💄'
+      - '格式'
+    - refactor: # 重构
+      - '♻️'
+      - '重构'
+    - perf:     # 性能优化
+      - '⚡'
+      - '性能'
+    - test:     # 测试相关
+      - '✅'
+      - '测试'
+    - build:    # 构建系统
+      - '📦'
+      - '构建'
+    - ci:       # CI 配置
+      - '🔧'
+      - 'CI'
+    - chore:    # 其他杂项
+      - '🔨'
+      - '杂项'
+
+  # 提交部分
+  releaseCommitMessageFormat: 'RELEASE: %s'
+
+# 写入配置
+writerOpts:
+  # 生成的 CHANGELOG 中包含的提交类型
+  types:
+    - feat
+    - fix
+    - perf
+    - refactor
+
+  # 是否包含提交范围
+  includeCommitScope: false
+
+  # 提交版本范围模板
+  commitLinkFormat: 'https://github.com/your-org/ai-frontend-master/commits/%s'
+
+  # 对比链接
+  compareLinkFormat: 'https://github.com/your-org/ai-frontend-master/compare/%s...%s'
+
+  # Issue 链接
+  issueLinkFormat: 'https://github.com/your-org/ai-frontend-master/issues/%s'
+
+  # 用户链接
+  userLinkFormat: 'https://github.com/%s'
+
+  # 是否对提交进行分组
+  groupBy: true

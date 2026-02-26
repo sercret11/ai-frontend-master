@@ -1,0 +1,5 @@
+{
+  "name": "Qianjing AI IDE Clone",
+  "description": "A clone of the Qianjing AI Code Assistant interface featuring a dual-pane IDE layout with code editing and preview capabilities.",
+  "requestFramePermissions": []
+}

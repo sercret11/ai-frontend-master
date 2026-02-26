@@ -1,0 +1,2803 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-01-29",
+  "totalPalettes": 96,
+  "categories": {
+    "saas": 15,
+    "ecommerce": 12,
+    "finance": 10,
+    "healthcare": 8,
+    "edtech": 7,
+    "social": 8,
+    "entertainment": 6,
+    "travel": 5,
+    "food": 5,
+    "other": 20
+  },
+  "palettes": [
+    {
+      "id": "saas-general",
+      "name": "SaaS General",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#2563EB",
+        "secondary": "#3B82F6",
+        "cta": "#F97316",
+        "background": "#F8FAFC",
+        "text": "#1E293B",
+        "border": "#E2E8F0"
+      },
+      "hsl": {
+        "primary": "220 90% 56%",
+        "secondary": "217 91% 60%",
+        "cta": "25 95% 53%",
+        "background": "210 40% 98%",
+        "text": "222 47% 11%",
+        "border": "214 32% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-600",
+        "secondary": "blue-500",
+        "cta": "orange-500",
+        "background": "slate-50",
+        "text": "slate-800",
+        "border": "slate-200"
+      }
+    },
+    {
+      "id": "saas-analytics",
+      "name": "Analytics SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#7C3AED",
+        "secondary": "#8B5CF6",
+        "cta": "#10B981",
+        "background": "#F5F3FF",
+        "text": "#1E1B4B",
+        "border": "#E9D5FF"
+      },
+      "hsl": {
+        "primary": "262 80% 56%",
+        "secondary": "258 90% 66%",
+        "cta": "142 76% 36%",
+        "background": "270 100% 98%",
+        "text": "250 50% 15%",
+        "border": "270 70% 91%"
+      },
+      "tailwind": {
+        "primary": "violet-600",
+        "secondary": "violet-500",
+        "cta": "emerald-500",
+        "background": "violet-50",
+        "text": "indigo-950",
+        "border": "violet-200"
+      }
+    },
+    {
+      "id": "saas-collaboration",
+      "name": "Collaboration SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#0891B2",
+        "secondary": "#06B6D4",
+        "cta": "#F59E0B",
+        "background": "#ECFEFF",
+        "text": "#164E63",
+        "border": "#CFFAFE"
+      },
+      "hsl": {
+        "primary": "188 85% 37%",
+        "secondary": "187 84% 43%",
+        "cta": "38 92% 50%",
+        "background": "183 100% 98%",
+        "text": "189 51% 20%",
+        "border": "185 84% 91%"
+      },
+      "tailwind": {
+        "primary": "cyan-600",
+        "secondary": "cyan-500",
+        "cta": "amber-500",
+        "background": "cyan-50",
+        "text": "cyan-900",
+        "border": "cyan-100"
+      }
+    },
+    {
+      "id": "saas-crm",
+      "name": "CRM SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#059669",
+        "secondary": "#10B981",
+        "cta": "#DC2626",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 76% 33%",
+        "secondary": "159 84% 42%",
+        "cta": "0 84% 60%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-600",
+        "secondary": "emerald-500",
+        "cta": "red-600",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "saas-project",
+      "name": "Project Management SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#4F46E5",
+        "secondary": "#6366F1",
+        "cta": "#EC4899",
+        "background": "#EEF2FF",
+        "text": "#312E81",
+        "border": "#E0E7FF"
+      },
+      "hsl": {
+        "primary": "245 79% 57%",
+        "secondary": "245 76% 66%",
+        "cta": "330 81% 60%",
+        "background": "239 100% 98%",
+        "text": "243 47% 20%",
+        "border": "239 100% 93%"
+      },
+      "tailwind": {
+        "primary": "indigo-600",
+        "secondary": "indigo-500",
+        "cta": "pink-500",
+        "background": "indigo-50",
+        "text": "indigo-950",
+        "border": "indigo-100"
+      }
+    },
+    {
+      "id": "saas-design",
+      "name": "Design Tool SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#DB2777",
+        "secondary": "#EC4899",
+        "cta": "#8B5CF6",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FBCFE8"
+      },
+      "hsl": {
+        "primary": "330 65% 51%",
+        "secondary": "330 81% 60%",
+        "cta": "258 90% 66%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 81% 91%"
+      },
+      "tailwind": {
+        "primary": "pink-600",
+        "secondary": "pink-500",
+        "cta": "violet-500",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-200"
+      }
+    },
+    {
+      "id": "saas-devtools",
+      "name": "Developer Tool SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#059669",
+        "secondary": "#10B981",
+        "cta": "#3B82F6",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 76% 33%",
+        "secondary": "159 84% 42%",
+        "cta": "217 91% 60%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-600",
+        "secondary": "emerald-500",
+        "cta": "blue-500",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "saas-hr",
+      "name": "HR SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#7C3AED",
+        "secondary": "#8B5CF6",
+        "cta": "#F59E0B",
+        "background": "#F5F3FF",
+        "text": "#4C1D95",
+        "border": "#DDD6FE"
+      },
+      "hsl": {
+        "primary": "262 80% 56%",
+        "secondary": "258 90% 66%",
+        "cta": "38 92% 50%",
+        "background": "270 100% 98%",
+        "text": "262 80% 27%",
+        "border": "258 90% 87%"
+      },
+      "tailwind": {
+        "primary": "violet-600",
+        "secondary": "violet-500",
+        "cta": "amber-500",
+        "background": "violet-50",
+        "text": "violet-900",
+        "border": "violet-200"
+      }
+    },
+    {
+      "id": "saas-finance",
+      "name": "Finance SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#1E40AF",
+        "secondary": "#3B82F6",
+        "cta": "#059669",
+        "background": "#EFF6FF",
+        "text": "#1E3A8A",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 70% 40%",
+        "secondary": "217 91% 60%",
+        "cta": "159 76% 33%",
+        "background": "220 100% 97%",
+        "text": "220 73% 27%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-800",
+        "secondary": "blue-500",
+        "cta": "emerald-600",
+        "background": "blue-50",
+        "text": "blue-900",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "saas-marketing",
+      "name": "Marketing SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#DC2626",
+        "secondary": "#EF4444",
+        "cta": "#F59E0B",
+        "background": "#FEF2F2",
+        "text": "#7F1D1D",
+        "border": "#FECACA"
+      },
+      "hsl": {
+        "primary": "0 84% 60%",
+        "secondary": "0 72% 59%",
+        "cta": "38 92% 50%",
+        "background": "0 100% 97%",
+        "text": "0 74% 28%",
+        "border": "0 84% 92%"
+      },
+      "tailwind": {
+        "primary": "red-600",
+        "secondary": "red-500",
+        "cta": "amber-500",
+        "background": "red-50",
+        "text": "red-900",
+        "border": "red-200"
+      }
+    },
+    {
+      "id": "saas-support",
+      "name": "Customer Service SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#0891B2",
+        "secondary": "#06B6D4",
+        "cta": "#10B981",
+        "background": "#ECFEFF",
+        "text": "#164E63",
+        "border": "#CFFAFE"
+      },
+      "hsl": {
+        "primary": "188 85% 37%",
+        "secondary": "187 84% 43%",
+        "cta": "159 84% 42%",
+        "background": "183 100% 98%",
+        "text": "189 51% 20%",
+        "border": "185 84% 91%"
+      },
+      "tailwind": {
+        "primary": "cyan-600",
+        "secondary": "cyan-500",
+        "cta": "emerald-500",
+        "background": "cyan-50",
+        "text": "cyan-900",
+        "border": "cyan-100"
+      }
+    },
+    {
+      "id": "saas-database",
+      "name": "Database SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#4338CA",
+        "secondary": "#6366F1",
+        "cta": "#059669",
+        "background": "#EEF2FF",
+        "text": "#312E81",
+        "border": "#E0E7FF"
+      },
+      "hsl": {
+        "primary": "245 79% 46%",
+        "secondary": "245 76% 66%",
+        "cta": "159 76% 33%",
+        "background": "239 100% 98%",
+        "text": "243 47% 27%",
+        "border": "239 100% 93%"
+      },
+      "tailwind": {
+        "primary": "indigo-700",
+        "secondary": "indigo-500",
+        "cta": "emerald-600",
+        "background": "indigo-50",
+        "text": "indigo-950",
+        "border": "indigo-100"
+      }
+    },
+    {
+      "id": "saas-security",
+      "name": "Security SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#BE123C",
+        "secondary": "#E11D48",
+        "cta": "#059669",
+        "background": "#FFF1F2",
+        "text": "#881337",
+        "border": "#FECDD3"
+      },
+      "hsl": {
+        "primary": "348 77% 42%",
+        "secondary": "350 79% 49%",
+        "cta": "159 76% 33%",
+        "background": "350 100% 97%",
+        "text": "349 77% 25%",
+        "border": "350 86% 89%"
+      },
+      "tailwind": {
+        "primary": "rose-700",
+        "secondary": "rose-600",
+        "cta": "emerald-600",
+        "background": "rose-50",
+        "text": "rose-900",
+        "border": "rose-200"
+      }
+    },
+    {
+      "id": "saas-ai",
+      "name": "AI SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#7C3AED",
+        "secondary": "#8B5CF6",
+        "cta": "#06B6D4",
+        "background": "#F5F3FF",
+        "text": "#4C1D95",
+        "border": "#E9D5FF"
+      },
+      "hsl": {
+        "primary": "262 80% 56%",
+        "secondary": "258 90% 66%",
+        "cta": "187 84% 43%",
+        "background": "270 100% 98%",
+        "text": "262 80% 27%",
+        "border": "270 70% 91%"
+      },
+      "tailwind": {
+        "primary": "violet-600",
+        "secondary": "violet-500",
+        "cta": "cyan-500",
+        "background": "violet-50",
+        "text": "violet-900",
+        "border": "violet-200"
+      }
+    },
+    {
+      "id": "saas-communication",
+      "name": "Communication SaaS",
+      "category": "SaaS",
+      "colors": {
+        "primary": "#2563EB",
+        "secondary": "#3B82F6",
+        "cta": "#10B981",
+        "background": "#EFF6FF",
+        "text": "#1E40AF",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 90% 56%",
+        "secondary": "217 91% 60%",
+        "cta": "159 84% 42%",
+        "background": "220 100% 97%",
+        "text": "220 73% 40%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-600",
+        "secondary": "blue-500",
+        "cta": "emerald-500",
+        "background": "blue-50",
+        "text": "blue-800",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "ecommerce-general",
+      "name": "E-commerce General",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#10B981",
+        "secondary": "#059669",
+        "cta": "#EF4444",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 84% 42%",
+        "secondary": "159 76% 33%",
+        "cta": "0 72% 59%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-500",
+        "secondary": "emerald-600",
+        "cta": "red-500",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "ecommerce-luxury",
+      "name": "Luxury E-commerce",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#1E3A8A",
+        "secondary": "#1E40AF",
+        "cta": "#D97706",
+        "background": "#FEF3C7",
+        "text": "#78350F",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "220 73% 27%",
+        "secondary": "220 70% 40%",
+        "cta": "35 83% 41%",
+        "background": "48 100% 89%",
+        "text": "35 70% 21%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "blue-900",
+        "secondary": "blue-800",
+        "cta": "amber-600",
+        "background": "amber-100",
+        "text": "amber-900",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "ecommerce-fashion",
+      "name": "Fast Fashion E-commerce",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#EC4899",
+        "secondary": "#F472B6",
+        "cta": "#F59E0B",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FBCFE8"
+      },
+      "hsl": {
+        "primary": "330 81% 60%",
+        "secondary": "330 71% 71%",
+        "cta": "38 92% 50%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 81% 91%"
+      },
+      "tailwind": {
+        "primary": "pink-500",
+        "secondary": "pink-400",
+        "cta": "amber-500",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-200"
+      }
+    },
+    {
+      "id": "ecommerce-electronics",
+      "name": "Electronics E-commerce",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#2563EB",
+        "secondary": "#3B82F6",
+        "cta": "#DC2626",
+        "background": "#EFF6FF",
+        "text": "#1E40AF",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 90% 56%",
+        "secondary": "217 91% 60%",
+        "cta": "0 84% 60%",
+        "background": "220 100% 97%",
+        "text": "220 73% 40%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-600",
+        "secondary": "blue-500",
+        "cta": "red-600",
+        "background": "blue-50",
+        "text": "blue-800",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "ecommerce-food",
+      "name": "Food E-commerce",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#F59E0B",
+        "secondary": "#FBBF24",
+        "cta": "#DC2626",
+        "background": "#FFFBEB",
+        "text": "#78350F",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "38 92% 50%",
+        "secondary": "43 96% 58%",
+        "cta": "0 84% 60%",
+        "background": "48 100% 96%",
+        "text": "35 70% 21%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "amber-500",
+        "secondary": "amber-400",
+        "cta": "red-600",
+        "background": "amber-50",
+        "text": "amber-900",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "ecommerce-home",
+      "name": "Home E-commerce",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#059669",
+        "secondary": "#10B981",
+        "cta": "#D97706",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 76% 33%",
+        "secondary": "159 84% 42%",
+        "cta": "35 83% 41%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-600",
+        "secondary": "emerald-500",
+        "cta": "amber-600",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "ecommerce-mom-baby",
+      "name": "Mom & Baby E-commerce",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#F9A8D4",
+        "secondary": "#F472B6",
+        "cta": "#60A5FA",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FBCFE8"
+      },
+      "hsl": {
+        "primary": "330 81% 80%",
+        "secondary": "330 71% 71%",
+        "cta": "217 91% 65%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 81% 91%"
+      },
+      "tailwind": {
+        "primary": "pink-300",
+        "secondary": "pink-400",
+        "cta": "blue-400",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-200"
+      }
+    },
+    {
+      "id": "ecommerce-sports",
+      "name": "Sports E-commerce",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#DC2626",
+        "secondary": "#EF4444",
+        "cta": "#2563EB",
+        "background": "#FEF2F2",
+        "text": "#7F1D1D",
+        "border": "#FECACA"
+      },
+      "hsl": {
+        "primary": "0 84% 60%",
+        "secondary": "0 72% 59%",
+        "cta": "220 90% 56%",
+        "background": "0 100% 97%",
+        "text": "0 74% 28%",
+        "border": "0 84% 92%"
+      },
+      "tailwind": {
+        "primary": "red-600",
+        "secondary": "red-500",
+        "cta": "blue-600",
+        "background": "red-50",
+        "text": "red-900",
+        "border": "red-200"
+      }
+    },
+    {
+      "id": "ecommerce-beauty",
+      "name": "Beauty E-commerce",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#DB2777",
+        "secondary": "#EC4899",
+        "cta": "#7C3AED",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FBCFE8"
+      },
+      "hsl": {
+        "primary": "330 65% 51%",
+        "secondary": "330 81% 60%",
+        "cta": "262 80% 56%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 81% 91%"
+      },
+      "tailwind": {
+        "primary": "pink-600",
+        "secondary": "pink-500",
+        "cta": "violet-600",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-200"
+      }
+    },
+    {
+      "id": "ecommerce-books",
+      "name": "Books E-commerce",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#4338CA",
+        "secondary": "#6366F1",
+        "cta": "#D97706",
+        "background": "#EEF2FF",
+        "text": "#312E81",
+        "border": "#E0E7FF"
+      },
+      "hsl": {
+        "primary": "245 79% 46%",
+        "secondary": "245 76% 66%",
+        "cta": "35 83% 41%",
+        "background": "239 100% 98%",
+        "text": "243 47% 27%",
+        "border": "239 100% 93%"
+      },
+      "tailwind": {
+        "primary": "indigo-700",
+        "secondary": "indigo-500",
+        "cta": "amber-600",
+        "background": "indigo-50",
+        "text": "indigo-950",
+        "border": "indigo-100"
+      }
+    },
+    {
+      "id": "ecommerce-automotive",
+      "name": "Automotive E-commerce",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#1E3A8A",
+        "secondary": "#2563EB",
+        "cta": "#DC2626",
+        "background": "#EFF6FF",
+        "text": "#1E40AF",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 73% 27%",
+        "secondary": "220 90% 56%",
+        "cta": "0 84% 60%",
+        "background": "220 100% 97%",
+        "text": "220 73% 40%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-900",
+        "secondary": "blue-600",
+        "cta": "red-600",
+        "background": "blue-50",
+        "text": "blue-800",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "ecommerce-crossborder",
+      "name": "Cross-border E-commerce",
+      "category": "E-commerce",
+      "colors": {
+        "primary": "#0891B2",
+        "secondary": "#06B6D4",
+        "cta": "#F59E0B",
+        "background": "#ECFEFF",
+        "text": "#164E63",
+        "border": "#CFFAFE"
+      },
+      "hsl": {
+        "primary": "188 85% 37%",
+        "secondary": "187 84% 43%",
+        "cta": "38 92% 50%",
+        "background": "183 100% 98%",
+        "text": "189 51% 20%",
+        "border": "185 84% 91%"
+      },
+      "tailwind": {
+        "primary": "cyan-600",
+        "secondary": "cyan-500",
+        "cta": "amber-500",
+        "background": "cyan-50",
+        "text": "cyan-900",
+        "border": "cyan-100"
+      }
+    },
+    {
+      "id": "finance-banking",
+      "name": "Banking App",
+      "category": "Finance",
+      "colors": {
+        "primary": "#1E40AF",
+        "secondary": "#2563EB",
+        "cta": "#D97706",
+        "background": "#EFF6FF",
+        "text": "#1E3A8A",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 70% 40%",
+        "secondary": "220 90% 56%",
+        "cta": "35 83% 41%",
+        "background": "220 100% 97%",
+        "text": "220 73% 27%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-800",
+        "secondary": "blue-600",
+        "cta": "amber-600",
+        "background": "blue-50",
+        "text": "blue-900",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "finance-payment",
+      "name": "Payment App",
+      "category": "Finance",
+      "colors": {
+        "primary": "#059669",
+        "secondary": "#10B981",
+        "cta": "#2563EB",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 76% 33%",
+        "secondary": "159 84% 42%",
+        "cta": "220 90% 56%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-600",
+        "secondary": "emerald-500",
+        "cta": "blue-600",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "finance-investment",
+      "name": "Investment & Wealth",
+      "category": "Finance",
+      "colors": {
+        "primary": "#1E3A8A",
+        "secondary": "#3B82F6",
+        "cta": "#D97706",
+        "background": "#EFF6FF",
+        "text": "#1E40AF",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 73% 27%",
+        "secondary": "217 91% 60%",
+        "cta": "35 83% 41%",
+        "background": "220 100% 97%",
+        "text": "220 73% 40%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-900",
+        "secondary": "blue-500",
+        "cta": "amber-600",
+        "background": "blue-50",
+        "text": "blue-800",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "finance-crypto",
+      "name": "Cryptocurrency",
+      "category": "Finance",
+      "colors": {
+        "primary": "#7C3AED",
+        "secondary": "#8B5CF6",
+        "cta": "#F59E0B",
+        "background": "#F5F3FF",
+        "text": "#4C1D95",
+        "border": "#E9D5FF"
+      },
+      "hsl": {
+        "primary": "262 80% 56%",
+        "secondary": "258 90% 66%",
+        "cta": "38 92% 50%",
+        "background": "270 100% 98%",
+        "text": "262 80% 27%",
+        "border": "270 70% 91%"
+      },
+      "tailwind": {
+        "primary": "violet-600",
+        "secondary": "violet-500",
+        "cta": "amber-500",
+        "background": "violet-50",
+        "text": "violet-900",
+        "border": "violet-200"
+      }
+    },
+    {
+      "id": "finance-insurance",
+      "name": "Insurance App",
+      "category": "Finance",
+      "colors": {
+        "primary": "#0891B2",
+        "secondary": "#06B6D4",
+        "cta": "#10B981",
+        "background": "#ECFEFF",
+        "text": "#164E63",
+        "border": "#CFFAFE"
+      },
+      "hsl": {
+        "primary": "188 85% 37%",
+        "secondary": "187 84% 43%",
+        "cta": "159 84% 42%",
+        "background": "183 100% 98%",
+        "text": "189 51% 20%",
+        "border": "185 84% 91%"
+      },
+      "tailwind": {
+        "primary": "cyan-600",
+        "secondary": "cyan-500",
+        "cta": "emerald-500",
+        "background": "cyan-50",
+        "text": "cyan-900",
+        "border": "cyan-100"
+      }
+    },
+    {
+      "id": "finance-credit",
+      "name": "Credit App",
+      "category": "Finance",
+      "colors": {
+        "primary": "#0369A1",
+        "secondary": "#0EA5E9",
+        "cta": "#DC2626",
+        "background": "#F0F9FF",
+        "text": "#0C4A6E",
+        "border": "#BAE6FD"
+      },
+      "hsl": {
+        "primary": "199 89% 33%",
+        "secondary": "199 89% 53%",
+        "cta": "0 84% 60%",
+        "background": "200 100% 97%",
+        "text": "201 83% 21%",
+        "border": "199 89% 80%"
+      },
+      "tailwind": {
+        "primary": "sky-700",
+        "secondary": "sky-500",
+        "cta": "red-600",
+        "background": "sky-50",
+        "text": "sky-900",
+        "border": "sky-200"
+      }
+    },
+    {
+      "id": "finance-stock",
+      "name": "Stock Trading",
+      "category": "Finance",
+      "colors": {
+        "primary": "#059669",
+        "secondary": "#10B981",
+        "cta": "#DC2626",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 76% 33%",
+        "secondary": "159 84% 42%",
+        "cta": "0 84% 60%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-600",
+        "secondary": "emerald-500",
+        "cta": "red-600",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "finance-fund",
+      "name": "Fund App",
+      "category": "Finance",
+      "colors": {
+        "primary": "#1E40AF",
+        "secondary": "#3B82F6",
+        "cta": "#D97706",
+        "background": "#EFF6FF",
+        "text": "#1E3A8A",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 70% 40%",
+        "secondary": "217 91% 60%",
+        "cta": "35 83% 41%",
+        "background": "220 100% 97%",
+        "text": "220 73% 27%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-800",
+        "secondary": "blue-500",
+        "cta": "amber-600",
+        "background": "blue-50",
+        "text": "blue-900",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "finance-management",
+      "name": "Financial Management",
+      "category": "Finance",
+      "colors": {
+        "primary": "#4338CA",
+        "secondary": "#6366F1",
+        "cta": "#059669",
+        "background": "#EEF2FF",
+        "text": "#312E81",
+        "border": "#E0E7FF"
+      },
+      "hsl": {
+        "primary": "245 79% 46%",
+        "secondary": "245 76% 66%",
+        "cta": "159 76% 33%",
+        "background": "239 100% 98%",
+        "text": "243 47% 27%",
+        "border": "239 100% 93%"
+      },
+      "tailwind": {
+        "primary": "indigo-700",
+        "secondary": "indigo-500",
+        "cta": "emerald-600",
+        "background": "indigo-50",
+        "text": "indigo-950",
+        "border": "indigo-100"
+      }
+    },
+    {
+      "id": "finance-crowdfunding",
+      "name": "Crowdfunding Platform",
+      "category": "Finance",
+      "colors": {
+        "primary": "#EC4899",
+        "secondary": "#F472B6",
+        "cta": "#10B981",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FBCFE8"
+      },
+      "hsl": {
+        "primary": "330 81% 60%",
+        "secondary": "330 71% 71%",
+        "cta": "159 84% 42%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 81% 91%"
+      },
+      "tailwind": {
+        "primary": "pink-500",
+        "secondary": "pink-400",
+        "cta": "emerald-500",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-200"
+      }
+    },
+    {
+      "id": "healthcare-general",
+      "name": "General Healthcare",
+      "category": "Healthcare",
+      "colors": {
+        "primary": "#06B6D4",
+        "secondary": "#0891B2",
+        "cta": "#10B981",
+        "background": "#ECFEFF",
+        "text": "#164E63",
+        "border": "#CFFAFE"
+      },
+      "hsl": {
+        "primary": "187 84% 43%",
+        "secondary": "188 85% 37%",
+        "cta": "159 84% 42%",
+        "background": "183 100% 98%",
+        "text": "189 51% 20%",
+        "border": "185 84% 91%"
+      },
+      "tailwind": {
+        "primary": "cyan-500",
+        "secondary": "cyan-600",
+        "cta": "emerald-500",
+        "background": "cyan-50",
+        "text": "cyan-900",
+        "border": "cyan-100"
+      }
+    },
+    {
+      "id": "healthcare-fitness",
+      "name": "Fitness App",
+      "category": "Healthcare",
+      "colors": {
+        "primary": "#EF4444",
+        "secondary": "#F87171",
+        "cta": "#10B981",
+        "background": "#FEF2F2",
+        "text": "#7F1D1D",
+        "border": "#FECACA"
+      },
+      "hsl": {
+        "primary": "0 72% 59%",
+        "secondary": "0 74% 75%",
+        "cta": "159 84% 42%",
+        "background": "0 100% 97%",
+        "text": "0 74% 28%",
+        "border": "0 84% 92%"
+      },
+      "tailwind": {
+        "primary": "red-500",
+        "secondary": "red-400",
+        "cta": "emerald-500",
+        "background": "red-50",
+        "text": "red-900",
+        "border": "red-200"
+      }
+    },
+    {
+      "id": "healthcare-mental",
+      "name": "Mental Health",
+      "category": "Healthcare",
+      "colors": {
+        "primary": "#A78BFA",
+        "secondary": "#C4B5FD",
+        "cta": "#34D399",
+        "background": "#F5F3FF",
+        "text": "#5B21B6",
+        "border": "#DDD6FE"
+      },
+      "hsl": {
+        "primary": "258 90% 76%",
+        "secondary": "258 90% 84%",
+        "cta": "152 76% 56%",
+        "background": "270 100% 98%",
+        "text": "258 73% 28%",
+        "border": "258 90% 87%"
+      },
+      "tailwind": {
+        "primary": "violet-400",
+        "secondary": "violet-300",
+        "cta": "emerald-400",
+        "background": "violet-50",
+        "text": "violet-900",
+        "border": "violet-200"
+      }
+    },
+    {
+      "id": "healthcare-spa",
+      "name": "Beauty SPA",
+      "category": "Healthcare",
+      "colors": {
+        "primary": "#F9A8D4",
+        "secondary": "#FBCFE8",
+        "cta": "#059669",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FCE7F3"
+      },
+      "hsl": {
+        "primary": "330 81% 80%",
+        "secondary": "330 81% 91%",
+        "cta": "159 76% 33%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 100% 94%"
+      },
+      "tailwind": {
+        "primary": "pink-300",
+        "secondary": "pink-200",
+        "cta": "emerald-600",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-100"
+      }
+    },
+    {
+      "id": "healthcare-nutrition",
+      "name": "Nutrition App",
+      "category": "Healthcare",
+      "colors": {
+        "primary": "#10B981",
+        "secondary": "#34D399",
+        "cta": "#F59E0B",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 84% 42%",
+        "secondary": "152 76% 56%",
+        "cta": "38 92% 50%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-500",
+        "secondary": "emerald-400",
+        "cta": "amber-500",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "healthcare-devices",
+      "name": "Medical Devices",
+      "category": "Healthcare",
+      "colors": {
+        "primary": "#0891B2",
+        "secondary": "#22D3EE",
+        "cta": "#DC2626",
+        "background": "#ECFEFF",
+        "text": "#164E63",
+        "border": "#CFFAFE"
+      },
+      "hsl": {
+        "primary": "188 85% 37%",
+        "secondary": "187 80% 69%",
+        "cta": "0 84% 60%",
+        "background": "183 100% 98%",
+        "text": "189 51% 20%",
+        "border": "185 84% 91%"
+      },
+      "tailwind": {
+        "primary": "cyan-600",
+        "secondary": "cyan-400",
+        "cta": "red-600",
+        "background": "cyan-50",
+        "text": "cyan-900",
+        "border": "cyan-100"
+      }
+    },
+    {
+      "id": "healthcare-pharmacy",
+      "name": "Pharmacy App",
+      "category": "Healthcare",
+      "colors": {
+        "primary": "#059669",
+        "secondary": "#10B981",
+        "cta": "#DC2626",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 76% 33%",
+        "secondary": "159 84% 42%",
+        "cta": "0 84% 60%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-600",
+        "secondary": "emerald-500",
+        "cta": "red-600",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "healthcare-vaccination",
+      "name": "Vaccination",
+      "category": "Healthcare",
+      "colors": {
+        "primary": "#0EA5E9",
+        "secondary": "#38BDF8",
+        "cta": "#10B981",
+        "background": "#F0F9FF",
+        "text": "#0C4A6E",
+        "border": "#BAE6FD"
+      },
+      "hsl": {
+        "primary": "199 89% 53%",
+        "secondary": "199 89% 73%",
+        "cta": "159 84% 42%",
+        "background": "200 100% 97%",
+        "text": "201 83% 21%",
+        "border": "199 89% 80%"
+      },
+      "tailwind": {
+        "primary": "sky-500",
+        "secondary": "sky-400",
+        "cta": "emerald-500",
+        "background": "sky-50",
+        "text": "sky-900",
+        "border": "sky-200"
+      }
+    },
+    {
+      "id": "edtech-online",
+      "name": "Online Education",
+      "category": "EdTech",
+      "colors": {
+        "primary": "#4F46E5",
+        "secondary": "#6366F1",
+        "cta": "#F59E0B",
+        "background": "#EEF2FF",
+        "text": "#312E81",
+        "border": "#E0E7FF"
+      },
+      "hsl": {
+        "primary": "245 79% 57%",
+        "secondary": "245 76% 66%",
+        "cta": "38 92% 50%",
+        "background": "239 100% 98%",
+        "text": "243 47% 20%",
+        "border": "239 100% 93%"
+      },
+      "tailwind": {
+        "primary": "indigo-600",
+        "secondary": "indigo-500",
+        "cta": "amber-500",
+        "background": "indigo-50",
+        "text": "indigo-950",
+        "border": "indigo-100"
+      }
+    },
+    {
+      "id": "edtech-k12",
+      "name": "K12 Education",
+      "category": "EdTech",
+      "colors": {
+        "primary": "#EC4899",
+        "secondary": "#F472B6",
+        "cta": "#3B82F6",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FBCFE8"
+      },
+      "hsl": {
+        "primary": "330 81% 60%",
+        "secondary": "330 71% 71%",
+        "cta": "217 91% 60%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 81% 91%"
+      },
+      "tailwind": {
+        "primary": "pink-500",
+        "secondary": "pink-400",
+        "cta": "blue-500",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-200"
+      }
+    },
+    {
+      "id": "edtech-language",
+      "name": "Language Learning",
+      "category": "EdTech",
+      "colors": {
+        "primary": "#0891B2",
+        "secondary": "#06B6D4",
+        "cta": "#10B981",
+        "background": "#ECFEFF",
+        "text": "#164E63",
+        "border": "#CFFAFE"
+      },
+      "hsl": {
+        "primary": "188 85% 37%",
+        "secondary": "187 84% 43%",
+        "cta": "159 84% 42%",
+        "background": "183 100% 98%",
+        "text": "189 51% 20%",
+        "border": "185 84% 91%"
+      },
+      "tailwind": {
+        "primary": "cyan-600",
+        "secondary": "cyan-500",
+        "cta": "emerald-500",
+        "background": "cyan-50",
+        "text": "cyan-900",
+        "border": "cyan-100"
+      }
+    },
+    {
+      "id": "edtech-coding",
+      "name": "Coding Education",
+      "category": "EdTech",
+      "colors": {
+        "primary": "#4338CA",
+        "secondary": "#6366F1",
+        "cta": "#10B981",
+        "background": "#EEF2FF",
+        "text": "#312E81",
+        "border": "#E0E7FF"
+      },
+      "hsl": {
+        "primary": "245 79% 46%",
+        "secondary": "245 76% 66%",
+        "cta": "159 84% 42%",
+        "background": "239 100% 98%",
+        "text": "243 47% 27%",
+        "border": "239 100% 93%"
+      },
+      "tailwind": {
+        "primary": "indigo-700",
+        "secondary": "indigo-500",
+        "cta": "emerald-500",
+        "background": "indigo-50",
+        "text": "indigo-950",
+        "border": "indigo-100"
+      }
+    },
+    {
+      "id": "edtech-vocational",
+      "name": "Vocational Training",
+      "category": "EdTech",
+      "colors": {
+        "primary": "#059669",
+        "secondary": "#10B981",
+        "cta": "#D97706",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 76% 33%",
+        "secondary": "159 84% 42%",
+        "cta": "35 83% 41%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-600",
+        "secondary": "emerald-500",
+        "cta": "amber-600",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "edtech-children",
+      "name": "Children Education",
+      "category": "EdTech",
+      "colors": {
+        "primary": "#FBBF24",
+        "secondary": "#FDE68A",
+        "cta": "#EC4899",
+        "background": "#FFFBEB",
+        "text": "#78350F",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "43 96% 58%",
+        "secondary": "48 96% 76%",
+        "cta": "330 81% 60%",
+        "background": "48 100% 96%",
+        "text": "35 70% 21%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "amber-400",
+        "secondary": "amber-200",
+        "cta": "pink-500",
+        "background": "amber-50",
+        "text": "amber-900",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "edtech-corporate",
+      "name": "Corporate Training",
+      "category": "EdTech",
+      "colors": {
+        "primary": "#1E40AF",
+        "secondary": "#3B82F6",
+        "cta": "#059669",
+        "background": "#EFF6FF",
+        "text": "#1E3A8A",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 70% 40%",
+        "secondary": "217 91% 60%",
+        "cta": "159 76% 33%",
+        "background": "220 100% 97%",
+        "text": "220 73% 27%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-800",
+        "secondary": "blue-500",
+        "cta": "emerald-600",
+        "background": "blue-50",
+        "text": "blue-900",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "social-general",
+      "name": "General Social",
+      "category": "Social",
+      "colors": {
+        "primary": "#3B82F6",
+        "secondary": "#60A5FA",
+        "cta": "#EC4899",
+        "background": "#EFF6FF",
+        "text": "#1E40AF",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "217 91% 60%",
+        "secondary": "217 91% 66%",
+        "cta": "330 81% 60%",
+        "background": "220 100% 97%",
+        "text": "220 73% 40%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-500",
+        "secondary": "blue-400",
+        "cta": "pink-500",
+        "background": "blue-50",
+        "text": "blue-800",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "social-messaging",
+      "name": "Instant Messaging",
+      "category": "Social",
+      "colors": {
+        "primary": "#10B981",
+        "secondary": "#34D399",
+        "cta": "#3B82F6",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 84% 42%",
+        "secondary": "152 76% 56%",
+        "cta": "217 91% 60%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-500",
+        "secondary": "emerald-400",
+        "cta": "blue-500",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "social-video",
+      "name": "Video Conference",
+      "category": "Social",
+      "colors": {
+        "primary": "#4F46E5",
+        "secondary": "#6366F1",
+        "cta": "#DC2626",
+        "background": "#EEF2FF",
+        "text": "#312E81",
+        "border": "#E0E7FF"
+      },
+      "hsl": {
+        "primary": "245 79% 57%",
+        "secondary": "245 76% 66%",
+        "cta": "0 84% 60%",
+        "background": "239 100% 98%",
+        "text": "243 47% 20%",
+        "border": "239 100% 93%"
+      },
+      "tailwind": {
+        "primary": "indigo-600",
+        "secondary": "indigo-500",
+        "cta": "red-600",
+        "background": "indigo-50",
+        "text": "indigo-950",
+        "border": "indigo-100"
+      }
+    },
+    {
+      "id": "social-stranger",
+      "name": "Stranger Social",
+      "category": "Social",
+      "colors": {
+        "primary": "#EC4899",
+        "secondary": "#F472B6",
+        "cta": "#8B5CF6",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FBCFE8"
+      },
+      "hsl": {
+        "primary": "330 81% 60%",
+        "secondary": "330 71% 71%",
+        "cta": "258 90% 66%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 81% 91%"
+      },
+      "tailwind": {
+        "primary": "pink-500",
+        "secondary": "pink-400",
+        "cta": "violet-500",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-200"
+      }
+    },
+    {
+      "id": "social-professional",
+      "name": "Professional Social",
+      "category": "Social",
+      "colors": {
+        "primary": "#1E40AF",
+        "secondary": "#3B82F6",
+        "cta": "#059669",
+        "background": "#EFF6FF",
+        "text": "#1E3A8A",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 70% 40%",
+        "secondary": "217 91% 60%",
+        "cta": "159 76% 33%",
+        "background": "220 100% 97%",
+        "text": "220 73% 27%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-800",
+        "secondary": "blue-500",
+        "cta": "emerald-600",
+        "background": "blue-50",
+        "text": "blue-900",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "social-community",
+      "name": "Interest Community",
+      "category": "Social",
+      "colors": {
+        "primary": "#F59E0B",
+        "secondary": "#FBBF24",
+        "cta": "#EC4899",
+        "background": "#FFFBEB",
+        "text": "#78350F",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "38 92% 50%",
+        "secondary": "43 96% 58%",
+        "cta": "330 81% 60%",
+        "background": "48 100% 96%",
+        "text": "35 70% 21%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "amber-500",
+        "secondary": "amber-400",
+        "cta": "pink-500",
+        "background": "amber-50",
+        "text": "amber-900",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "social-livestream",
+      "name": "Live Streaming",
+      "category": "Social",
+      "colors": {
+        "primary": "#EF4444",
+        "secondary": "#F87171",
+        "cta": "#F59E0B",
+        "background": "#FEF2F2",
+        "text": "#7F1D1D",
+        "border": "#FECACA"
+      },
+      "hsl": {
+        "primary": "0 72% 59%",
+        "secondary": "0 74% 75%",
+        "cta": "38 92% 50%",
+        "background": "0 100% 97%",
+        "text": "0 74% 28%",
+        "border": "0 84% 92%"
+      },
+      "tailwind": {
+        "primary": "red-500",
+        "secondary": "red-400",
+        "cta": "amber-500",
+        "background": "red-50",
+        "text": "red-900",
+        "border": "red-200"
+      }
+    },
+    {
+      "id": "social-content",
+      "name": "Content Community",
+      "category": "Social",
+      "colors": {
+        "primary": "#7C3AED",
+        "secondary": "#8B5CF6",
+        "cta": "#EC4899",
+        "background": "#F5F3FF",
+        "text": "#4C1D95",
+        "border": "#E9D5FF"
+      },
+      "hsl": {
+        "primary": "262 80% 56%",
+        "secondary": "258 90% 66%",
+        "cta": "330 81% 60%",
+        "background": "270 100% 98%",
+        "text": "262 80% 27%",
+        "border": "270 70% 91%"
+      },
+      "tailwind": {
+        "primary": "violet-600",
+        "secondary": "violet-500",
+        "cta": "pink-500",
+        "background": "violet-50",
+        "text": "violet-900",
+        "border": "violet-200"
+      }
+    },
+    {
+      "id": "entertainment-video",
+      "name": "Video Platform",
+      "category": "Entertainment",
+      "colors": {
+        "primary": "#DC2626",
+        "secondary": "#EF4444",
+        "cta": "#F59E0B",
+        "background": "#FEF2F2",
+        "text": "#7F1D1D",
+        "border": "#FECACA"
+      },
+      "hsl": {
+        "primary": "0 84% 60%",
+        "secondary": "0 72% 59%",
+        "cta": "38 92% 50%",
+        "background": "0 100% 97%",
+        "text": "0 74% 28%",
+        "border": "0 84% 92%"
+      },
+      "tailwind": {
+        "primary": "red-600",
+        "secondary": "red-500",
+        "cta": "amber-500",
+        "background": "red-50",
+        "text": "red-900",
+        "border": "red-200"
+      }
+    },
+    {
+      "id": "entertainment-music",
+      "name": "Music App",
+      "category": "Entertainment",
+      "colors": {
+        "primary": "#7C3AED",
+        "secondary": "#8B5CF6",
+        "cta": "#EC4899",
+        "background": "#F5F3FF",
+        "text": "#4C1D95",
+        "border": "#E9D5FF"
+      },
+      "hsl": {
+        "primary": "262 80% 56%",
+        "secondary": "258 90% 66%",
+        "cta": "330 81% 60%",
+        "background": "270 100% 98%",
+        "text": "262 80% 27%",
+        "border": "270 70% 91%"
+      },
+      "tailwind": {
+        "primary": "violet-600",
+        "secondary": "violet-500",
+        "cta": "pink-500",
+        "background": "violet-50",
+        "text": "violet-900",
+        "border": "violet-200"
+      }
+    },
+    {
+      "id": "entertainment-gaming",
+      "name": "Gaming Platform",
+      "category": "Entertainment",
+      "colors": {
+        "primary": "#7C3AED",
+        "secondary": "#A78BFA",
+        "cta": "#10B981",
+        "background": "#F5F3FF",
+        "text": "#4C1D95",
+        "border": "#E9D5FF"
+      },
+      "hsl": {
+        "primary": "262 80% 56%",
+        "secondary": "258 90% 76%",
+        "cta": "159 84% 42%",
+        "background": "270 100% 98%",
+        "text": "262 80% 27%",
+        "border": "270 70% 91%"
+      },
+      "tailwind": {
+        "primary": "violet-600",
+        "secondary": "violet-400",
+        "cta": "emerald-500",
+        "background": "violet-50",
+        "text": "violet-900",
+        "border": "violet-200"
+      }
+    },
+    {
+      "id": "entertainment-news",
+      "name": "News & Media",
+      "category": "Entertainment",
+      "colors": {
+        "primary": "#1E3A8A",
+        "secondary": "#2563EB",
+        "cta": "#DC2626",
+        "background": "#EFF6FF",
+        "text": "#1E40AF",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 73% 27%",
+        "secondary": "220 90% 56%",
+        "cta": "0 84% 60%",
+        "background": "220 100% 97%",
+        "text": "220 73% 40%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-900",
+        "secondary": "blue-600",
+        "cta": "red-600",
+        "background": "blue-50",
+        "text": "blue-800",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "entertainment-ebooks",
+      "name": "E-books",
+      "category": "Entertainment",
+      "colors": {
+        "primary": "#059669",
+        "secondary": "#10B981",
+        "cta": "#D97706",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 76% 33%",
+        "secondary": "159 84% 42%",
+        "cta": "35 83% 41%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-600",
+        "secondary": "emerald-500",
+        "cta": "amber-600",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "entertainment-comics",
+      "name": "Comics App",
+      "category": "Entertainment",
+      "colors": {
+        "primary": "#EC4899",
+        "secondary": "#F472B6",
+        "cta": "#3B82F6",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FBCFE8"
+      },
+      "hsl": {
+        "primary": "330 81% 60%",
+        "secondary": "330 71% 71%",
+        "cta": "217 91% 60%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 81% 91%"
+      },
+      "tailwind": {
+        "primary": "pink-500",
+        "secondary": "pink-400",
+        "cta": "blue-500",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-200"
+      }
+    },
+    {
+      "id": "travel-platform",
+      "name": "Travel Platform",
+      "category": "Travel",
+      "colors": {
+        "primary": "#F59E0B",
+        "secondary": "#FBBF24",
+        "cta": "#10B981",
+        "background": "#FFFBEB",
+        "text": "#78350F",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "38 92% 50%",
+        "secondary": "43 96% 58%",
+        "cta": "159 84% 42%",
+        "background": "48 100% 96%",
+        "text": "35 70% 21%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "amber-500",
+        "secondary": "amber-400",
+        "cta": "emerald-500",
+        "background": "amber-50",
+        "text": "amber-900",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "travel-ridehailing",
+      "name": "Ride-hailing App",
+      "category": "Travel",
+      "colors": {
+        "primary": "#0891B2",
+        "secondary": "#06B6D4",
+        "cta": "#DC2626",
+        "background": "#ECFEFF",
+        "text": "#164E63",
+        "border": "#CFFAFE"
+      },
+      "hsl": {
+        "primary": "188 85% 37%",
+        "secondary": "187 84% 43%",
+        "cta": "0 84% 60%",
+        "background": "183 100% 98%",
+        "text": "189 51% 20%",
+        "border": "185 84% 91%"
+      },
+      "tailwind": {
+        "primary": "cyan-600",
+        "secondary": "cyan-500",
+        "cta": "red-600",
+        "background": "cyan-50",
+        "text": "cyan-900",
+        "border": "cyan-100"
+      }
+    },
+    {
+      "id": "travel-hotel",
+      "name": "Hotel Booking",
+      "category": "Travel",
+      "colors": {
+        "primary": "#D97706",
+        "secondary": "#F59E0B",
+        "cta": "#059669",
+        "background": "#FFFBEB",
+        "text": "#78350F",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "35 83% 41%",
+        "secondary": "38 92% 50%",
+        "cta": "159 76% 33%",
+        "background": "48 100% 96%",
+        "text": "35 70% 21%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "amber-600",
+        "secondary": "amber-500",
+        "cta": "emerald-600",
+        "background": "amber-50",
+        "text": "amber-900",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "travel-flight",
+      "name": "Flight App",
+      "category": "Travel",
+      "colors": {
+        "primary": "#1E40AF",
+        "secondary": "#3B82F6",
+        "cta": "#DC2626",
+        "background": "#EFF6FF",
+        "text": "#1E3A8A",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 70% 40%",
+        "secondary": "217 91% 60%",
+        "cta": "0 84% 60%",
+        "background": "220 100% 97%",
+        "text": "220 73% 27%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-800",
+        "secondary": "blue-500",
+        "cta": "red-600",
+        "background": "blue-50",
+        "text": "blue-900",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "travel-food-delivery",
+      "name": "Food Delivery",
+      "category": "Travel",
+      "colors": {
+        "primary": "#F59E0B",
+        "secondary": "#FBBF24",
+        "cta": "#DC2626",
+        "background": "#FFFBEB",
+        "text": "#78350F",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "38 92% 50%",
+        "secondary": "43 96% 58%",
+        "cta": "0 84% 60%",
+        "background": "48 100% 96%",
+        "text": "35 70% 21%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "amber-500",
+        "secondary": "amber-400",
+        "cta": "red-600",
+        "background": "amber-50",
+        "text": "amber-900",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "food-general",
+      "name": "Food App",
+      "category": "Food",
+      "colors": {
+        "primary": "#F59E0B",
+        "secondary": "#FBBF24",
+        "cta": "#DC2626",
+        "background": "#FFFBEB",
+        "text": "#78350F",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "38 92% 50%",
+        "secondary": "43 96% 58%",
+        "cta": "0 84% 60%",
+        "background": "48 100% 96%",
+        "text": "35 70% 21%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "amber-500",
+        "secondary": "amber-400",
+        "cta": "red-600",
+        "background": "amber-50",
+        "text": "amber-900",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "food-recipe",
+      "name": "Recipe App",
+      "category": "Food",
+      "colors": {
+        "primary": "#EF4444",
+        "secondary": "#F87171",
+        "cta": "#10B981",
+        "background": "#FEF2F2",
+        "text": "#7F1D1D",
+        "border": "#FECACA"
+      },
+      "hsl": {
+        "primary": "0 72% 59%",
+        "secondary": "0 74% 75%",
+        "cta": "159 84% 42%",
+        "background": "0 100% 97%",
+        "text": "0 74% 28%",
+        "border": "0 84% 92%"
+      },
+      "tailwind": {
+        "primary": "red-500",
+        "secondary": "red-400",
+        "cta": "emerald-500",
+        "background": "red-50",
+        "text": "red-900",
+        "border": "red-200"
+      }
+    },
+    {
+      "id": "food-restaurant",
+      "name": "Restaurant Reservation",
+      "category": "Food",
+      "colors": {
+        "primary": "#D97706",
+        "secondary": "#F59E0B",
+        "cta": "#DC2626",
+        "background": "#FFFBEB",
+        "text": "#78350F",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "35 83% 41%",
+        "secondary": "38 92% 50%",
+        "cta": "0 84% 60%",
+        "background": "48 100% 96%",
+        "text": "35 70% 21%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "amber-600",
+        "secondary": "amber-500",
+        "cta": "red-600",
+        "background": "amber-50",
+        "text": "amber-900",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "food-coffee",
+      "name": "Coffee Shop",
+      "category": "Food",
+      "colors": {
+        "primary": "#78350F",
+        "secondary": "#92400E",
+        "cta": "#10B981",
+        "background": "#FFFBEB",
+        "text": "#451A03",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "35 70% 21%",
+        "secondary": "30 65% 28%",
+        "cta": "159 84% 42%",
+        "background": "48 100% 96%",
+        "text": "25 73% 11%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "amber-900",
+        "secondary": "amber-800",
+        "cta": "emerald-500",
+        "background": "amber-50",
+        "text": "amber-950",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "food-alcohol",
+      "name": "Alcohol App",
+      "category": "Food",
+      "colors": {
+        "primary": "#7C3AED",
+        "secondary": "#8B5CF6",
+        "cta": "#D97706",
+        "background": "#F5F3FF",
+        "text": "#4C1D95",
+        "border": "#E9D5FF"
+      },
+      "hsl": {
+        "primary": "262 80% 56%",
+        "secondary": "258 90% 66%",
+        "cta": "35 83% 41%",
+        "background": "270 100% 98%",
+        "text": "262 80% 27%",
+        "border": "270 70% 91%"
+      },
+      "tailwind": {
+        "primary": "violet-600",
+        "secondary": "violet-500",
+        "cta": "amber-600",
+        "background": "violet-50",
+        "text": "violet-900",
+        "border": "violet-200"
+      }
+    },
+    {
+      "id": "other-realestate",
+      "name": "Real Estate",
+      "category": "Other",
+      "colors": {
+        "primary": "#1E3A8A",
+        "secondary": "#2563EB",
+        "cta": "#D97706",
+        "background": "#EFF6FF",
+        "text": "#1E40AF",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 73% 27%",
+        "secondary": "220 90% 56%",
+        "cta": "35 83% 41%",
+        "background": "220 100% 97%",
+        "text": "220 73% 40%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-900",
+        "secondary": "blue-600",
+        "cta": "amber-600",
+        "background": "blue-50",
+        "text": "blue-800",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "other-automotive-services",
+      "name": "Automotive Services",
+      "category": "Other",
+      "colors": {
+        "primary": "#2563EB",
+        "secondary": "#3B82F6",
+        "cta": "#DC2626",
+        "background": "#EFF6FF",
+        "text": "#1E40AF",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 90% 56%",
+        "secondary": "217 91% 60%",
+        "cta": "0 84% 60%",
+        "background": "220 100% 97%",
+        "text": "220 73% 40%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-600",
+        "secondary": "blue-500",
+        "cta": "red-600",
+        "background": "blue-50",
+        "text": "blue-800",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "other-pet",
+      "name": "Pet App",
+      "category": "Other",
+      "colors": {
+        "primary": "#F59E0B",
+        "secondary": "#FBBF24",
+        "cta": "#EC4899",
+        "background": "#FFFBEB",
+        "text": "#78350F",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "38 92% 50%",
+        "secondary": "43 96% 58%",
+        "cta": "330 81% 60%",
+        "background": "48 100% 96%",
+        "text": "35 70% 21%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "amber-500",
+        "secondary": "amber-400",
+        "cta": "pink-500",
+        "background": "amber-50",
+        "text": "amber-900",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "other-mom-baby",
+      "name": "Mom & Baby App",
+      "category": "Other",
+      "colors": {
+        "primary": "#F9A8D4",
+        "secondary": "#FBCFE8",
+        "cta": "#10B981",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FCE7F3"
+      },
+      "hsl": {
+        "primary": "330 81% 80%",
+        "secondary": "330 81% 91%",
+        "cta": "159 84% 42%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 100% 94%"
+      },
+      "tailwind": {
+        "primary": "pink-300",
+        "secondary": "pink-200",
+        "cta": "emerald-500",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-100"
+      }
+    },
+    {
+      "id": "other-wedding",
+      "name": "Wedding App",
+      "category": "Other",
+      "colors": {
+        "primary": "#F9A8D4",
+        "secondary": "#FBCFE8",
+        "cta": "#D97706",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FCE7F3"
+      },
+      "hsl": {
+        "primary": "330 81% 80%",
+        "secondary": "330 81% 91%",
+        "cta": "35 83% 41%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 100% 94%"
+      },
+      "tailwind": {
+        "primary": "pink-300",
+        "secondary": "pink-200",
+        "cta": "amber-600",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-100"
+      }
+    },
+    {
+      "id": "other-legal",
+      "name": "Legal Consultation",
+      "category": "Other",
+      "colors": {
+        "primary": "#1E3A8A",
+        "secondary": "#1E40AF",
+        "cta": "#D97706",
+        "background": "#EFF6FF",
+        "text": "#1E40AF",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 73% 27%",
+        "secondary": "220 70% 40%",
+        "cta": "35 83% 41%",
+        "background": "220 100% 97%",
+        "text": "220 73% 40%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-900",
+        "secondary": "blue-800",
+        "cta": "amber-600",
+        "background": "blue-50",
+        "text": "blue-800",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "other-government",
+      "name": "Government Services",
+      "category": "Other",
+      "colors": {
+        "primary": "#1E40AF",
+        "secondary": "#2563EB",
+        "cta": "#DC2626",
+        "background": "#EFF6FF",
+        "text": "#1E3A8A",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 70% 40%",
+        "secondary": "220 90% 56%",
+        "cta": "0 84% 60%",
+        "background": "220 100% 97%",
+        "text": "220 73% 27%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-800",
+        "secondary": "blue-600",
+        "cta": "red-600",
+        "background": "blue-50",
+        "text": "blue-900",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "other-nonprofit",
+      "name": "Non-profit",
+      "category": "Other",
+      "colors": {
+        "primary": "#059669",
+        "secondary": "#10B981",
+        "cta": "#3B82F6",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 76% 33%",
+        "secondary": "159 84% 42%",
+        "cta": "217 91% 60%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-600",
+        "secondary": "emerald-500",
+        "cta": "blue-500",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "other-religious",
+      "name": "Religious App",
+      "category": "Other",
+      "colors": {
+        "primary": "#7C3AED",
+        "secondary": "#8B5CF6",
+        "cta": "#F59E0B",
+        "background": "#F5F3FF",
+        "text": "#4C1D95",
+        "border": "#E9D5FF"
+      },
+      "hsl": {
+        "primary": "262 80% 56%",
+        "secondary": "258 90% 66%",
+        "cta": "38 92% 50%",
+        "background": "270 100% 98%",
+        "text": "262 80% 27%",
+        "border": "270 70% 91%"
+      },
+      "tailwind": {
+        "primary": "violet-600",
+        "secondary": "violet-500",
+        "cta": "amber-500",
+        "background": "violet-50",
+        "text": "violet-900",
+        "border": "violet-200"
+      }
+    },
+    {
+      "id": "other-sports",
+      "name": "Sports App",
+      "category": "Other",
+      "colors": {
+        "primary": "#DC2626",
+        "secondary": "#EF4444",
+        "cta": "#F59E0B",
+        "background": "#FEF2F2",
+        "text": "#7F1D1D",
+        "border": "#FECACA"
+      },
+      "hsl": {
+        "primary": "0 84% 60%",
+        "secondary": "0 72% 59%",
+        "cta": "38 92% 50%",
+        "background": "0 100% 97%",
+        "text": "0 74% 28%",
+        "border": "0 84% 92%"
+      },
+      "tailwind": {
+        "primary": "red-600",
+        "secondary": "red-500",
+        "cta": "amber-500",
+        "background": "red-50",
+        "text": "red-900",
+        "border": "red-200"
+      }
+    },
+    {
+      "id": "other-aviation",
+      "name": "Aviation App",
+      "category": "Other",
+      "colors": {
+        "primary": "#1E40AF",
+        "secondary": "#3B82F6",
+        "cta": "#9CA3AF",
+        "background": "#EFF6FF",
+        "text": "#1E3A8A",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 70% 40%",
+        "secondary": "217 91% 60%",
+        "cta": "220 10% 63%",
+        "background": "220 100% 97%",
+        "text": "220 73% 27%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-800",
+        "secondary": "blue-500",
+        "cta": "gray-400",
+        "background": "blue-50",
+        "text": "blue-900",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "other-hotel",
+      "name": "Hotel App",
+      "category": "Other",
+      "colors": {
+        "primary": "#D97706",
+        "secondary": "#F59E0B",
+        "cta": "#78350F",
+        "background": "#FFFBEB",
+        "text": "#78350F",
+        "border": "#FDE68A"
+      },
+      "hsl": {
+        "primary": "35 83% 41%",
+        "secondary": "38 92% 50%",
+        "cta": "35 70% 21%",
+        "background": "48 100% 96%",
+        "text": "35 70% 21%",
+        "border": "48 96% 76%"
+      },
+      "tailwind": {
+        "primary": "amber-600",
+        "secondary": "amber-500",
+        "cta": "amber-900",
+        "background": "amber-50",
+        "text": "amber-900",
+        "border": "amber-200"
+      }
+    },
+    {
+      "id": "other-recruitment",
+      "name": "Recruitment App",
+      "category": "Other",
+      "colors": {
+        "primary": "#2563EB",
+        "secondary": "#3B82F6",
+        "cta": "#10B981",
+        "background": "#EFF6FF",
+        "text": "#1E40AF",
+        "border": "#BFDBFE"
+      },
+      "hsl": {
+        "primary": "220 90% 56%",
+        "secondary": "217 91% 60%",
+        "cta": "159 84% 42%",
+        "background": "220 100% 97%",
+        "text": "220 73% 40%",
+        "border": "217 91% 91%"
+      },
+      "tailwind": {
+        "primary": "blue-600",
+        "secondary": "blue-500",
+        "cta": "emerald-500",
+        "background": "blue-50",
+        "text": "blue-800",
+        "border": "blue-200"
+      }
+    },
+    {
+      "id": "other-secondhand",
+      "name": "Secondhand Trading",
+      "category": "Other",
+      "colors": {
+        "primary": "#059669",
+        "secondary": "#10B981",
+        "cta": "#2563EB",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 76% 33%",
+        "secondary": "159 84% 42%",
+        "cta": "220 90% 56%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-600",
+        "secondary": "emerald-500",
+        "cta": "blue-600",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "other-maintenance",
+      "name": "Maintenance Services",
+      "category": "Other",
+      "colors": {
+        "primary": "#0369A1",
+        "secondary": "#0EA5E9",
+        "cta": "#10B981",
+        "background": "#F0F9FF",
+        "text": "#0C4A6E",
+        "border": "#BAE6FD"
+      },
+      "hsl": {
+        "primary": "199 89% 33%",
+        "secondary": "199 89% 53%",
+        "cta": "159 84% 42%",
+        "background": "200 100% 97%",
+        "text": "201 83% 21%",
+        "border": "199 89% 80%"
+      },
+      "tailwind": {
+        "primary": "sky-700",
+        "secondary": "sky-500",
+        "cta": "emerald-500",
+        "background": "sky-50",
+        "text": "sky-900",
+        "border": "sky-200"
+      }
+    },
+    {
+      "id": "other-beauty-salon",
+      "name": "Beauty & Hair Salon",
+      "category": "Other",
+      "colors": {
+        "primary": "#EC4899",
+        "secondary": "#F472B6",
+        "cta": "#8B5CF6",
+        "background": "#FDF2F8",
+        "text": "#831843",
+        "border": "#FBCFE8"
+      },
+      "hsl": {
+        "primary": "330 81% 60%",
+        "secondary": "330 71% 71%",
+        "cta": "258 90% 66%",
+        "background": "330 100% 97%",
+        "text": "330 65% 23%",
+        "border": "330 81% 91%"
+      },
+      "tailwind": {
+        "primary": "pink-500",
+        "secondary": "pink-400",
+        "cta": "violet-500",
+        "background": "pink-50",
+        "text": "pink-950",
+        "border": "pink-200"
+      }
+    },
+    {
+      "id": "other-fitness-app",
+      "name": "Fitness App",
+      "category": "Other",
+      "colors": {
+        "primary": "#EF4444",
+        "secondary": "#F87171",
+        "cta": "#10B981",
+        "background": "#FEF2F2",
+        "text": "#7F1D1D",
+        "border": "#FECACA"
+      },
+      "hsl": {
+        "primary": "0 72% 59%",
+        "secondary": "0 74% 75%",
+        "cta": "159 84% 42%",
+        "background": "0 100% 97%",
+        "text": "0 74% 28%",
+        "border": "0 84% 92%"
+      },
+      "tailwind": {
+        "primary": "red-500",
+        "secondary": "red-400",
+        "cta": "emerald-500",
+        "background": "red-50",
+        "text": "red-900",
+        "border": "red-200"
+      }
+    },
+    {
+      "id": "other-yoga",
+      "name": "Yoga App",
+      "category": "Other",
+      "colors": {
+        "primary": "#06B6D4",
+        "secondary": "#22D3EE",
+        "cta": "#A78BFA",
+        "background": "#ECFEFF",
+        "text": "#164E63",
+        "border": "#CFFAFE"
+      },
+      "hsl": {
+        "primary": "187 84% 43%",
+        "secondary": "187 80% 69%",
+        "cta": "258 90% 76%",
+        "background": "183 100% 98%",
+        "text": "189 51% 20%",
+        "border": "185 84% 91%"
+      },
+      "tailwind": {
+        "primary": "cyan-500",
+        "secondary": "cyan-400",
+        "cta": "violet-400",
+        "background": "cyan-50",
+        "text": "cyan-900",
+        "border": "cyan-100"
+      }
+    },
+    {
+      "id": "other-fishing",
+      "name": "Fishing App",
+      "category": "Other",
+      "colors": {
+        "primary": "#059669",
+        "secondary": "#10B981",
+        "cta": "#0891B2",
+        "background": "#F0FDF4",
+        "text": "#064E3B",
+        "border": "#BBF7D0"
+      },
+      "hsl": {
+        "primary": "159 76% 33%",
+        "secondary": "159 84% 42%",
+        "cta": "188 85% 37%",
+        "background": "150 100% 98%",
+        "text": "160 61% 18%",
+        "border": "159 76% 86%"
+      },
+      "tailwind": {
+        "primary": "emerald-600",
+        "secondary": "emerald-500",
+        "cta": "cyan-600",
+        "background": "emerald-50",
+        "text": "emerald-950",
+        "border": "emerald-200"
+      }
+    },
+    {
+      "id": "other-gardening",
+      "name": "Gardening App",
+      "category": "Other",
+      "colors": {
+        "primary": "#65A30D",
+        "secondary": "#84CC16",
+        "cta": "#92400E",
+        "background": "#F7FEE7",
+        "text": "#365314",
+        "border": "#ECFCCB"
+      },
+      "hsl": {
+        "primary": "83 74% 37%",
+        "secondary": "84 76% 46%",
+        "cta": "30 65% 28%",
+        "background": "83 100% 95%",
+        "text": "83 48% 19%",
+        "border": "84 76% 90%"
+      },
+      "tailwind": {
+        "primary": "lime-600",
+        "secondary": "lime-500",
+        "cta": "amber-800",
+        "background": "lime-50",
+        "text": "lime-950",
+        "border": "lime-200"
+      }
+    }
+  ]
+}

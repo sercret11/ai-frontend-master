@@ -1,0 +1,64 @@
+{
+  "compilerOptions": {
+    /* 语言和环境 */
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "types": ["node"],
+
+    /* 发出 */
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./",
+    "removeComments": false,
+    "importHelpers": true,
+    "newLine": "lf",
+
+    /* 互操作约束 */
+    "forceConsistentCasingInFileNames": true,
+
+    /* 类型检查 - 严格模式 */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+
+    /* 完性 */
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+
+    /* 额外选项 */
+    "allowJs": false,
+    "checkJs": false
+  },
+  "include": [
+    "src/**/*",
+    "scripts/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "frontend/dist",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}

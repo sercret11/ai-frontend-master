@@ -1,0 +1,18 @@
+{
+  "feature": "Prompt routing and builder",
+  "locations": [
+    "backend/src/prompt/router.ts",
+    "backend/src/prompt/builder.ts",
+    "backend/src/prompt/section-*.ts",
+    "prompt-docs/**"
+  ],
+  "implementation_summary": "Mode detection (creator vs implementer) lives in backend/src/prompt/router.ts with signal detection, scoring, and a single decision surface used by runtime and prompt-context routing; builder.ts stitches the system prompt, selected sections, and resource guide, applies template variable replacement, and emits token diagnostics before handing off to the language client; section-index/loader/retriever orchestrate prompt-docs metadata, tech-stack mappings, and token-aware selection back to the builder.",
+  "tech_stack": "Node+TypeScript backend, Vitest tests for prompt builder/section retrieval/router consistency, shared-types for DTOs, markdown-based prompt docs, custom logging module.",
+  "tests": "backend/src/prompt/builder.selection.test.ts, router.consistency.test.ts, section-retriever.dependency.test.ts, token-estimator.test.ts (Vitest).",
+  "observations": [
+    "Need to verify that template placeholder policies (reserved keys, injection sanitization) defined in builder align with docs/tests.",
+    "Token budgets (core prompt ~8K, sections ~3-5K, static vs runtime drift) are described in code comments; ensure documentation + tests cover the same drift measurements.",
+    "Routing signals/responsiveness logged? Router currently lacks explicit log statements, while builder and retriever emit logs; confirm log coverage expectation.",
+    "Fallback definitions (FALLBACK_INDEX, tech stack map) should match prompt-docs index to ensure doc/test/implementation parity."
+  ]
+}

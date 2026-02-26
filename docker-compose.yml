@@ -1,0 +1,141 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # Context7 MCP Service
+  # ============================================
+  context7-mcp:
+    image: node:20-alpine
+    container_name: ai-frontend-context7-mcp
+    restart: unless-stopped
+    working_dir: /app
+    command: ["npx", "-y", "@upstash/context7-mcp", "--transport", "http", "--port", "3000"]
+    environment:
+      - CONTEXT7_API_KEY=${CONTEXT7_API_KEY:-}
+    expose:
+      - "3000"
+    networks:
+      - ai-frontend-network
+
+  # ============================================
+  # Backend Service
+  # ============================================
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: ai-frontend-backend
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - HOST=0.0.0.0
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5173}
+      - CONTEXT7_MCP_URL=${CONTEXT7_MCP_URL:-http://context7-mcp:3000/mcp}
+      - CONTEXT7_API_KEY=${CONTEXT7_API_KEY:-}
+      - DATABASE_PATH=/app/data/ai-frontend-master.db
+      # AI Provider Configuration - set your API keys
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_BASE_URL=${ANTHROPIC_BASE_URL:-https://api.anthropic.com}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
+      - GOOGLE_BASE_URL=${GOOGLE_BASE_URL:-https://generativelanguage.googleapis.com}
+      - ZHIPUAI_API_KEY=${ZHIPUAI_API_KEY:-}
+      - ZHIPUAI_BASE_URL=${ZHIPUAI_BASE_URL:-https://open.bigmodel.cn}
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
+      - DASHSCOPE_BASE_URL=${DASHSCOPE_BASE_URL:-https://dashscope.aliyuncs.com}
+      # AI Default Settings
+      - AI_DEFAULT_PROVIDER=${AI_DEFAULT_PROVIDER:-anthropic}
+      - AI_DEFAULT_MODEL=${AI_DEFAULT_MODEL:-claude-sonnet-4-20250514}
+      - AI_MAX_TOKENS=${AI_MAX_TOKENS:-8192}
+      - AI_TEMPERATURE=${AI_TEMPERATURE:-7}
+      - AI_TOP_P=${AI_TOP_P:-9}
+      - UI_UX_DATA_PATH=/app/ui-ux-data
+    volumes:
+      # Persist SQLite database
+      - db-data:/app/data
+      # Source hot-reload volume (dev mode)
+      - ./backend/src:/app/src:ro
+      # Prompt docs (agent config)
+      - ./prompt-docs:/app/prompt-docs:ro
+      # UI/UX CSV data (design_search direct read)
+      - ./ui-ux-data:/app/ui-ux-data:ro
+      - ./assets:/app/assets:ro
+    networks:
+      - ai-frontend-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "const req=require('http').request({hostname:'localhost',port:3001,path:'/health',headers:{Origin:'http://localhost:5190'}},(r)=>process.exit(r.statusCode===200?0:1));req.on('error',()=>process.exit(1));req.end();"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+  # ============================================
+  # Frontend Service
+  # ============================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Inject API URL at build time
+        - VITE_API_URL=${VITE_API_URL:-/api}
+    container_name: ai-frontend-frontend
+    restart: unless-stopped
+    ports:
+      - "5190:5174"
+    environment:
+      - NODE_ENV=production
+      # API config - use reverse proxy path
+      - VITE_API_URL=${VITE_API_URL:-/api}
+    networks:
+      - ai-frontend-network
+    depends_on:
+      context7-mcp:
+        condition: service_started
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5174/', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # ============================================
+  # Nginx Reverse Proxy (optional, recommended for production)
+  # ============================================
+  nginx:
+    image: nginx:alpine
+    container_name: ai-frontend-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx-ssl:/etc/nginx/ssl:ro
+    networks:
+      - ai-frontend-network
+    depends_on:
+      - frontend
+      - backend
+    profiles:
+      - with-nginx
+
+# ============================================
+# Volumes
+# ============================================
+volumes:
+  db-data:
+    driver: local
+
+# ============================================
+# Networks
+# ============================================
+networks:
+  ai-frontend-network:
+    driver: bridge
+

@@ -1,0 +1,14 @@
+**/node_modules
+**/.package-lock.json
+**/dist
+**/coverage
+.git
+.gitignore
+.spec-workflow
+.serena
+frontend
+docs
+.codex
+*.log
+**/.env
+**/.env.*

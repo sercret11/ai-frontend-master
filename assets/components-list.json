@@ -1,0 +1,1194 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-01-29",
+  "totalComponents": 115,
+  "categories": {
+    "Navigation": {
+      "count": 12,
+      "description": "Page navigation, menus, and routing components"
+    },
+    "Action": {
+      "count": 18,
+      "description": "User interaction and operation components"
+    },
+    "Form": {
+      "count": 20,
+      "description": "Data input and form components"
+    },
+    "Data Display": {
+      "count": 15,
+      "description": "Data display, lists, and visualization"
+    },
+    "Feedback": {
+      "count": 12,
+      "description": "Status feedback and notification components"
+    },
+    "Layout": {
+      "count": 10,
+      "description": "Page layout and container components"
+    },
+    "Media": {
+      "count": 8,
+      "description": "Images, videos, and audio components"
+    },
+    "Chart": {
+      "count": 10,
+      "description": "Data visualization and chart components"
+    },
+    "Typography": {
+      "count": 10,
+      "description": "Text and typography components"
+    }
+  },
+  "components": [
+    {
+      "name": "Menu",
+      "category": "Navigation",
+      "shadcn": true,
+      "shadcnName": "Menubar",
+      "rn": "MenuView",
+      "description": "Display navigation menu items",
+      "variants": ["horizontal", "vertical", "dropdown"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Navigation Menu",
+      "category": "Navigation",
+      "shadcn": true,
+      "shadcnName": "NavigationMenu",
+      "rn": null,
+      "description": "Website main navigation with dropdown",
+      "variants": ["horizontal", "vertical"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Breadcrumb",
+      "category": "Navigation",
+      "shadcn": true,
+      "shadcnName": "Breadcrumb",
+      "rn": null,
+      "description": "Display page hierarchy",
+      "variants": ["default", "withIcons", "collapsible"],
+      "platforms": ["web", "mobile"]
+    },
+    {
+      "name": "Tabs",
+      "category": "Navigation",
+      "shadcn": true,
+      "shadcnName": "Tabs",
+      "rn": null,
+      "description": "Tab-based content switching",
+      "variants": ["default", "vertical", "pills"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Pagination",
+      "category": "Navigation",
+      "shadcn": true,
+      "shadcnName": "Pagination",
+      "rn": null,
+      "description": "Page navigation for data tables",
+      "variants": ["default", "withSizes", "withJump"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Sidebar",
+      "category": "Navigation",
+      "shadcn": false,
+      "shadcnName": "Sheet",
+      "rn": null,
+      "description": "Side navigation panel",
+      "variants": ["left", "right", "collapsible"],
+      "platforms": ["web", "desktop", "mobile"]
+    },
+    {
+      "name": "Header",
+      "category": "Navigation",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Page header with navigation",
+      "variants": ["fixed", "static", "sticky"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Footer",
+      "category": "Navigation",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Page footer with links",
+      "variants": ["simple", "withColumns", "withNewsletter"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Back Button",
+      "category": "Navigation",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Navigate to previous page",
+      "variants": ["iconOnly", "withText"],
+      "platforms": ["mobile", "web"]
+    },
+    {
+      "name": "Link",
+      "category": "Navigation",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Internal navigation link",
+      "variants": ["default", "withIcon", "underlined"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "External Link",
+      "category": "Navigation",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "External navigation link",
+      "variants": ["default", "withIcon"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "More Vertical",
+      "category": "Navigation",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Vertical overflow menu",
+      "variants": ["iconOnly", "withLabel"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Button",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "Button",
+      "rn": "TouchableOpacity",
+      "description": "Action button with multiple variants",
+      "variants": ["default", "secondary", "ghost", "link", "destructive", "outline", "icon"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Toggle Switch",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "Switch",
+      "rn": "Switch",
+      "description": "Binary toggle switch",
+      "variants": ["default", "withLabel"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Checkbox",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "Checkbox",
+      "rn": null,
+      "description": "Checkbox selection",
+      "variants": ["default", "indeterminate", "withDescription"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Radio",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "RadioGroup",
+      "rn": null,
+      "description": "Single selection from options",
+      "variants": ["default", "withCards", "inline"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Dropdown Menu",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "DropdownMenu",
+      "rn": null,
+      "description": "Dropdown action menu",
+      "variants": ["default", "withIcons", "withSeparators"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Select",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "Select",
+      "rn": "Picker",
+      "description": "Select from dropdown list",
+      "variants": ["default", "withGroups", "multiSelect"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Context Menu",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "ContextMenu",
+      "rn": null,
+      "description": "Right-click context menu",
+      "variants": ["default", "withIcons", "withSubmenus"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Command",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "Command",
+      "rn": null,
+      "description": "Command palette for quick actions",
+      "variants": ["default", "withDialog", "withSearch"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Popover",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "Popover",
+      "rn": null,
+      "description": "Floating content container",
+      "variants": ["default", "withCard", "interactive"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Tooltip",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "Tooltip",
+      "rn": null,
+      "description": "Hover information tooltip",
+      "variants": ["default", "withRichContent", "withArrow"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Hover Card",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "HoverCard",
+      "rn": null,
+      "description": "Card displayed on hover",
+      "variants": ["default", "withLinks"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Picker",
+      "category": "Action",
+      "shadcn": false,
+      "shadcnName": "Select",
+      "rn": "Picker",
+      "description": "Mobile picker component",
+      "variants": ["date", "time", "custom"],
+      "platforms": ["mobile"]
+    },
+    {
+      "name": "Slider",
+      "category": "Action",
+      "shadcn": true,
+      "shadcnName": "Slider",
+      "rn": "Slider",
+      "description": "Range slider selection",
+      "variants": ["default", "range", "withMarks", "vertical"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Stepper",
+      "category": "Action",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Step increment/decrement",
+      "variants": ["horizontal", "vertical", "withLabels"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Swipe",
+      "category": "Action",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "PanGestureHandler",
+      "description": "Swipe gesture action",
+      "variants": ["left", "right", "both"],
+      "platforms": ["mobile"]
+    },
+    {
+      "name": "Pull to Refresh",
+      "category": "Action",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "RefreshControl",
+      "description": "Pull to refresh content",
+      "variants": ["default", "withLoading"],
+      "platforms": ["mobile"]
+    },
+    {
+      "name": "Infinite Scroll",
+      "category": "Action",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "FlatList",
+      "description": "Load more on scroll",
+      "variants": ["default", "withLoader", "withEndMessage"],
+      "platforms": ["web", "mobile"]
+    },
+    {
+      "name": "Drag & Drop",
+      "category": "Action",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "GestureDetector",
+      "description": "Drag and drop items",
+      "variants": ["reorder", "sortable", "betweenLists"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Input",
+      "category": "Form",
+      "shadcn": true,
+      "shadcnName": "Input",
+      "rn": "TextInput",
+      "description": "Text input field",
+      "variants": ["text", "password", "email", "number", "search", "withIcon", "withError"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Textarea",
+      "category": "Form",
+      "shadcn": true,
+      "shadcnName": "Textarea",
+      "rn": "TextInput",
+      "description": "Multiline text input",
+      "variants": ["default", "autoResize", "withCounter"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Form",
+      "category": "Form",
+      "shadcn": true,
+      "shadcnName": "Form",
+      "rn": null,
+      "description": "Form container with validation",
+      "variants": ["default", "withValidation", "multiStep"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "FormField",
+      "category": "Form",
+      "shadcn": true,
+      "shadcnName": "FormField",
+      "rn": null,
+      "description": "Individual form field",
+      "variants": ["default", "withDescription", "withValidation"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Label",
+      "category": "Form",
+      "shadcn": true,
+      "shadcnName": "Label",
+      "rn": null,
+      "description": "Form field label",
+      "variants": ["default", "required", "optional"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Combobox",
+      "category": "Form",
+      "shadcn": true,
+      "shadcnName": "Combobox",
+      "rn": null,
+      "description": "Combined input and select",
+      "variants": ["default", "withCreatable", "multiSelect"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Radio Group",
+      "category": "Form",
+      "shadcn": true,
+      "shadcnName": "RadioGroup",
+      "rn": null,
+      "description": "Radio button group",
+      "variants": ["default", "horizontal", "vertical"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Date Picker",
+      "category": "Form",
+      "shadcn": true,
+      "shadcnName": "DatePicker",
+      "rn": "DateTimePicker",
+      "description": "Date selection picker",
+      "variants": ["default", "withRange", "withTime"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Time Picker",
+      "category": "Form",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "TimePicker",
+      "description": "Time selection picker",
+      "variants": ["default", "withSeconds", "12Hour", "24Hour"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Calendar",
+      "category": "Form",
+      "shadcn": true,
+      "shadcnName": "Calendar",
+      "rn": "Calendar",
+      "description": "Calendar date display and selection",
+      "variants": ["default", "withRange", "withMultiple", "inline"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Upload",
+      "category": "Form",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "File upload component",
+      "variants": ["default", "dragDrop", "multiFile", "withPreview"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Avatar Upload",
+      "category": "Form",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Profile picture upload",
+      "variants": ["default", "withCrop", "withPreview"],
+      "platforms": ["web", "mobile"]
+    },
+    {
+      "name": "Auto Complete",
+      "category": "Form",
+      "shadcn": false,
+      "shadcnName": "Combobox",
+      "rn": null,
+      "description": "Auto-complete input",
+      "variants": ["default", "withAsync", "multiSelect"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Multi Select",
+      "category": "Form",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Multiple item selection",
+      "variants": ["default", "withSearch", "withGroups"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Tag Input",
+      "category": "Form",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Input tags as items",
+      "variants": ["default", "withAutoComplete", "withColors"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "OTP Input",
+      "category": "Form",
+      "shadcn": true,
+      "shadcnName": "InputOTP",
+      "rn": null,
+      "description": "One-time password input",
+      "variants": ["default", "withSeparator", "numeric"],
+      "platforms": ["web", "mobile"]
+    },
+    {
+      "name": "Password Strength",
+      "category": "Form",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Password strength indicator",
+      "variants": ["default", "withMeter", "withRequirements"],
+      "platforms": ["web", "mobile"]
+    },
+    {
+      "name": "Form Validation",
+      "category": "Form",
+      "shadcn": false,
+      "shadcnName": "Form",
+      "rn": null,
+      "description": "Form validation system",
+      "variants": ["realtime", "onSubmit", "onBlur"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Card",
+      "category": "Data Display",
+      "shadcn": true,
+      "shadcnName": "Card",
+      "rn": "View",
+      "description": "Content card container",
+      "variants": ["default", "withHeader", "withFooter", "hoverable"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Table",
+      "category": "Data Display",
+      "shadcn": true,
+      "shadcnName": "Table",
+      "rn": "FlatList",
+      "description": "Data table display",
+      "variants": ["default", "sortable", "filterable", "withPagination"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Badge",
+      "category": "Data Display",
+      "shadcn": true,
+      "shadcnName": "Badge",
+      "rn": null,
+      "description": "Status indicator badge",
+      "variants": ["default", "destructive", "outline", "secondary"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Avatar",
+      "category": "Data Display",
+      "shadcn": true,
+      "shadcnName": "Avatar",
+      "rn": null,
+      "description": "User avatar image",
+      "variants": ["default", "withFallback", "grouped"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "List",
+      "category": "Data Display",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "FlatList",
+      "description": "Item list display",
+      "variants": ["default", "withIcons", "withActions", "grouped"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Data Grid",
+      "category": "Data Display",
+      "shadcn": false,
+      "shadcnName": "DataTable",
+      "rn": null,
+      "description": "Advanced data table",
+      "variants": ["default", "withFilters", "withSorting", "withExport"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Tree",
+      "category": "Data Display",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Hierarchical tree view",
+      "variants": ["default", "withCheckboxes", "withDragDrop"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Timeline",
+      "category": "Data Display",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Vertical timeline display",
+      "variants": ["default", "horizontal", "withIcons"],
+      "platforms": ["web", "mobile"]
+    },
+    {
+      "name": "Kanban",
+      "category": "Data Display",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Kanban board layout",
+      "variants": ["default", "withSwimlanes", "withDragDrop"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Calendar View",
+      "category": "Data Display",
+      "shadcn": false,
+      "shadcnName": "Calendar",
+      "rn": null,
+      "description": "Calendar event display",
+      "variants": ["month", "week", "day", "agenda"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Accordion",
+      "category": "Data Display",
+      "shadcn": true,
+      "shadcnName": "Accordion",
+      "rn": "Accordion",
+      "description": "Collapsible content sections",
+      "variants": ["default", "single", "multiple"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Collapsible",
+      "category": "Data Display",
+      "shadcn": true,
+      "shadcnName": "Collapsible",
+      "rn": null,
+      "description": "Collapsible content",
+      "variants": ["default", "withAnimation"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Skeleton",
+      "category": "Data Display",
+      "shadcn": true,
+      "shadcnName": "Skeleton",
+      "rn": null,
+      "description": "Loading placeholder",
+      "variants": ["default", "withCard", "withList"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Progress",
+      "category": "Data Display",
+      "shadcn": true,
+      "shadcnName": "Progress",
+      "rn": "ProgressBar",
+      "description": "Progress indicator",
+      "variants": ["default", "withLabel", "circular", "withSteps"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Spinner",
+      "category": "Data Display",
+      "shadcn": false,
+      "shadcnName": "Skeleton",
+      "rn": "ActivityIndicator",
+      "description": "Loading spinner",
+      "variants": ["default", "withLabel", "dots"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Alert",
+      "category": "Feedback",
+      "shadcn": true,
+      "shadcnName": "Alert",
+      "rn": null,
+      "description": "Alert message display",
+      "variants": ["default", "destructive", "success", "warning"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Toast",
+      "category": "Feedback",
+      "shadcn": true,
+      "shadcnName": "Sonner",
+      "rn": "Toast",
+      "description": "Toast notification",
+      "variants": ["default", "success", "error", "info", "warning", "promise"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Dialog",
+      "category": "Feedback",
+      "shadcn": true,
+      "shadcnName": "Dialog",
+      "rn": "Modal",
+      "description": "Modal dialog",
+      "variants": ["default", "alert", "confirm", "withForm"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "AlertDialog",
+      "category": "Feedback",
+      "shadcn": true,
+      "shadcnName": "AlertDialog",
+      "rn": "Alert",
+      "description": "Alert confirmation dialog",
+      "variants": ["default", "danger", "withAction"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Sheet",
+      "category": "Feedback",
+      "shadcn": true,
+      "shadcnName": "Sheet",
+      "rn": "DrawerLayout",
+      "description": "Side sheet modal",
+      "variants": ["left", "right", "top", "bottom"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Modal",
+      "category": "Feedback",
+      "shadcn": true,
+      "shadcnName": "Dialog",
+      "rn": "Modal",
+      "description": "Modal overlay",
+      "variants": ["default", "centered", "fullscreen"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Empty State",
+      "category": "Feedback",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Empty content placeholder",
+      "variants": ["default", "withIllustration", "withAction"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Error Boundary",
+      "category": "Feedback",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Error catch and display",
+      "variants": ["default", "withReset", "withDetails"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Container",
+      "category": "Layout",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "View",
+      "description": "Content container",
+      "variants": ["default", "fluid", "constrained"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Grid",
+      "category": "Layout",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "GridView",
+      "description": "Grid layout",
+      "variants": ["default", "responsive", "masonry"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Flex",
+      "category": "Layout",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "View",
+      "description": "Flexbox layout",
+      "variants": ["row", "column", "wrap"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Stack",
+      "category": "Layout",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "View",
+      "description": "Stack layout",
+      "variants": ["vertical", "horizontal"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Separator",
+      "category": "Layout",
+      "shadcn": true,
+      "shadcnName": "Separator",
+      "rn": null,
+      "description": "Visual separator line",
+      "variants": ["horizontal", "vertical"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Scroll Area",
+      "category": "Layout",
+      "shadcn": true,
+      "shadcnName": "ScrollArea",
+      "rn": "ScrollView",
+      "description": "Scrollable container",
+      "variants": ["default", "horizontal", "vertical", "both"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Resizable",
+      "category": "Layout",
+      "shadcn": true,
+      "shadcnName": "Resizable",
+      "rn": null,
+      "description": "Resizable panel",
+      "variants": ["default", "withHandle", "withConstraints"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Aspect Ratio",
+      "category": "Layout",
+      "shadcn": true,
+      "shadcnName": "AspectRatio",
+      "rn": null,
+      "description": "Aspect ratio container",
+      "variants": ["16:9", "4:3", "1:1", "21:9", "custom"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Spacer",
+      "category": "Layout",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "View",
+      "description": "Spacing element",
+      "variants": ["horizontal", "vertical", "responsive"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Section",
+      "category": "Layout",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "View",
+      "description": "Content section",
+      "variants": ["default", "withPadding", "fullWidth"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Panel",
+      "category": "Layout",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "View",
+      "description": "Collapsible panel",
+      "variants": ["default", "collapsible", "resizable"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Image",
+      "category": "Media",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "Image",
+      "description": "Image display",
+      "variants": ["default", "responsive", "withLazyLoad", "withZoom"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Avatar",
+      "category": "Media",
+      "shadcn": true,
+      "shadcnName": "Avatar",
+      "rn": null,
+      "description": "User avatar image",
+      "variants": ["default", "withFallback", "grouped", "editable"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Carousel",
+      "category": "Media",
+      "shadcn": true,
+      "shadcnName": "Carousel",
+      "rn": "Swiper",
+      "description": "Image carousel",
+      "variants": ["default", "withThumbnails", "withAutoplay", "3D"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Video",
+      "category": "Media",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "Video",
+      "description": "Video player",
+      "variants": ["default", "withControls", "autoplay", "background"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Audio",
+      "category": "Media",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "Audio",
+      "description": "Audio player",
+      "variants": ["default", "withPlaylist", "withWaveform"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Gallery",
+      "category": "Media",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Image gallery",
+      "variants": ["grid", "masonry", "slider", "lightbox"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Lightbox",
+      "category": "Media",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Image lightbox viewer",
+      "variants": ["default", "withZoom", "withThumbnails"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "File Viewer",
+      "category": "Media",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "File preview viewer",
+      "variants": ["pdf", "image", "video", "document"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Icon",
+      "category": "Media",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "Icon",
+      "description": "Icon display",
+      "variants": ["default", "button", "withBadge", "animated"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Line Chart",
+      "category": "Chart",
+      "shadcn": true,
+      "shadcnName": "Chart",
+      "rn": "VictoryChart",
+      "description": "Line data visualization",
+      "variants": ["default", "multiLine", "withArea", "interactive"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Bar Chart",
+      "category": "Chart",
+      "shadcn": true,
+      "shadcnName": "Chart",
+      "rn": "VictoryBar",
+      "description": "Bar data visualization",
+      "variants": ["vertical", "horizontal", "stacked", "grouped"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Pie Chart",
+      "category": "Chart",
+      "shadcn": true,
+      "shadcnName": "Chart",
+      "rn": "VictoryPie",
+      "description": "Pie data visualization",
+      "variants": ["default", "donut", "withLabels", "interactive"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Area Chart",
+      "category": "Chart",
+      "shadcn": true,
+      "shadcnName": "Chart",
+      "rn": "VictoryArea",
+      "description": "Area data visualization",
+      "variants": ["default", "stacked", "withGradient"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Scatter Plot",
+      "category": "Chart",
+      "shadcn": true,
+      "shadcnName": "Chart",
+      "rn": "VictoryScatter",
+      "description": "Scatter data visualization",
+      "variants": ["default", "withBubbles", "withTrendLine"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Radar Chart",
+      "category": "Chart",
+      "shadcn": true,
+      "shadcnName": "Chart",
+      "rn": "VictoryRadar",
+      "description": "Radar/spider data visualization",
+      "variants": ["default", "withComparison"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Gauge Chart",
+      "category": "Chart",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Gauge/meter visualization",
+      "variants": ["default", "withRanges", "withNeedle"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Heatmap",
+      "category": "Chart",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Heat map visualization",
+      "variants": ["default", "withTime", "withGeo"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Treemap",
+      "category": "Chart",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Tree map visualization",
+      "variants": ["default", "withColor", "withLabels"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Funnel Chart",
+      "category": "Chart",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Funnel visualization",
+      "variants": ["default", "withLabels", "withComparison"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Gantt Chart",
+      "category": "Chart",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Gantt timeline visualization",
+      "variants": ["default", "withProgress", "withDependencies"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Heading",
+      "category": "Typography",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "Text",
+      "description": "Section heading",
+      "variants": ["h1", "h2", "h3", "h4", "h5", "h6", "withSubtitle"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Paragraph",
+      "category": "Typography",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "Text",
+      "description": "Text paragraph",
+      "variants": ["default", "lead", "small", "muted"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Text",
+      "category": "Typography",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "Text",
+      "description": "Text content",
+      "variants": ["default", "bold", "italic", "underline", "code"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Blockquote",
+      "category": "Typography",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Block quotation",
+      "variants": ["default", "withCitation", "withIcon"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Code",
+      "category": "Typography",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Inline code display",
+      "variants": ["default", "withCopy", "withSyntax"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Code Block",
+      "category": "Typography",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Code block with syntax highlighting",
+      "variants": ["default", "withLineNumbers", "withCopy", "withFilename"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "List Item",
+      "category": "Typography",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "List item text",
+      "variants": ["bullet", "numbered", "withIcon", "withAction"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Link",
+      "category": "Typography",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": "Text",
+      "description": "Text hyperlink",
+      "variants": ["default", "external", "withIcon", "underline"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Caption",
+      "category": "Typography",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Image or table caption",
+      "variants": ["default", "withBorder"],
+      "platforms": ["web", "mobile", "desktop"]
+    },
+    {
+      "name": "Keyboard",
+      "category": "Typography",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Keyboard key display",
+      "variants": ["default", "withCombo"],
+      "platforms": ["web", "desktop"]
+    },
+    {
+      "name": "Muted Text",
+      "category": "Typography",
+      "shadcn": false,
+      "shadcnName": null,
+      "rn": null,
+      "description": "Subtle text color",
+      "variants": ["default", "small", "large"],
+      "platforms": ["web", "mobile", "desktop"]
+    }
+  ],
+  "metadata": {
+    "totalCategories": 9,
+    "totalComponents": 115,
+    "shadcnCoverage": 47,
+    "platformSupport": {
+      "web": 115,
+      "mobile": 95,
+      "desktop": 85
+    },
+    "mostVariants": "Button (7 variants)",
+    "leastVariants": "Multiple components (2 variants)",
+    "notes": [
+      "All components include shadcn/ui and React Native mappings where applicable",
+      "Variants represent common use cases for each component",
+      "Platform support indicates where components are most commonly used",
+      "shadcn/ui coverage: ~41% of components have direct shadcn/ui equivalents",
+      "Some components may require additional libraries for full functionality"
+    ]
+  }
+}

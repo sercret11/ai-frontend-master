@@ -1,0 +1,110 @@
+/**
+ * Concurrency Limiter Utility
+ *
+ * 限制并发操作数量，防止资源耗尽
+ *
+ * @module concurrency-limiter
+ *
+ * @example
+ * ```typescript
+ * import { ConcurrencyLimiter } from './concurrency-limiter';
+ *
+ * const limiter = new ConcurrencyLimiter(5); // 最多5个并发操作
+ *
+ * // 执行多个异步操作
+ * const tasks = [1, 2, 3, 4, 5, 6, 7, 8].map(id =>
+ *   limiter.run(async () => {
+ *     console.log(`Task ${id} started`);
+ *     await fetchData(id);
+ *     console.log(`Task ${id} completed`);
+ *   })
+ * );
+ *
+ * await Promise.all(tasks);
+ * ```
+ */
+
+/**
+ * 并发限制器类
+ *
+ * 控制同时运行的任务数量，超出限制的任务将排队等待
+ */
+export class ConcurrencyLimiter {
+  /** 最大并发数 */
+  private maxConcurrency: number;
+  /** 当前运行的任务数 */
+  private running = 0;
+  /** 等待队列 */
+  private queue: Array<() => void> = [];
+
+  /**
+   * 创建并发限制器实例
+   *
+   * @param maxConcurrency - 最大并发操作数量
+   *
+   * @example
+   * ```typescript
+   * const limiter = new ConcurrencyLimiter(3); // 最多3个并发
+   * ```
+   */
+  constructor(maxConcurrency: number) {
+    this.maxConcurrency = maxConcurrency;
+  }
+
+  /**
+   * 运行一个异步操作（受并发限制）
+   *
+   * @param fn - 要执行的异步函数
+   * @returns Promise<T> - 函数执行结果
+   *
+   * @example
+   * ```typescript
+   * const result = await limiter.run(async () => {
+   *   return await fetchData();
+   * });
+   * ```
+   */
+  async run<T>(fn: () => Promise<T>): Promise<T> {
+    // If we've reached the limit, wait
+    if (this.running >= this.maxConcurrency) {
+      await new Promise<void>(resolve => {
+        this.queue.push(resolve);
+      });
+    }
+
+    this.running++;
+
+    try {
+      return await fn();
+    } finally {
+      this.running--;
+
+      // Start next task in queue
+      const next = this.queue.shift();
+      if (next) {
+        next();
+      }
+    }
+  }
+
+  /**
+   * 获取并发限制器统计信息
+   *
+   * @returns 统计对象
+   *
+   * @example
+   * ```typescript
+   * const stats = limiter.getStats();
+   * console.log(`Running: ${stats.running}`);
+   * console.log(`Queued: ${stats.queued}`);
+   * console.log(`Max Concurrency: ${stats.maxConcurrency}`);
+   * ```
+   */
+  getStats() {
+    return {
+      running: this.running,
+      queued: this.queue.length,
+      maxConcurrency: this.maxConcurrency,
+    };
+  }
+}

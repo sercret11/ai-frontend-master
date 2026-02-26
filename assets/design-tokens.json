@@ -1,0 +1,548 @@
+{
+  "version": "1.0.0",
+  "name": "Design Tokens System",
+  "description": "Complete design token system for cross-platform UI development",
+  "lastUpdated": "2026-01-29",
+  "tokens": {
+    "spacing": {
+      "description": "8-level spacing system based on 8px baseline",
+      "values": {
+        "0": "0px",
+        "1": "4px",
+        "2": "8px",
+        "3": "12px",
+        "4": "16px",
+        "5": "20px",
+        "6": "24px",
+        "8": "32px",
+        "10": "40px",
+        "12": "48px",
+        "16": "64px",
+        "xs": "4px",
+        "sm": "8px",
+        "md": "16px",
+        "lg": "24px",
+        "xl": "32px",
+        "2xl": "48px",
+        "3xl": "64px"
+      },
+      "usage": {
+        "padding": {
+          "button": "12px 16px",
+          "buttonSm": "8px 12px",
+          "buttonLg": "16px 24px",
+          "card": "24px",
+          "cardCompact": "16px"
+        },
+        "margin": {
+          "section": "48px",
+          "element": "16px"
+        }
+      }
+    },
+    "borderRadius": {
+      "description": "8-level border radius system",
+      "values": {
+        "none": "0",
+        "sm": "2px",
+        "base": "4px",
+        "md": "6px",
+        "lg": "8px",
+        "xl": "12px",
+        "2xl": "16px",
+        "full": "9999px"
+      },
+      "usage": {
+        "button": "md",
+        "card": "lg",
+        "input": "base",
+        "modal": "xl",
+        "avatar": "full",
+        "badge": "full"
+      }
+    },
+    "shadows": {
+      "description": "4-level shadow system for depth hierarchy",
+      "light": {
+        "sm": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        "inner": "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)"
+      },
+      "dark": {
+        "sm": "0 1px 2px 0 rgb(0 0 0 / 0.3)",
+        "md": "0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4)",
+        "lg": "0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4)",
+        "xl": "0 20px 25px -5px rgb(0 0 0 / 0.5), 0 8px 10px -6px rgb(0 0 0 / 0.5)",
+        "inner": "inset 0 2px 4px 0 rgb(0 0 0 / 0.3)"
+      },
+      "usage": {
+        "button": "sm",
+        "card": "md",
+        "dropdown": "md",
+        "modal": "xl",
+        "drawer": "lg",
+        "tooltip": "lg",
+        "popover": "xl"
+      }
+    },
+    "blur": {
+      "description": "6-level blur effect system",
+      "values": {
+        "none": "blur(0)",
+        "sm": "blur(4px)",
+        "base": "blur(8px)",
+        "md": "blur(12px)",
+        "lg": "blur(16px)",
+        "xl": "blur(24px)"
+      },
+      "usage": {
+        "tooltip": "sm",
+        "dropdown": "base",
+        "modalBackdrop": "md",
+        "drawerBackdrop": "lg",
+        "overlay": "xl"
+      }
+    },
+    "transitions": {
+      "description": "Animation transition system",
+      "duration": {
+        "instant": "0ms",
+        "fast": "100ms",
+        "base": "150ms",
+        "normal": "200ms",
+        "slow": "300ms",
+        "slower": "500ms"
+      },
+      "easing": {
+        "linear": "linear",
+        "ease": "ease",
+        "easeIn": "cubic-bezier(0.4, 0, 1, 1)",
+        "easeOut": "cubic-bezier(0, 0, 0.2, 1)",
+        "easeInOut": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "standard": "cubic-bezier(0.4, 0.0, 0.2, 1)",
+        "deceleration": "cubic-bezier(0.0, 0.0, 0.2, 1)",
+        "acceleration": "cubic-bezier(0.4, 0.0, 1, 1)",
+        "ios": "cubic-bezier(0.25, 0.1, 0.25, 1)"
+      },
+      "presets": {
+        "fast": "150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "normal": "200ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "slow": "300ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "spring": "300ms cubic-bezier(0.25, 0.1, 0.25, 1)"
+      },
+      "properties": {
+        "color": "background-color, border-color, color, fill, stroke",
+        "shadow": "box-shadow",
+        "transform": "transform, opacity, filter"
+      }
+    },
+    "typography": {
+      "description": "Typography scale system",
+      "fontSizes": {
+        "xs": "0.75rem",
+        "sm": "0.875rem",
+        "base": "1rem",
+        "lg": "1.125rem",
+        "xl": "1.25rem",
+        "2xl": "1.5rem",
+        "3xl": "1.875rem",
+        "4xl": "2.25rem",
+        "5xl": "3rem",
+        "6xl": "3.75rem",
+        "7xl": "4.5rem"
+      },
+      "fontWeights": {
+        "thin": "100",
+        "extralight": "200",
+        "light": "300",
+        "normal": "400",
+        "medium": "500",
+        "semibold": "600",
+        "bold": "700",
+        "extrabold": "800",
+        "black": "900"
+      },
+      "lineHeights": {
+        "tight": "1.25",
+        "snug": "1.375",
+        "normal": "1.5",
+        "relaxed": "1.625",
+        "loose": "2"
+      },
+      "letterSpacing": {
+        "tighter": "-0.05em",
+        "tight": "-0.025em",
+        "normal": "0em",
+        "wide": "0.025em",
+        "wider": "0.05em",
+        "widest": "0.1em"
+      },
+      "recommendedWeights": {
+        "heading": {
+          "regular": "400",
+          "medium": "500",
+          "semibold": "600",
+          "bold": "700"
+        },
+        "body": {
+          "regular": "400",
+          "medium": "500",
+          "semibold": "600"
+        }
+      }
+    },
+    "zIndex": {
+      "description": "Layer hierarchy system",
+      "values": {
+        "base": "0",
+        "dropdown": "1000",
+        "sticky": "1100",
+        "fixed": "1200",
+        "modalBackdrop": "1300",
+        "modal": "1400",
+        "popover": "1500",
+        "tooltip": "1600",
+        "notification": "1700"
+      }
+    },
+    "breakpoints": {
+      "description": "Responsive breakpoint system",
+      "values": {
+        "xs": "0px",
+        "sm": "640px",
+        "md": "768px",
+        "lg": "1024px",
+        "xl": "1280px",
+        "2xl": "1536px"
+      },
+      "containers": {
+        "sm": "640px",
+        "md": "768px",
+        "lg": "1024px",
+        "xl": "1280px",
+        "fluid": "100%"
+      }
+    },
+    "borders": {
+      "description": "Border system",
+      "width": {
+        "0": "0px",
+        "1": "1px",
+        "2": "2px",
+        "4": "4px",
+        "8": "8px"
+      },
+      "colors": {
+        "default": "#E2E8F0",
+        "hover": "#CBD5E1",
+        "focus": "#94A3B8"
+      }
+    },
+    "opacity": {
+      "description": "Opacity levels",
+      "values": {
+        "0": "0",
+        "10": "0.1",
+        "20": "0.2",
+        "30": "0.3",
+        "40": "0.4",
+        "50": "0.5",
+        "60": "0.6",
+        "70": "0.7",
+        "80": "0.8",
+        "90": "0.9",
+        "100": "1"
+      }
+    },
+    "gradients": {
+      "description": "Preset gradient system (use sparingly)",
+      "presets": {
+        "blue": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+        "purple": "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+        "green": "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+        "orange": "linear-gradient(135deg, #f97316 0%, #ea580c 100%)",
+        "gray": "linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)"
+      },
+      "rules": [
+        "Only 2-3 color stops",
+        "Avoid mixing opposing temperatures",
+        "Only for subtle emphasis"
+      ]
+    },
+    "animation": {
+      "description": "Keyframe animation presets",
+      "keyframes": {
+        "fadeIn": {
+          "from": { "opacity": "0" },
+          "to": { "opacity": "1" }
+        },
+        "fadeOut": {
+          "from": { "opacity": "1" },
+          "to": { "opacity": "0" }
+        },
+        "slideInUp": {
+          "from": { "transform": "translateY(100%)", "opacity": "0" },
+          "to": { "transform": "translateY(0)", "opacity": "1" }
+        },
+        "slideInDown": {
+          "from": { "transform": "translateY(-100%)", "opacity": "0" },
+          "to": { "transform": "translateY(0)", "opacity": "1" }
+        },
+        "slideInLeft": {
+          "from": { "transform": "translateX(-100%)", "opacity": "0" },
+          "to": { "transform": "translateX(0)", "opacity": "1" }
+        },
+        "slideInRight": {
+          "from": { "transform": "translateX(100%)", "opacity": "0" },
+          "to": { "transform": "translateX(0)", "opacity": "1" }
+        },
+        "scaleIn": {
+          "from": { "transform": "scale(0.9)", "opacity": "0" },
+          "to": { "transform": "scale(1)", "opacity": "1" }
+        },
+        "scaleOut": {
+          "from": { "transform": "scale(1)", "opacity": "1" },
+          "to": { "transform": "scale(0.9)", "opacity": "0" }
+        },
+        "spin": {
+          "from": { "transform": "rotate(0deg)" },
+          "to": { "transform": "rotate(360deg)" }
+        },
+        "pulse": {
+          "0%, 100%": { "opacity": "1" },
+          "50%": { "opacity": "0.5" }
+        },
+        "bounce": {
+          "0%, 100%": {
+            "transform": "translateY(-5%)",
+            "animation-timing-function": "cubic-bezier(0.8, 0, 1, 1)"
+          },
+          "50%": {
+            "transform": "translateY(0)",
+            "animation-timing-function": "cubic-bezier(0, 0, 0.2, 1)"
+          }
+        },
+        "shake": {
+          "0%, 100%": { "transform": "translateX(0)" },
+          "25%": { "transform": "translateX(-5px)" },
+          "75%": { "transform": "translateX(5px)" }
+        }
+      }
+    },
+    "layout": {
+      "description": "Layout system tokens",
+      "grid": {
+        "columns": 12,
+        "gaps": {
+          "xs": "4px",
+          "sm": "8px",
+          "md": "16px",
+          "lg": "24px",
+          "xl": "32px"
+        }
+      },
+      "container": {
+        "maxWidth": "1280px",
+        "padding": "16px"
+      },
+      "gutters": {
+        "mobile": "16px",
+        "tablet": "24px",
+        "desktop": "32px"
+      }
+    }
+  },
+  "cssVariables": {
+    "description": "CSS custom properties for direct use",
+    "spacing": {
+      "--spacing-0": "0",
+      "--spacing-1": "0.25rem",
+      "--spacing-2": "0.5rem",
+      "--spacing-3": "0.75rem",
+      "--spacing-4": "1rem",
+      "--spacing-5": "1.25rem",
+      "--spacing-6": "1.5rem",
+      "--spacing-8": "2rem",
+      "--spacing-10": "2.5rem",
+      "--spacing-12": "3rem",
+      "--spacing-16": "4rem"
+    },
+    "radius": {
+      "--radius-none": "0",
+      "--radius-sm": "2px",
+      "--radius-base": "4px",
+      "--radius-md": "6px",
+      "--radius-lg": "8px",
+      "--radius-xl": "12px",
+      "--radius-2xl": "16px",
+      "--radius-full": "9999px"
+    },
+    "shadow": {
+      "--shadow-sm": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+      "--shadow-md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+      "--shadow-lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+      "--shadow-xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+      "--shadow-inner": "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)"
+    },
+    "transition": {
+      "--transition-fast": "150ms",
+      "--transition-base": "200ms",
+      "--transition-slow": "300ms",
+      "--ease-in-out": "cubic-bezier(0.4, 0, 0.2, 1)"
+    },
+    "typography": {
+      "--text-xs": "0.75rem",
+      "--text-sm": "0.875rem",
+      "--text-base": "1rem",
+      "--text-lg": "1.125rem",
+      "--text-xl": "1.25rem",
+      "--text-2xl": "1.5rem",
+      "--text-3xl": "1.875rem",
+      "--text-4xl": "2.25rem",
+      "--text-5xl": "3rem",
+      "--leading-tight": "1.25",
+      "--leading-snug": "1.375",
+      "--leading-normal": "1.5",
+      "--leading-relaxed": "1.625",
+      "--leading-loose": "2"
+    }
+  },
+  "tailwind": {
+    "description": "Tailwind CSS configuration reference",
+    "theme": {
+      "spacing": {
+        "extend": {
+          "0": "0",
+          "1": "0.25rem",
+          "2": "0.5rem",
+          "3": "0.75rem",
+          "4": "1rem",
+          "5": "1.25rem",
+          "6": "1.5rem",
+          "8": "2rem",
+          "10": "2.5rem",
+          "12": "3rem",
+          "16": "4rem"
+        }
+      },
+      "borderRadius": {
+        "none": "0",
+        "sm": "2px",
+        "DEFAULT": "4px",
+        "md": "6px",
+        "lg": "8px",
+        "xl": "12px",
+        "2xl": "16px",
+        "full": "9999px"
+      },
+      "boxShadow": {
+        "sm": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        "md": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "lg": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "xl": "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
+        "inner": "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)"
+      },
+      "transitionDuration": {
+        "instant": "0ms",
+        "fast": "100ms",
+        "base": "150ms",
+        "DEFAULT": "200ms",
+        "slow": "300ms",
+        "slower": "500ms"
+      },
+      "screens": {
+        "sm": "640px",
+        "md": "768px",
+        "lg": "1024px",
+        "xl": "1280px",
+        "2xl": "1536px"
+      },
+      "zIndex": {
+        "dropdown": "1000",
+        "sticky": "1100",
+        "fixed": "1200",
+        "modalBackdrop": "1300",
+        "modal": "1400",
+        "popover": "1500",
+        "tooltip": "1600",
+        "notification": "1700"
+      }
+    }
+  },
+  "bestPractices": {
+    "spacing": {
+      "baseline": "8px grid system",
+      "recommendations": [
+        "Use consistent spacing throughout",
+        "Multiply by 2 for major sections",
+        "Use negative spacing sparingly"
+      ]
+    },
+    "shadows": {
+      "recommendations": [
+        "Don't overuse shadows",
+        "Light mode: lighter shadows",
+        "Dark mode: darker shadows with more opacity",
+        "Inner shadow for focus states"
+      ]
+    },
+    "transitions": {
+      "recommendations": [
+        "Always use transitions on state changes",
+        "Prefer ease-out for entrance animations",
+        "Keep duration under 300ms for UI elements",
+        "Respect prefers-reduced-motion"
+      ]
+    },
+    "borderRadius": {
+      "recommendations": [
+        "Match radius to element size",
+        "Keep consistent across related elements",
+        "Use full radius for circular elements",
+        "Smaller radius for smaller elements"
+      ]
+    },
+    "typography": {
+      "recommendations": [
+        "Max 2 font families per design",
+        "Establish clear visual hierarchy",
+        "Line height 1.5-1.625 for body text",
+        "Tighter line height for headings"
+      ]
+    },
+    "performance": {
+      "gpuAccelerated": [
+        "transform",
+        "opacity",
+        "filter"
+      ],
+      "avoidReflow": [
+        "width",
+        "height",
+        "left",
+        "top"
+      ]
+    }
+  },
+  "metadata": {
+    "source": [
+      "prompt-docs/creator/visual-language.md",
+      "prompt-docs/creator/design-strategy.md",
+      "prompt-docs/creator/ux-heuristics.md",
+      "prompt-docs/core/platform-capabilities.md"
+    ],
+    "platforms": [
+      "Web",
+      "React Native",
+      "UniApp"
+    ],
+    "standards": [
+      "8px baseline grid",
+      "Mobile-first responsive design",
+      "GPU-accelerated animations",
+      "Accessibility considerations"
+    ]
+  }
+}

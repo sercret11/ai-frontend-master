@@ -1,0 +1,83 @@
+{
+  "name": "ai-frontend-master",
+  "version": "3.1.0",
+  "description": "AI-powered full-platform frontend development system with tool calling architecture",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "shared-types"
+  ],
+  "scripts": {
+    "init": "tsx scripts/cli.ts create",
+    "design:gen": "node scripts/run-python.js scripts/generate-design-system.py",
+    "platform:detect": "tsx scripts/detect-platform.ts",
+    "component:create": "tsx scripts/create-component.ts",
+    "verify": "node scripts/check-env.js && tsx scripts/verify-setup.ts",
+    "check-env": "node scripts/check-env.js",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:legacy": "tsx backend/src/server.ts",
+    "dev:watch": "tsx --watch backend/src/server.ts",
+    "build": "npm run build:shared && npm run build:backend && npm run build:frontend",
+    "build:shared": "cd shared-types && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "server": "tsx backend/src/server.ts",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "install:all": "npm ci && npm --prefix backend ci && npm --prefix frontend ci"
+  },
+  "keywords": [
+    "frontend",
+    "cross-platform",
+    "design-system",
+    "cli"
+  ],
+  "author": "FrontendMaster Team",
+  "license": "MIT",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cac": "^6.7.14",
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "express-rate-limit": "^7.1.5",
+    "fs-extra": "^11.3.3",
+    "glob": "^10.3.0",
+    "gray-matter": "^4.0.3",
+    "inquirer": "^9.2.11",
+    "ora": "^8.0.1",
+    "remeda": "^2.33.4",
+    "ws": "^8.19.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/express-rate-limit": "^6.0.0",
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.10.0",
+    "@types/ws": "^8.5.10",
+    "@vitest/ui": "^4.0.18",
+    "concurrently": "^8.2.2",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.3",
+    "vitest": "^4.0.18"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "python": ">=3.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/frontend-master.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/frontend-master/issues"
+  },
+  "homepage": "https://github.com/your-username/frontend-master#readme"
+}

@@ -1,0 +1,1363 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-01-29",
+  "description": "Complete collection of 66 typography pairings for web design",
+  "totalPairs": 66,
+  "categories": {
+    "Professional Business": 10,
+    "Creative Arts": 8,
+    "Tech Startups": 7,
+    "Friendly Approachable": 6,
+    "Classic Elegant": 8,
+    "Editorial Publishing": 5,
+    "Child-Friendly": 4,
+    "Developer Tools": 3,
+    "Multi-Language Support": 15
+  },
+  "pairs": [
+    {
+      "id": "classic-swiss",
+      "name": "Classic Swiss",
+      "category": "Professional Business",
+      "heading": {
+        "font": "Inter",
+        "weights": "600-700",
+        "style": "Bold headings"
+      },
+      "body": {
+        "font": "Inter",
+        "weights": "400-500",
+        "style": "Clean body text"
+      },
+      "characteristics": "Minimalist Professional",
+      "vibe": "Modern Trustworthy",
+      "bestFor": ["SaaS", "Enterprise Applications", "Finance", "B2B"],
+      "googleFonts": true,
+      "fallback": ["-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"]
+    },
+    {
+      "id": "modern-professional",
+      "name": "Modern Professional",
+      "category": "Professional Business",
+      "heading": {
+        "font": "SF Pro Display",
+        "weights": "600-700",
+        "style": "Modern headings"
+      },
+      "body": {
+        "font": "SF Pro Text",
+        "weights": "400-500",
+        "style": "Refined body text"
+      },
+      "characteristics": "Apple Ecosystem",
+      "vibe": "Modern Refined",
+      "bestFor": ["iOS Applications", "Mac Applications", "Tech Products"],
+      "systemFont": true,
+      "platform": "Apple",
+      "fallback": ["-apple-system", "BlinkMacSystemFont", "sans-serif"]
+    },
+    {
+      "id": "enterprise-standard",
+      "name": "Enterprise Standard",
+      "category": "Professional Business",
+      "heading": {
+        "font": "Roboto",
+        "weights": "700",
+        "style": "Bold headings"
+      },
+      "body": {
+        "font": "Roboto",
+        "weights": "400-500",
+        "style": "Professional body text"
+      },
+      "characteristics": "Google Design Language",
+      "vibe": "Friendly Professional",
+      "bestFor": ["Android Applications", "Google Products", "Enterprise Software"],
+      "googleFonts": true,
+      "fallback": ["Roboto", "Arial", "sans-serif"]
+    },
+    {
+      "id": "business-elite",
+      "name": "Business Elite",
+      "category": "Professional Business",
+      "heading": {
+        "font": "Segoe UI",
+        "weights": "600-700",
+        "style": "Business headings"
+      },
+      "body": {
+        "font": "Segoe UI",
+        "weights": "400",
+        "style": "Professional body text"
+      },
+      "characteristics": "Microsoft Design Language",
+      "vibe": "Business Professional",
+      "bestFor": ["Windows Applications", "Enterprise Software", "Business Tools"],
+      "systemFont": true,
+      "platform": "Windows",
+      "fallback": ["Segoe UI", "Arial", "sans-serif"]
+    },
+    {
+      "id": "trustworthy",
+      "name": "Trustworthy",
+      "category": "Professional Business",
+      "heading": {
+        "font": "Helvetica Neue",
+        "weights": "700",
+        "style": "Bold headings"
+      },
+      "body": {
+        "font": "Helvetica",
+        "weights": "400-500",
+        "style": "Classic body text"
+      },
+      "characteristics": "Classic Sans-serif",
+      "vibe": "Time Tested",
+      "bestFor": ["Finance", "Legal", "Government"],
+      "systemFont": true,
+      "fallback": ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"]
+    },
+    {
+      "id": "clean-concise",
+      "name": "Clean Concise",
+      "category": "Professional Business",
+      "heading": {
+        "font": "Poppins",
+        "weights": "600-700",
+        "style": "Modern headings"
+      },
+      "body": {
+        "font": "Open Sans",
+        "weights": "400-600",
+        "style": "Friendly body text"
+      },
+      "characteristics": "Geometric Sans-serif + Humanist Sans-serif",
+      "vibe": "Modern Friendly",
+      "bestFor": ["SaaS", "Education", "Health"],
+      "googleFonts": true,
+      "fallback": ["Poppins", "Open Sans", "Arial", "sans-serif"]
+    },
+    {
+      "id": "efficient-modern",
+      "name": "Efficient Modern",
+      "category": "Professional Business",
+      "heading": {
+        "font": "Source Sans Pro",
+        "weights": "600-700",
+        "style": "Professional headings"
+      },
+      "body": {
+        "font": "Source Sans Pro",
+        "weights": "400-600",
+        "style": "Efficient body text"
+      },
+      "characteristics": "Adobe Design Language",
+      "vibe": "Professional Efficient",
+      "bestFor": ["Creative Tools", "Design Software", "Enterprise Applications"],
+      "googleFonts": true,
+      "adobeFonts": true,
+      "fallback": ["Source Sans Pro", "Arial", "sans-serif"]
+    },
+    {
+      "id": "data-driven",
+      "name": "Data Driven",
+      "category": "Professional Business",
+      "heading": {
+        "font": "IBM Plex Sans",
+        "weights": "600",
+        "style": "Technical headings"
+      },
+      "body": {
+        "font": "IBM Plex Sans",
+        "weights": "400-500",
+        "style": "Professional body text"
+      },
+      "characteristics": "IBM Design Language",
+      "vibe": "Technical Professional",
+      "bestFor": ["Data Products", "Development Tools", "Enterprise Software"],
+      "googleFonts": true,
+      "fallback": ["IBM Plex Sans", "Arial", "sans-serif"]
+    },
+    {
+      "id": "stable-reliable",
+      "name": "Stable Reliable",
+      "category": "Professional Business",
+      "heading": {
+        "font": "Ubuntu",
+        "weights": "700",
+        "style": "Bold headings"
+      },
+      "body": {
+        "font": "Ubuntu",
+        "weights": "400-500",
+        "style": "Friendly body text"
+      },
+      "characteristics": "Ubuntu Brand Font",
+      "vibe": "Community Friendly",
+      "bestFor": ["Open Source Projects", "Community Platforms", "Linux Applications"],
+      "googleFonts": true,
+      "fallback": ["Ubuntu", "Arial", "sans-serif"]
+    },
+    {
+      "id": "minimalism",
+      "name": "Minimalism",
+      "category": "Professional Business",
+      "heading": {
+        "font": "Manrope",
+        "weights": "600-800",
+        "style": "Bold headings"
+      },
+      "body": {
+        "font": "Manrope",
+        "weights": "400-500",
+        "style": "Clean body text"
+      },
+      "characteristics": "Modern Geometric",
+      "vibe": "Clean Elegant",
+      "bestFor": ["Startups", "Personal Brands", "Creative Studios"],
+      "googleFonts": true,
+      "fallback": ["Manrope", "Arial", "sans-serif"]
+    },
+    {
+      "id": "editorial-elegant",
+      "name": "Editorial Elegant",
+      "category": "Creative Arts",
+      "heading": {
+        "font": "Playfair Display",
+        "weights": "600-700",
+        "style": "Elegant headings"
+      },
+      "body": {
+        "font": "Libre Baskerville",
+        "weights": "400",
+        "style": "Classic body text"
+      },
+      "characteristics": "Classic Serif + Transitional Serif",
+      "vibe": "High-End Refined",
+      "bestFor": ["Fashion", "Art", "Luxury Brands", "Magazines"],
+      "googleFonts": true,
+      "fallback": ["Playfair Display", "Libre Baskerville", "Georgia", "serif"]
+    },
+    {
+      "id": "modern-fashion",
+      "name": "Modern Fashion",
+      "category": "Creative Arts",
+      "heading": {
+        "font": "Montserrat",
+        "weights": "700-800",
+        "style": "Bold fashion headings"
+      },
+      "body": {
+        "font": "Lato",
+        "weights": "400-700",
+        "style": "Modern body text"
+      },
+      "characteristics": "Geometric Sans-serif + Humanist Sans-serif",
+      "vibe": "Fashionable Modern",
+      "bestFor": ["Fashion", "Beauty", "Lifestyle"],
+      "googleFonts": true,
+      "fallback": ["Montserrat", "Lato", "Arial", "sans-serif"]
+    },
+    {
+      "id": "artistic-creative",
+      "name": "Artistic Creative",
+      "category": "Creative Arts",
+      "heading": {
+        "font": "Abril Fatface",
+        "weights": "400",
+        "style": "Display headings"
+      },
+      "body": {
+        "font": "Lora",
+        "weights": "400-500",
+        "style": "Artistic body text"
+      },
+      "characteristics": "Display Serif + Transitional Serif",
+      "vibe": "Strong Artistic Feel",
+      "bestFor": ["Art Galleries", "Creative Portfolios", "Cultural Events"],
+      "googleFonts": true,
+      "fallback": ["Abril Fatface", "Lora", "Georgia", "serif"]
+    },
+    {
+      "id": "retro-nostalgic",
+      "name": "Retro Nostalgic",
+      "category": "Creative Arts",
+      "heading": {
+        "font": "Cormorant Garamond",
+        "weights": "600-700",
+        "style": "Classic headings"
+      },
+      "body": {
+        "font": "Crimson Text",
+        "weights": "400",
+        "style": "Retro body text"
+      },
+      "characteristics": "Old Style Serif + Transitional Serif",
+      "vibe": "Classic Retro",
+      "bestFor": ["Historical Websites", "Museums", "Traditional Culture"],
+      "googleFonts": true,
+      "fallback": ["Cormorant Garamond", "Crimson Text", "Georgia", "serif"]
+    },
+    {
+      "id": "modern-art",
+      "name": "Modern Art",
+      "category": "Creative Arts",
+      "heading": {
+        "font": "Space Grotesk",
+        "weights": "700",
+        "style": "Avant-garde headings"
+      },
+      "body": {
+        "font": "Space Grotesk",
+        "weights": "400-500",
+        "style": "Modern body text"
+      },
+      "characteristics": "Geometric Sans-serif",
+      "vibe": "Avant-Garde Modern",
+      "bestFor": ["Design Studios", "Art Exhibitions", "Creative Agencies"],
+      "googleFonts": true,
+      "fallback": ["Space Grotesk", "Arial", "sans-serif"]
+    },
+    {
+      "id": "brand-story",
+      "name": "Brand Story",
+      "category": "Creative Arts",
+      "heading": {
+        "font": "Prata",
+        "weights": "400",
+        "style": "Story headings"
+      },
+      "body": {
+        "font": "Raleway",
+        "weights": "300-500",
+        "style": "Narrative body text"
+      },
+      "characteristics": "Display Serif + Geometric Sans-serif",
+      "vibe": "Strong Story Feel",
+      "bestFor": ["Brand Stories", "Narrative Websites", "Personal Blogs"],
+      "googleFonts": true,
+      "fallback": ["Prata", "Raleway", "Georgia", "serif"]
+    },
+    {
+      "id": "visual-impact",
+      "name": "Visual Impact",
+      "category": "Creative Arts",
+      "heading": {
+        "font": "Oswald",
+        "weights": "600-700",
+        "style": "Impactful headings"
+      },
+      "body": {
+        "font": "Open Sans",
+        "weights": "400-600",
+        "style": "Clean body text"
+      },
+      "characteristics": "Condensed Sans-serif + Humanist Sans-serif",
+      "vibe": "Strong Contrast",
+      "bestFor": ["Posters", "Advertisements", "Event Pages"],
+      "googleFonts": true,
+      "fallback": ["Oswald", "Open Sans", "Arial", "sans-serif"]
+    },
+    {
+      "id": "elegant-modern",
+      "name": "Elegant Modern",
+      "category": "Creative Arts",
+      "heading": {
+        "font": "Cormorant",
+        "weights": "600-700",
+        "style": "Elegant headings"
+      },
+      "body": {
+        "font": "Montserrat",
+        "weights": "400-600",
+        "style": "Modern body text"
+      },
+      "characteristics": "Serif + Sans-serif",
+      "vibe": "Elegant Contrast",
+      "bestFor": ["High-End Brands", "Design Studios", "Architecture Firms"],
+      "googleFonts": true,
+      "fallback": ["Cormorant", "Montserrat", "Georgia", "serif"]
+    },
+    {
+      "id": "tech-pioneer",
+      "name": "Tech Pioneer",
+      "category": "Tech Startups",
+      "heading": {
+        "font": "Space Grotesk",
+        "weights": "700",
+        "style": "Tech headings"
+      },
+      "body": {
+        "font": "DM Sans",
+        "weights": "400-500",
+        "style": "Modern body text"
+      },
+      "characteristics": "Geometric Sans-serif + Humanist Sans-serif",
+      "vibe": "Strong Tech Feel",
+      "bestFor": ["Tech Products", "AI Applications", "Blockchain"],
+      "googleFonts": true,
+      "fallback": ["Space Grotesk", "DM Sans", "Arial", "sans-serif"]
+    },
+    {
+      "id": "developer-friendly",
+      "name": "Developer Friendly",
+      "category": "Tech Startups",
+      "heading": {
+        "font": "JetBrains Mono",
+        "weights": "600-700",
+        "style": "Code headings"
+      },
+      "body": {
+        "font": "Inter",
+        "weights": "400-500",
+        "style": "Technical body text"
+      },
+      "characteristics": "Monospace Font + Sans-serif",
+      "vibe": "Technical Professional",
+      "bestFor": ["Development Tools", "Code Platforms", "Technical Documentation"],
+      "googleFonts": true,
+      "fallback": ["JetBrains Mono", "Inter", "monospace"]
+    },
+    {
+      "id": "innovation-frontier",
+      "name": "Innovation Frontier",
+      "category": "Tech Startups",
+      "heading": {
+        "font": "Outfit",
+        "weights": "600-700",
+        "style": "Innovative headings"
+      },
+      "body": {
+        "font": "Plus Jakarta Sans",
+        "weights": "400-500",
+        "style": "Modern body text"
+      },
+      "characteristics": "Geometric Sans-serif + Humanist Sans-serif",
+      "vibe": "Modern Innovative",
+      "bestFor": ["Startups", "Tech Products", "Innovation Platforms"],
+      "googleFonts": true,
+      "fallback": ["Outfit", "Plus Jakarta Sans", "Arial", "sans-serif"]
+    },
+    {
+      "id": "data-intelligence",
+      "name": "Data Intelligence",
+      "category": "Tech Startups",
+      "heading": {
+        "font": "Lexend",
+        "weights": "600-700",
+        "style": "Clear headings"
+      },
+      "body": {
+        "font": "Inter",
+        "weights": "400-500",
+        "style": "Intelligent body text"
+      },
+      "characteristics": "Readability Optimized + Modern",
+      "vibe": "Clear Intelligent",
+      "bestFor": ["Data Analysis", "EdTech", "Knowledge Platforms"],
+      "googleFonts": true,
+      "fallback": ["Lexend", "Inter", "Arial", "sans-serif"]
+    },
+    {
+      "id": "future-tech",
+      "name": "Future Tech",
+      "category": "Tech Startups",
+      "heading": {
+        "font": "Orbitron",
+        "weights": "700-900",
+        "style": "Futuristic headings"
+      },
+      "body": {
+        "font": "Exo 2",
+        "weights": "400-600",
+        "style": "Sci-fi body text"
+      },
+      "characteristics": "Sci-Fi Font + Geometric Sans-serif",
+      "vibe": "Strong Future Feel",
+      "bestFor": ["Gaming", "VR/AR", "Future Technology"],
+      "googleFonts": true,
+      "fallback": ["Orbitron", "Exo 2", "Arial", "sans-serif"]
+    },
+    {
+      "id": "geek-spirit",
+      "name": "Geek Spirit",
+      "category": "Tech Startups",
+      "heading": {
+        "font": "Fira Code",
+        "weights": "600",
+        "style": "Code headings"
+      },
+      "body": {
+        "font": "IBM Plex Sans",
+        "weights": "400-500",
+        "style": "Technical body text"
+      },
+      "characteristics": "Programming Font + Technical Font",
+      "vibe": "Geek Culture",
+      "bestFor": ["Development Tools", "Code Platforms", "Technical Communities"],
+      "googleFonts": true,
+      "fallback": ["Fira Code", "IBM Plex Sans", "monospace"]
+    },
+    {
+      "id": "modern-saas",
+      "name": "Modern SaaS",
+      "category": "Tech Startups",
+      "heading": {
+        "font": "Cal Sans",
+        "weights": "600-700",
+        "style": "SaaS headings"
+      },
+      "body": {
+        "font": "Inter",
+        "weights": "400-500",
+        "style": "Modern body text"
+      },
+      "characteristics": "Cal.com Custom Font + Modern",
+      "vibe": "SaaS Friendly",
+      "bestFor": ["SaaS Products", "Booking Tools", "Productivity Tools"],
+      "commercialFont": true,
+      "fallback": ["Cal Sans", "Inter", "Arial", "sans-serif"]
+    },
+    {
+      "id": "warm-friendly",
+      "name": "Warm Friendly",
+      "category": "Friendly Approachable",
+      "heading": {
+        "font": "Nunito",
+        "weights": "700-800",
+        "style": "Friendly headings"
+      },
+      "body": {
+        "font": "Nunito",
+        "weights": "400-600",
+        "style": "Approachable body text"
+      },
+      "characteristics": "Rounded Sans-serif",
+      "vibe": "Friendly Approachable",
+      "bestFor": ["Education", "Children's Applications", "Communities"],
+      "googleFonts": true,
+      "fallback": ["Nunito", "Arial", "sans-serif"]
+    },
+    {
+      "id": "vibrant-energetic",
+      "name": "Vibrant Energetic",
+      "category": "Friendly Approachable",
+      "heading": {
+        "font": "Poppins",
+        "weights": "600-700",
+        "style": "Energetic headings"
+      },
+      "body": {
+        "font": "Nunito",
+        "weights": "400-600",
+        "style": "Youthful body text"
+      },
+      "characteristics": "Geometric Sans-serif + Rounded Sans-serif",
+      "vibe": "Youthful Energetic",
+      "bestFor": ["Youth Brands", "Social Applications", "Sports Fitness"],
+      "googleFonts": true,
+      "fallback": ["Poppins", "Nunito", "Arial", "sans-serif"]
+    },
+    {
+      "id": "soft-warm",
+      "name": "Soft Warm",
+      "category": "Friendly Approachable",
+      "heading": {
+        "font": "Quicksand",
+        "weights": "600-700",
+        "style": "Soft headings"
+      },
+      "body": {
+        "font": "Quicksand",
+        "weights": "400-500",
+        "style": "Warm body text"
+      },
+      "characteristics": "Rounded Geometric",
+      "vibe": "Soft Warm",
+      "bestFor": ["Maternal & Baby", "Children", "Lifestyle"],
+      "googleFonts": true,
+      "fallback": ["Quicksand", "Arial", "sans-serif"]
+    },
+    {
+      "id": "natural-organic",
+      "name": "Natural Organic",
+      "category": "Friendly Approachable",
+      "heading": {
+        "font": "Fredoka One",
+        "weights": "400",
+        "style": "Display headings"
+      },
+      "body": {
+        "font": "Nunito",
+        "weights": "400-600",
+        "style": "Organic body text"
+      },
+      "characteristics": "Display Font + Rounded Sans-serif",
+      "vibe": "Natural Organic",
+      "bestFor": ["Organic Food", "Environmental", "Healthy Living"],
+      "googleFonts": true,
+      "fallback": ["Fredoka One", "Nunito", "Arial", "sans-serif"]
+    },
+    {
+      "id": "happy-playful",
+      "name": "Happy Playful",
+      "category": "Friendly Approachable",
+      "heading": {
+        "font": "Baloo 2",
+        "weights": "600-800",
+        "style": "Playful headings"
+      },
+      "body": {
+        "font": "Nunito",
+        "weights": "400-600",
+        "style": "Happy body text"
+      },
+      "characteristics": "Display Font + Rounded Sans-serif",
+      "vibe": "Happy Playful",
+      "bestFor": ["Children's Education", "Gaming", "Entertainment"],
+      "googleFonts": true,
+      "fallback": ["Baloo 2", "Nunito", "Arial", "sans-serif"]
+    },
+    {
+      "id": "friendly-modern",
+      "name": "Friendly Modern",
+      "category": "Friendly Approachable",
+      "heading": {
+        "font": "Nunito Sans",
+        "weights": "700-800",
+        "style": "Modern friendly headings"
+      },
+      "body": {
+        "font": "Open Sans",
+        "weights": "400-600",
+        "style": "Approachable body text"
+      },
+      "characteristics": "Rounded Sans-serif + Humanist Sans-serif",
+      "vibe": "Friendly Modern",
+      "bestFor": ["Non-Profit Organizations", "Community Services", "Public Services"],
+      "googleFonts": true,
+      "fallback": ["Nunito Sans", "Open Sans", "Arial", "sans-serif"]
+    },
+    {
+      "id": "traditional-elegant",
+      "name": "Traditional Elegant",
+      "category": "Classic Elegant",
+      "heading": {
+        "font": "Bodoni Moda",
+        "weights": "600-700",
+        "style": "Elegant headings"
+      },
+      "body": {
+        "font": "Lora",
+        "weights": "400-500",
+        "style": "Classic body text"
+      },
+      "characteristics": "Modern Serif + Transitional Serif",
+      "vibe": "Traditional Elegant",
+      "bestFor": ["Luxury Brands", "High-End Hotels", "Fine Dining"],
+      "googleFonts": true,
+      "fallback": ["Bodoni Moda", "Lora", "Georgia", "serif"]
+    },
+    {
+      "id": "fashion-magazine",
+      "name": "Fashion Magazine",
+      "category": "Classic Elegant",
+      "heading": {
+        "font": "Vollkorn",
+        "weights": "600-700",
+        "style": "Magazine headings"
+      },
+      "body": {
+        "font": "Crimson Text",
+        "weights": "400",
+        "style": "Publication body text"
+      },
+      "characteristics": "Slab Serif + Transitional Serif",
+      "vibe": "Magazine Style",
+      "bestFor": ["Magazines", "Blogs", "Publications"],
+      "googleFonts": true,
+      "fallback": ["Vollkorn", "Crimson Text", "Georgia", "serif"]
+    },
+    {
+      "id": "high-end-luxury",
+      "name": "High-End Luxury",
+      "category": "Classic Elegant",
+      "heading": {
+        "font": "Cinzel",
+        "weights": "600-700",
+        "style": "Luxury headings"
+      },
+      "body": {
+        "font": "Cormorant Garamond",
+        "weights": "400-500",
+        "style": "Elegant body text"
+      },
+      "characteristics": "Classic Serif + Old Style Serif",
+      "vibe": "High-End Luxury",
+      "bestFor": ["Luxury Brands", "Jewelry", "High-End Fashion"],
+      "googleFonts": true,
+      "fallback": ["Cinzel", "Cormorant Garamond", "Georgia", "serif"]
+    },
+    {
+      "id": "literary-temperament",
+      "name": "Literary Temperament",
+      "category": "Classic Elegant",
+      "heading": {
+        "font": "Merriweather",
+        "weights": "700-900",
+        "style": "Literary headings"
+      },
+      "body": {
+        "font": "Merriweather",
+        "weights": "300-400",
+        "style": "Reading body text"
+      },
+      "characteristics": "Slab Serif",
+      "vibe": "Literary Temperament",
+      "bestFor": ["E-Books", "Reading Applications", "Literary Websites"],
+      "googleFonts": true,
+      "fallback": ["Merriweather", "Georgia", "serif"]
+    },
+    {
+      "id": "simple-elegant",
+      "name": "Simple Elegant",
+      "category": "Classic Elegant",
+      "heading": {
+        "font": "Lora",
+        "weights": "600-700",
+        "style": "Simple headings"
+      },
+      "body": {
+        "font": "Lora",
+        "weights": "400-500",
+        "style": "Elegant body text"
+      },
+      "characteristics": "Transitional Serif",
+      "vibe": "Simple Elegant",
+      "bestFor": ["Personal Blogs", "Literary Magazines", "Cultural Websites"],
+      "googleFonts": true,
+      "fallback": ["Lora", "Georgia", "serif"]
+    },
+    {
+      "id": "news-newspaper",
+      "name": "News Newspaper",
+      "category": "Classic Elegant",
+      "heading": {
+        "font": "PT Serif",
+        "weights": "700",
+        "style": "News headings"
+      },
+      "body": {
+        "font": "PT Serif",
+        "weights": "400",
+        "style": "Newspaper body text"
+      },
+      "characteristics": "Transitional Serif",
+      "vibe": "News Newspaper",
+      "bestFor": ["News", "Newspapers", "Publishing"],
+      "googleFonts": true,
+      "fallback": ["PT Serif", "Georgia", "serif"]
+    },
+    {
+      "id": "academic-professional",
+      "name": "Academic Professional",
+      "category": "Classic Elegant",
+      "heading": {
+        "font": "Source Serif Pro",
+        "weights": "600-700",
+        "style": "Academic headings"
+      },
+      "body": {
+        "font": "Source Serif Pro",
+        "weights": "400-600",
+        "style": "Professional body text"
+      },
+      "characteristics": "Transitional Serif",
+      "vibe": "Academic Professional",
+      "bestFor": ["Academic Journals", "University Websites", "Research Institutions"],
+      "googleFonts": true,
+      "adobeFonts": true,
+      "fallback": ["Source Serif Pro", "Georgia", "serif"]
+    },
+    {
+      "id": "brand-classic",
+      "name": "Brand Classic",
+      "category": "Classic Elegant",
+      "heading": {
+        "font": "Libre Baskerville",
+        "weights": "700",
+        "style": "Brand headings"
+      },
+      "body": {
+        "font": "Libre Baskerville",
+        "weights": "400",
+        "style": "Corporate body text"
+      },
+      "characteristics": "Transitional Serif",
+      "vibe": "Brand Classic",
+      "bestFor": ["Brand Websites", "Corporate Image", "Professional Services"],
+      "googleFonts": true,
+      "fallback": ["Libre Baskerville", "Georgia", "serif"]
+    },
+    {
+      "id": "newspaper-standard",
+      "name": "Newspaper Standard",
+      "category": "Editorial Publishing",
+      "heading": {
+        "font": "Chomsky",
+        "weights": "700-900",
+        "style": "Bold newspaper headings"
+      },
+      "body": {
+        "font": "Georgia",
+        "weights": "400",
+        "style": "Classic body text"
+      },
+      "characteristics": "Slab Serif + Transitional Serif",
+      "vibe": "Newspaper Style",
+      "bestFor": ["News", "Newspapers", "Journals"],
+      "systemFont": true,
+      "googleFonts": true,
+      "fallback": ["Chomsky", "Georgia", "serif"]
+    },
+    {
+      "id": "magazine-fashion",
+      "name": "Magazine Fashion",
+      "category": "Editorial Publishing",
+      "heading": {
+        "font": "Bebas Neue",
+        "weights": "400",
+        "style": "Display headings"
+      },
+      "body": {
+        "font": "Lato",
+        "weights": "400-700",
+        "style": "Magazine body text"
+      },
+      "characteristics": "Display Font + Humanist Sans-serif",
+      "vibe": "Magazine Cover",
+      "bestFor": ["Magazines", "Fashion", "Lifestyle"],
+      "googleFonts": true,
+      "fallback": ["Bebas Neue", "Lato", "Arial", "sans-serif"]
+    },
+    {
+      "id": "literary-reading",
+      "name": "Literary Reading",
+      "category": "Editorial Publishing",
+      "heading": {
+        "font": "Crimson Text",
+        "weights": "600-700",
+        "style": "Literary headings"
+      },
+      "body": {
+        "font": "Crimson Text",
+        "weights": "400",
+        "style": "Reading body text"
+      },
+      "characteristics": "Transitional Serif",
+      "vibe": "Literary Reading",
+      "bestFor": ["Long-Form Reading", "Fiction", "Essays"],
+      "googleFonts": true,
+      "fallback": ["Crimson Text", "Georgia", "serif"]
+    },
+    {
+      "id": "technical-documentation",
+      "name": "Technical Documentation",
+      "category": "Editorial Publishing",
+      "heading": {
+        "font": "Source Code Pro",
+        "weights": "600-700",
+        "style": "Technical headings"
+      },
+      "body": {
+        "font": "Source Sans Pro",
+        "weights": "400-600",
+        "style": "Documentation body text"
+      },
+      "characteristics": "Monospace Font + Humanist Sans-serif",
+      "vibe": "Technical Documentation",
+      "bestFor": ["Technical Documentation", "API Documentation", "Developer Guides"],
+      "googleFonts": true,
+      "adobeFonts": true,
+      "fallback": ["Source Code Pro", "Source Sans Pro", "monospace"]
+    },
+    {
+      "id": "blog-writing",
+      "name": "Blog Writing",
+      "category": "Editorial Publishing",
+      "heading": {
+        "font": "Merriweather",
+        "weights": "700-900",
+        "style": "Blog headings"
+      },
+      "body": {
+        "font": "Open Sans",
+        "weights": "400-600",
+        "style": "Blog body text"
+      },
+      "characteristics": "Slab Serif + Humanist Sans-serif",
+      "vibe": "Blog Writing",
+      "bestFor": ["Personal Blogs", "Medium", "Content Platforms"],
+      "googleFonts": true,
+      "fallback": ["Merriweather", "Open Sans", "Georgia", "serif"]
+    },
+    {
+      "id": "child-friendly",
+      "name": "Child Friendly",
+      "category": "Child-Friendly",
+      "heading": {
+        "font": "Fredoka",
+        "weights": "500-600",
+        "style": "Child-friendly headings"
+      },
+      "body": {
+        "font": "Quicksand",
+        "weights": "400-500",
+        "style": "Soft body text"
+      },
+      "characteristics": "Rounded Display + Rounded Geometric",
+      "vibe": "Child Friendly",
+      "bestFor": ["Children's Applications", "Educational Games", "Cartoons"],
+      "googleFonts": true,
+      "fallback": ["Fredoka", "Quicksand", "Arial", "sans-serif"]
+    },
+    {
+      "id": "cartoon-playful",
+      "name": "Cartoon Playful",
+      "category": "Child-Friendly",
+      "heading": {
+        "font": "Bangers",
+        "weights": "400",
+        "style": "Cartoon headings"
+      },
+      "body": {
+        "font": "Comic Neue",
+        "weights": "400-700",
+        "style": "Playful body text"
+      },
+      "characteristics": "Cartoon Font + Handwritten Style",
+      "vibe": "Cartoon Playful",
+      "bestFor": ["Gaming", "Cartoons", "Entertainment"],
+      "googleFonts": true,
+      "fallback": ["Bangers", "Comic Neue", "Arial", "sans-serif"]
+    },
+    {
+      "id": "handwritten-style",
+      "name": "Handwritten Style",
+      "category": "Child-Friendly",
+      "heading": {
+        "font": "Caveat",
+        "weights": "400-700",
+        "style": "Handwritten headings"
+      },
+      "body": {
+        "font": "Patrick Hand",
+        "weights": "400",
+        "style": "Handwritten body text"
+      },
+      "characteristics": "Handwritten Font",
+      "vibe": "Friendly Handwritten",
+      "bestFor": ["Personal Blogs", "Message Boards", "Note Applications"],
+      "googleFonts": true,
+      "fallback": ["Caveat", "Patrick Hand", "cursive"]
+    },
+    {
+      "id": "gaming-playful",
+      "name": "Gaming Playful",
+      "category": "Child-Friendly",
+      "heading": {
+        "font": "Bubblegum Sans",
+        "weights": "400",
+        "style": "Gaming headings"
+      },
+      "body": {
+        "font": "Nunito",
+        "weights": "400-600",
+        "style": "Playful body text"
+      },
+      "characteristics": "Display Font + Rounded Sans-serif",
+      "vibe": "Gaming Playful",
+      "bestFor": ["Children's Games", "Casual Games", "Entertainment"],
+      "googleFonts": true,
+      "fallback": ["Bubblegum Sans", "Nunito", "Arial", "sans-serif"]
+    },
+    {
+      "id": "code-first",
+      "name": "Code First",
+      "category": "Developer Tools",
+      "heading": {
+        "font": "JetBrains Mono",
+        "weights": "600-700",
+        "style": "Code headings"
+      },
+      "body": {
+        "font": "IBM Plex Sans",
+        "weights": "400-500",
+        "style": "Technical body text"
+      },
+      "characteristics": "Monospace Font + Technical Font",
+      "vibe": "Code Friendly",
+      "bestFor": ["IDE", "Code Editors", "Development Tools"],
+      "googleFonts": true,
+      "fallback": ["JetBrains Mono", "IBM Plex Sans", "monospace"]
+    },
+    {
+      "id": "terminal-style",
+      "name": "Terminal Style",
+      "category": "Developer Tools",
+      "heading": {
+        "font": "Fira Code",
+        "weights": "600",
+        "style": "Terminal headings"
+      },
+      "body": {
+        "font": "Inter",
+        "weights": "400-500",
+        "style": "Modern body text"
+      },
+      "characteristics": "Programming Font + Modern",
+      "vibe": "Terminal Style",
+      "bestFor": ["Terminal", "Command Line", "Development Tools"],
+      "googleFonts": true,
+      "fallback": ["Fira Code", "Inter", "monospace"]
+    },
+    {
+      "id": "technical-documentation-dev",
+      "name": "Technical Documentation",
+      "category": "Developer Tools",
+      "heading": {
+        "font": "Source Code Pro",
+        "weights": "600-700",
+        "style": "Documentation headings"
+      },
+      "body": {
+        "font": "Source Sans Pro",
+        "weights": "400-600",
+        "style": "Technical body text"
+      },
+      "characteristics": "Monospace Font + Humanist Sans-serif",
+      "vibe": "Technical Documentation",
+      "bestFor": ["Technical Documentation", "API Documentation", "Developer Guides"],
+      "googleFonts": true,
+      "adobeFonts": true,
+      "fallback": ["Source Code Pro", "Source Sans Pro", "monospace"]
+    },
+    {
+      "id": "simplified-chinese",
+      "name": "Simplified Chinese",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Noto Sans SC",
+        "weights": "700",
+        "style": "Chinese headings"
+      },
+      "body": {
+        "font": "Noto Sans SC",
+        "weights": "400-500",
+        "style": "Chinese body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["General Chinese", "Websites", "Applications"],
+      "googleFonts": true,
+      "language": "zh-CN",
+      "fallback": ["Noto Sans SC", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "sans-serif"]
+    },
+    {
+      "id": "traditional-chinese",
+      "name": "Traditional Chinese",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Noto Sans TC",
+        "weights": "700",
+        "style": "Traditional Chinese headings"
+      },
+      "body": {
+        "font": "Noto Sans TC",
+        "weights": "400-500",
+        "style": "Traditional Chinese body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Taiwan Hong Kong", "Traditional Chinese Websites"],
+      "googleFonts": true,
+      "language": "zh-TW",
+      "fallback": ["Noto Sans TC", "-apple-system", "BlinkMacSystemFont", "sans-serif"]
+    },
+    {
+      "id": "japanese",
+      "name": "Japanese",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Noto Sans JP",
+        "weights": "700",
+        "style": "Japanese headings"
+      },
+      "body": {
+        "font": "Noto Sans JP",
+        "weights": "400-500",
+        "style": "Japanese body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Japanese Market", "Japanese Applications"],
+      "googleFonts": true,
+      "language": "ja",
+      "fallback": ["Noto Sans JP", "-apple-system", "BlinkMacSystemFont", "sans-serif"]
+    },
+    {
+      "id": "korean",
+      "name": "Korean",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Noto Sans KR",
+        "weights": "700",
+        "style": "Korean headings"
+      },
+      "body": {
+        "font": "Noto Sans KR",
+        "weights": "400-500",
+        "style": "Korean body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Korean Market", "Korean Applications"],
+      "googleFonts": true,
+      "language": "ko",
+      "fallback": ["Noto Sans KR", "-apple-system", "BlinkMacSystemFont", "sans-serif"]
+    },
+    {
+      "id": "arabic",
+      "name": "Arabic",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Noto Sans Arabic",
+        "weights": "700",
+        "style": "Arabic headings"
+      },
+      "body": {
+        "font": "Noto Sans Arabic",
+        "weights": "400-500",
+        "style": "Arabic body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Middle Eastern Market", "Arabic Applications"],
+      "googleFonts": true,
+      "language": "ar",
+      "rtl": true,
+      "fallback": ["Noto Sans Arabic", "Arial", "sans-serif"]
+    },
+    {
+      "id": "hebrew",
+      "name": "Hebrew",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Heebo",
+        "weights": "700-900",
+        "style": "Hebrew headings"
+      },
+      "body": {
+        "font": "Heebo",
+        "weights": "400-500",
+        "style": "Hebrew body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Israeli Market", "Hebrew Applications"],
+      "googleFonts": true,
+      "language": "he",
+      "rtl": true,
+      "fallback": ["Heebo", "Arial", "sans-serif"]
+    },
+    {
+      "id": "thai",
+      "name": "Thai",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Noto Sans Thai",
+        "weights": "700",
+        "style": "Thai headings"
+      },
+      "body": {
+        "font": "Noto Sans Thai",
+        "weights": "400-500",
+        "style": "Thai body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Thai Market", "Thai Applications"],
+      "googleFonts": true,
+      "language": "th",
+      "fallback": ["Noto Sans Thai", "-apple-system", "BlinkMacSystemFont", "sans-serif"]
+    },
+    {
+      "id": "vietnamese",
+      "name": "Vietnamese",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Be Vietnam Pro",
+        "weights": "700",
+        "style": "Vietnamese headings"
+      },
+      "body": {
+        "font": "Be Vietnam Pro",
+        "weights": "400-600",
+        "style": "Vietnamese body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Vietnamese Market", "Vietnamese Applications"],
+      "googleFonts": true,
+      "language": "vi",
+      "fallback": ["Be Vietnam Pro", "Arial", "sans-serif"]
+    },
+    {
+      "id": "russian",
+      "name": "Russian",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Roboto",
+        "weights": "700",
+        "style": "Russian headings"
+      },
+      "body": {
+        "font": "Roboto",
+        "weights": "400-500",
+        "style": "Russian body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Russian Market", "Russian Applications"],
+      "googleFonts": true,
+      "language": "ru",
+      "fallback": ["Roboto", "Arial", "sans-serif"]
+    },
+    {
+      "id": "german",
+      "name": "German",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Inter",
+        "weights": "600-700",
+        "style": "German headings"
+      },
+      "body": {
+        "font": "Inter",
+        "weights": "400-500",
+        "style": "German body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["German Market", "German Applications"],
+      "googleFonts": true,
+      "language": "de",
+      "fallback": ["Inter", "Arial", "sans-serif"]
+    },
+    {
+      "id": "french",
+      "name": "French",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Inter",
+        "weights": "600-700",
+        "style": "French headings"
+      },
+      "body": {
+        "font": "Inter",
+        "weights": "400-500",
+        "style": "French body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["French Market", "French Applications"],
+      "googleFonts": true,
+      "language": "fr",
+      "fallback": ["Inter", "Arial", "sans-serif"]
+    },
+    {
+      "id": "spanish",
+      "name": "Spanish",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Inter",
+        "weights": "600-700",
+        "style": "Spanish headings"
+      },
+      "body": {
+        "font": "Inter",
+        "weights": "400-500",
+        "style": "Spanish body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Spanish Market", "Spanish Applications"],
+      "googleFonts": true,
+      "language": "es",
+      "fallback": ["Inter", "Arial", "sans-serif"]
+    },
+    {
+      "id": "portuguese",
+      "name": "Portuguese",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Inter",
+        "weights": "600-700",
+        "style": "Portuguese headings"
+      },
+      "body": {
+        "font": "Inter",
+        "weights": "400-500",
+        "style": "Portuguese body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Portuguese Market", "Portuguese Applications"],
+      "googleFonts": true,
+      "language": "pt",
+      "fallback": ["Inter", "Arial", "sans-serif"]
+    },
+    {
+      "id": "italian",
+      "name": "Italian",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Inter",
+        "weights": "600-700",
+        "style": "Italian headings"
+      },
+      "body": {
+        "font": "Inter",
+        "weights": "400-500",
+        "style": "Italian body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Italian Market", "Italian Applications"],
+      "googleFonts": true,
+      "language": "it",
+      "fallback": ["Inter", "Arial", "sans-serif"]
+    },
+    {
+      "id": "hindi",
+      "name": "Hindi",
+      "category": "Multi-Language",
+      "heading": {
+        "font": "Noto Sans Devanagari",
+        "weights": "700",
+        "style": "Hindi headings"
+      },
+      "body": {
+        "font": "Noto Sans Devanagari",
+        "weights": "400-500",
+        "style": "Hindi body text"
+      },
+      "characteristics": "Sans-serif",
+      "vibe": "Modern Concise",
+      "bestFor": ["Indian Market", "Hindi Applications"],
+      "googleFonts": true,
+      "language": "hi",
+      "fallback": ["Noto Sans Devanagari", "-apple-system", "BlinkMacSystemFont", "sans-serif"]
+    }
+  ]
+}

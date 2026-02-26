@@ -1,0 +1,25 @@
+{
+  "questions": [
+    {
+      "id": 1,
+      "text": "Does ContextManager's cache key (used for parse results, sections, skills, system prompt) intentionally ignore the incoming user message, request.args, and custom sections?",
+      "priority": "high"
+    },
+    {
+      "id": 2,
+      "text": "How are token budgets computed and enforced end-to-end: SectionSelector limits sections to 40% of maxTokens, but compaction and pruning thresholds also target 80%/protectWindow—are these budgets coordinated or duplicated?",
+      "priority": "high"
+    },
+    {
+      "id": 3,
+      "text": "When request overrides (maxTokens, mode, techStack, compressionThreshold) are supplied, which source takes precedence when building the context and updating the session?",
+      "priority": "medium"
+    },
+    {
+      "id": 4,
+      "text": "Are there automated tests that cover the expected invariants for cache key composition, budget limits, compaction/pruning thresholds, and session/request parameter precedence?",
+      "priority": "medium"
+    }
+  ],
+  "notes": "Questions derived from the context-scan observations and will guide targeted file analysis."
+}

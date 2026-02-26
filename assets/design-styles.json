@@ -1,0 +1,1805 @@
+{
+  "version": "1.0.0",
+  "metadata": {
+    "title": "67 Design Styles Complete Collection",
+    "description": "Complete collection of 67 design styles covering General Styles (49), Landing Page Styles (8), and BI Dashboard Styles (10)",
+    "lastUpdated": "2026-01-29",
+    "totalStyles": 67,
+    "categories": {
+      "general": 49,
+      "landingPage": 8,
+      "biDashboard": 10
+    }
+  },
+  "styles": [
+    {
+      "id": "minimalism-swiss",
+      "name": "Minimalism & Swiss Style",
+      "category": "General",
+      "characteristics": [
+        "Grid layout",
+        "Generous whitespace",
+        "Sans-serif fonts (Inter, Helvetica)",
+        "Monochromatic or dual-color schemes",
+        "Geometric shapes",
+        "Flat icons",
+        "Clear hierarchy",
+        "Functionality first"
+      ],
+      "useCases": ["SaaS", "Enterprise Applications", "Tools", "B2B Products"],
+      "css": {
+        "fontFamily": "'Inter', 'Helvetica Neue', sans-serif",
+        "layout": "css-grid",
+        "gridTemplateColumns": "repeat(12, 1fr)",
+        "gap": "24px",
+        "spacing": "8px base unit",
+        "colors": "monochromatic or dual-color",
+        "borders": "1px solid"
+      },
+      "components": [
+        "Solid buttons (4-8px border-radius)",
+        "Clean cards (1px border)",
+        "Clear navigation (top or side)",
+        "Minimal forms (no extra decoration)"
+      ],
+      "colorSuggestions": {
+        "primary": ["black", "dark gray"],
+        "accent": ["single bright color (blue, orange)"],
+        "background": ["white", "light gray"]
+      }
+    },
+    {
+      "id": "neumorphism",
+      "name": "Neumorphism",
+      "category": "General",
+      "characteristics": [
+        "Soft shadows",
+        "Low contrast",
+        "Rounded elements (12-24px)",
+        "Monochromatic scheme (gray, blue)",
+        "Floating effect",
+        "Subtle interactions"
+      ],
+      "useCases": ["Mobile Apps", "Tools", "Smart Home Controls"],
+      "css": {
+        "background": "#e0e5ec",
+        "borderRadius": "16px",
+        "boxShadowRaised": "8px 8px 16px #b8bec7, -8px -8px 16px #ffffff",
+        "boxShadowPressed": "inset 8px 8px 16px #b8bec7, inset -8px -8px 16px #ffffff",
+        "transition": "all 0.2s ease"
+      },
+      "components": [
+        "Soft buttons (12-16px border-radius)",
+        "Floating cards",
+        "Pressed inputs",
+        "Toggle switches"
+      ],
+      "colorSuggestions": {
+        "background": ["#e0e5ec (light gray-blue)"],
+        "text": ["#4a5568 (dark gray)"],
+        "accent": ["single color (low saturation)"]
+      }
+    },
+    {
+      "id": "glassmorphism",
+      "name": "Glassmorphism",
+      "category": "General",
+      "characteristics": [
+        "Semi-transparent backgrounds (rgba/hsla)",
+        "Background blur (backdrop-filter)",
+        "Bright borders (1-2px)",
+        "Gradient overlays",
+        "Layering effect"
+      ],
+      "useCases": ["Modern Web Apps", "Dashboards", "Mobile Apps"],
+      "css": {
+        "background": "rgba(255, 255, 255, 0.1)",
+        "backdropFilter": "blur(20px) saturate(180%)",
+        "border": "1px solid rgba(255, 255, 255, 0.3)",
+        "borderRadius": "16px",
+        "boxShadow": "0 8px 32px rgba(0, 0, 0, 0.1)"
+      },
+      "components": [
+        "Frosted glass cards",
+        "Semi-transparent navigation bars",
+        "Modal dialogs",
+        "Floating panels"
+      ],
+      "colorSuggestions": {
+        "primary": ["purple", "blue gradients"],
+        "background": ["dark gradients"],
+        "transparency": ["10-30%"]
+      }
+    },
+    {
+      "id": "brutalism",
+      "name": "Brutalism",
+      "category": "General",
+      "characteristics": [
+        "High contrast (black/white)",
+        "Thick borders (3-5px)",
+        "Raw shadows (no blur)",
+        "Large fonts (Bold)",
+        "Asymmetric layouts",
+        "Solid color fills"
+      ],
+      "useCases": ["Creative Websites", "Personal Portfolios", "Art"],
+      "css": {
+        "border": "4px solid #000",
+        "boxShadow": "8px 8px 0 #000",
+        "background": "#fff",
+        "color": "#000",
+        "fontFamily": "'Courier New', monospace",
+        "fontWeight": "bold",
+        "textTransform": "uppercase"
+      },
+      "components": [
+        "Thick border buttons",
+        "Solid shadow cards",
+        "Large headlines (72px+)",
+        "Mosaic grids"
+      ],
+      "colorSuggestions": {
+        "primary": ["pure black #000", "pure white #fff"],
+        "accent": ["yellow", "red", "blue (high saturation)"],
+        "contrast": ["maximum (21:1)"]
+      }
+    },
+    {
+      "id": "3d-hyperrealism",
+      "name": "3D & Hyperrealism",
+      "category": "General",
+      "characteristics": [
+        "Realistic 3D rendering",
+        "Real materials (metal, glass)",
+        "Environmental lighting",
+        "Depth perception",
+        "Floating elements"
+      ],
+      "useCases": ["Product Showcases", "E-commerce", "Premium Brands"],
+      "css": {
+        "perspective": "1000px",
+        "transformStyle": "preserve-3d",
+        "transform": "rotateY(25deg) rotateX(15deg)",
+        "boxShadow": "0 50px 100px -20px rgba(0, 0, 0, 0.5), 0 30px 60px -30px rgba(0, 0, 0, 0.6)",
+        "transition": "transform 0.5s ease"
+      },
+      "tools": ["Three.js", "React Three Fiber", "Spline", "Blender"],
+      "components": [
+        "3D product previews",
+        "Glass material cards",
+        "Metal material elements",
+        "Floating 3D elements"
+      ],
+      "colorSuggestions": {
+        "productColor": ["real material colors"],
+        "background": ["neutral gray", "gradients"],
+        "lighting": ["warm or cool"]
+      }
+    },
+    {
+      "id": "vibrant-block",
+      "name": "Vibrant & Block-based",
+      "category": "General",
+      "characteristics": [
+        "High saturation colors",
+        "Large color blocks",
+        "Geometric shapes",
+        "Borderless layouts",
+        "Strong contrast"
+      ],
+      "useCases": ["Creative Websites", "Design Portfolios", "Event Pages"],
+      "css": {
+        "display": "grid",
+        "gridTemplateColumns": "repeat(3, 1fr)",
+        "gap": "0",
+        "padding": "80px 40px",
+        "fontSize": "48px",
+        "fontWeight": "900",
+        "textTransform": "uppercase"
+      },
+      "components": [
+        "Color block navigation",
+        "Patchwork layouts",
+        "Vibrant buttons",
+        "Geometric decorations"
+      ],
+      "colorSuggestions": {
+        "primary": ["high saturation (>70%)"],
+        "contrastColors": ["complementary pairs"],
+        "quantity": ["3-6 colors"]
+      }
+    },
+    {
+      "id": "dark-mode-oled",
+      "name": "Dark Mode (OLED)",
+      "category": "General",
+      "characteristics": [
+        "Pure black background (#000000)",
+        "High contrast text",
+        "Reduced blue light",
+        "Power saving (OLED)",
+        "Eye protection mode"
+      ],
+      "useCases": ["Night Apps", "Developer Tools", "Games", "Video Apps"],
+      "css": {
+        "background": "#000000",
+        "color": "#ffffff",
+        "textColor": "#e0e0e0 (warm gray)",
+        "primaryBackground": "#1a1a1a",
+        "border": "1px solid #333",
+        "accentColor": "#bb86fc (purple), #03dac6 (teal)"
+      },
+      "components": [
+        "Dark navigation bars",
+        "Dark cards",
+        "Low-blue accent colors",
+        "Dark charts"
+      ],
+      "colorSuggestions": {
+        "background": ["#000000 (pure black)"],
+        "text": ["#ffffff (primary)", "#e0e0e0 (secondary)"],
+        "accent": ["purple", "teal", "green (avoid blue)"],
+        "border": ["#1a1a1a (dark gray)"]
+      }
+    },
+    {
+      "id": "accessible-ethical",
+      "name": "Accessible & Ethical",
+      "category": "General",
+      "characteristics": [
+        "WCAG AAA contrast (7:1+)",
+        "Large touch targets (44x44px+)",
+        "Clear focus states",
+        "Semantic HTML",
+        "Screen reader friendly",
+        "Keyboard navigation support"
+      ],
+      "useCases": ["Government Websites", "Healthcare", "Education", "Public Services"],
+      "css": {
+        "color": "#1a1a1a (17:1 contrast)",
+        "background": "#ffffff",
+        "minTouchTarget": "44px",
+        "focusOutline": "3px solid #005fcc",
+        "outlineOffset": "2px",
+        "linkColor": "#005fcc"
+      },
+      "accessibilityChecklist": [
+        "All text contrast >= 7:1",
+        "Touch targets >= 44x44px",
+        "Focus states visible",
+        "Semantic HTML",
+        "ARIA labels correct",
+        "Keyboard accessible",
+        "Screen reader tested"
+      ],
+      "components": [
+        "Large touch targets",
+        "Clear focus indicators",
+        "Underlined links",
+        "Form labels with clear hierarchy",
+        "Skip links"
+      ],
+      "colorSuggestions": {
+        "primary": ["high contrast (>= 7:1)"],
+        "avoid": ["light text", "thin fonts"],
+        "testTools": ["WAVE", "axe DevTools"]
+      }
+    },
+    {
+      "id": "claymorphism",
+      "name": "Claymorphism",
+      "category": "General",
+      "characteristics": [
+        "Soft 3D effects",
+        "Rounded shapes",
+        "Soft shadows",
+        "Clay texture",
+        "Cartoon style"
+      ],
+      "useCases": ["Kids Apps", "Games", "Creative Tools"],
+      "css": {
+        "background": "linear-gradient(145deg, #f0f0f0, #cacaca)",
+        "borderRadius": "50%",
+        "boxShadow": "20px 20px 60px #bebebe, -20px -20px 60px #ffffff",
+        "transition": "all 0.3s ease"
+      },
+      "components": [
+        "Clay buttons (rounded)",
+        "3D icons",
+        "Soft cards",
+        "Cartoon avatars"
+      ],
+      "colorSuggestions": {
+        "primary": ["soft pink", "blue", "green"],
+        "gradients": ["monochromatic gradients"],
+        "highlights": ["white semi-transparent"]
+      }
+    },
+    {
+      "id": "aurora-ui",
+      "name": "Aurora UI",
+      "category": "General",
+      "characteristics": [
+        "Flowing gradient backgrounds",
+        "Aurora colors (purple, pink, blue)",
+        "Blurred edges",
+        "Dynamic effects",
+        "Dreamy atmosphere"
+      ],
+      "useCases": ["Music Apps", "Social Apps", "Creative Websites"],
+      "css": {
+        "background": "multiple radial-gradients with animation",
+        "backgroundSize": "200% 200%",
+        "animation": "aurora 15s ease infinite",
+        "backdropFilter": "blur(20px)",
+        "border": "1px solid rgba(255, 255, 255, 0.1)",
+        "borderRadius": "20px"
+      },
+      "components": [
+        "Aurora background cards",
+        "Gradient text",
+        "Semi-transparent panels",
+        "Flowing buttons"
+      ],
+      "colorSuggestions": {
+        "primary": ["purple", "pink", "blue gradients"],
+        "transparency": ["5-20%"],
+        "animation": ["15-30 second loops"]
+      }
+    },
+    {
+      "id": "retro-futurism",
+      "name": "Retro-Futurism",
+      "category": "General",
+      "characteristics": [
+        "Vintage tech aesthetics",
+        "Futuristic elements",
+        "Neon colors",
+        "Retro typography",
+        "Space-age imagery"
+      ],
+      "useCases": ["Tech Portfolios", "Creative Agencies", "Art Projects"],
+      "components": [
+        "Neon borders",
+        "Retro-futuristic illustrations",
+        "Space-age buttons",
+        "Vintage tech icons"
+      ],
+      "colorSuggestions": {
+        "primary": ["neon pink", "cyan", "electric blue"],
+        "accent": ["silver", "chrome"],
+        "background": ["deep purple", "black"]
+      }
+    },
+    {
+      "id": "flat-design",
+      "name": "Flat Design",
+      "category": "General",
+      "characteristics": [
+        "No gradients or shadows",
+        "Solid colors",
+        "Simple shapes",
+        "Clean typography",
+        "Minimalist icons"
+      ],
+      "useCases": ["Corporate Sites", "Business Apps", "Informational Sites"],
+      "css": {
+        "boxShadow": "none",
+        "gradients": "none",
+        "borderRadius": "0-4px",
+        "transitions": "simple color changes"
+      },
+      "components": [
+        "Flat buttons",
+        "Simple cards",
+        "Clean navigation",
+        "Minimal forms"
+      ],
+      "colorSuggestions": {
+        "primary": ["bold solid colors"],
+        "background": ["white", "light gray"],
+        "accent": ["single accent color"]
+      }
+    },
+    {
+      "id": "skeuomorphism",
+      "name": "Skeuomorphism",
+      "category": "General",
+      "characteristics": [
+        "Realistic textures",
+        "Life-like elements",
+        "Gradients and shadows",
+        "Physical metaphors",
+        "Detailed craftsmanship"
+      ],
+      "useCases": ["Premium Apps", "Luxury Brands", "Craftsmanship Sites"],
+      "css": {
+        "realisticShadows": "multiple layered shadows",
+        "gradients": "subtle texture gradients",
+        "borderRadius": "realistic shapes",
+        "textures": "wood, metal, leather, fabric"
+      },
+      "components": [
+        "Realistic buttons",
+        "Textured cards",
+        "Life-like toggles",
+        "Physical controls"
+      ],
+      "colorSuggestions": {
+        "primary": ["natural material colors"],
+        "accent": ["gold", "bronze", "silver"],
+        "background": ["realistic textures"]
+      }
+    },
+    {
+      "id": "liquid-glass",
+      "name": "Liquid Glass",
+      "category": "General",
+      "characteristics": [
+        "Fluid shapes",
+        "Glass-like transparency",
+        "Morphing forms",
+        "Irregular borders",
+        "Liquid animations"
+      ],
+      "useCases": ["Creative Portfolios", "Art Sites", "Experimental Projects"],
+      "components": [
+        "Fluid buttons",
+        "Morphing cards",
+        "Liquid backgrounds",
+        "Glass morphing containers"
+      ],
+      "colorSuggestions": {
+        "primary": ["iridescent", "holographic"],
+        "background": ["gradient meshes"],
+        "transparency": ["variable transparency"]
+      }
+    },
+    {
+      "id": "motion-driven",
+      "name": "Motion-Driven",
+      "category": "General",
+      "characteristics": [
+        "Animation-first design",
+        "Smooth transitions",
+        "Micro-interactions",
+        "Kinetic typography",
+        "Scroll-based animations"
+      ],
+      "useCases": ["Interactive Stories", "Portfolio Sites", "Brand Experiences"],
+      "css": {
+        "transitions": "all 0.3s cubic-bezier",
+        "animations": "keyframe animations",
+        "transforms": "translate, rotate, scale",
+        "timingFunctions": "custom bezier curves"
+      },
+      "components": [
+        "Animated buttons",
+        "Motion cards",
+        "Scroll-triggered elements",
+        "Kinetic text"
+      ],
+      "colorSuggestions": {
+        "primary": ["any color palette"],
+        "focus": ["motion quality over color"]
+      }
+    },
+    {
+      "id": "micro-interactions",
+      "name": "Micro-interactions",
+      "category": "General",
+      "characteristics": [
+        "Subtle feedback animations",
+        "Interactive states",
+        "Delightful details",
+        "Contextual responses",
+        "Engaging moments"
+      ],
+      "useCases": ["Interactive Apps", "E-commerce", "Social Platforms"],
+      "components": [
+        "Hover effects",
+        "Click feedback",
+        "Loading animations",
+        "Success confirmations"
+      ],
+      "colorSuggestions": {
+        "primary": ["brand colors with state variations"],
+        "feedback": ["color changes on interaction"]
+      }
+    },
+    {
+      "id": "inclusive-design",
+      "name": "Inclusive Design",
+      "category": "General",
+      "characteristics": [
+        "Universal accessibility",
+        "Diverse representation",
+        "Cultural sensitivity",
+        "Adaptable layouts",
+        "Multiple interaction modes"
+      ],
+      "useCases": ["Public Services", "Education", "Healthcare", "Community Platforms"],
+      "components": [
+        "Adaptable navigation",
+        "Multiple language support",
+        "Flexible typography",
+        "Alternative input methods"
+      ],
+      "colorSuggestions": {
+        "primary": ["culturally neutral colors"],
+        "contrast": ["WCAG AA minimum"],
+        "flexibility": ["customizable themes"]
+      }
+    },
+    {
+      "id": "zero-interface",
+      "name": "Zero Interface",
+      "category": "General",
+      "characteristics": [
+        "Invisible controls",
+        "Gesture-based",
+        "Voice-controlled",
+        "AI-driven interactions",
+        "Minimal visual elements"
+      ],
+      "useCases": ["Smart Home", "Voice Apps", "AI Assistants", "Wearables"],
+      "components": [
+        "Gesture controls",
+        "Voice commands",
+        "Contextual actions",
+        "Invisible triggers"
+      ],
+      "colorSuggestions": {
+        "primary": ["minimal colors"],
+        "background": ["neutral or adaptive"],
+        "focus": ["invisibility"]
+      }
+    },
+    {
+      "id": "soft-ui-evolution",
+      "name": "Soft UI Evolution",
+      "category": "General",
+      "characteristics": [
+        "Evolved neumorphism",
+        "Better contrast",
+        "Subtle depth",
+        "Soft shadows",
+        "Refined aesthetics"
+      ],
+      "useCases": ["Modern Apps", "Dashboard", "Productivity Tools"],
+      "css": {
+        "background": "#f0f2f5",
+        "softShadows": "subtle layered shadows",
+        "borderRadius": "12-16px",
+        "transitions": "smooth 0.2s ease"
+      },
+      "components": [
+        "Soft cards",
+        "Elegant buttons",
+        "Refined inputs",
+        "Subtle navigation"
+      ],
+      "colorSuggestions": {
+        "primary": ["soft grays", "muted blues"],
+        "accent": ["gentle accent colors"],
+        "background": ["light neutral"]
+      }
+    },
+    {
+      "id": "neubrutalism",
+      "name": "Neubrutalism",
+      "category": "General",
+      "characteristics": [
+        "Bold colors",
+        "Thick black borders",
+        "Hard shadows",
+        "Raw aesthetics",
+        "Playful but structured"
+      ],
+      "useCases": ["Startups", "Creative Agencies", "Brand Sites"],
+      "css": {
+        "border": "3px solid #000",
+        "boxShadow": "6px 6px 0 #000",
+        "borderRadius": "0-8px",
+        "fontWeight": "bold"
+      },
+      "components": [
+        "Bold border buttons",
+        "Hard shadow cards",
+        "Chunky headers",
+        "Playful layouts"
+      ],
+      "colorSuggestions": {
+        "primary": ["bold primary colors"],
+        "borders": ["black #000"],
+        "background": ["white", "bright colors"]
+      }
+    },
+    {
+      "id": "bento-box-grid",
+      "name": "Bento Box Grid",
+      "category": "General",
+      "characteristics": [
+        "Modular grid layout",
+        "Uneven cell sizes",
+        "Content-focused",
+        "Organized modules",
+        "Flexible arrangement"
+      ],
+      "useCases": ["Dashboards", "Content Aggregators", "Portfolio Sites"],
+      "css": {
+        "display": "grid",
+        "gridTemplateColumns": "repeat(4, 1fr)",
+        "gridAutoRows": "minmax(100px, auto)",
+        "gap": "16px"
+      },
+      "components": [
+        "Variable size cards",
+        "Flexible content blocks",
+        "Grid-based widgets",
+        "Modular sections"
+      ],
+      "colorSuggestions": {
+        "primary": ["any palette"],
+        "focus": ["grid structure"]
+      }
+    },
+    {
+      "id": "y2k-aesthetic",
+      "name": "Y2K Aesthetic",
+      "category": "General",
+      "characteristics": [
+        "Early 2000s nostalgia",
+        "Chrome effects",
+        "Bubble fonts",
+        "Bright colors",
+        "Optimistic futurism"
+      ],
+      "useCases": ["Fashion", "Lifestyle", "Entertainment", "Nostalgic Brands"],
+      "components": [
+        "Chrome buttons",
+        "Bubble text",
+        "Sparkle effects",
+        "Retro tech elements"
+      ],
+      "colorSuggestions": {
+        "primary": ["hot pink", "lime green", "baby blue"],
+        "accent": ["chrome", "silver"],
+        "background": ["white", "pastels"]
+      }
+    },
+    {
+      "id": "cyberpunk-ui",
+      "name": "Cyberpunk UI",
+      "category": "General",
+      "characteristics": [
+        "High-tech dystopia",
+        "Neon accents",
+        "Dark backgrounds",
+        "Glitch effects",
+        "Tech-heavy aesthetics"
+      ],
+      "useCases": ["Gaming", "Tech Brands", "Entertainment", "Future Concepts"],
+      "css": {
+        "background": "#0a0a0a",
+        "neonColors": "#ff00ff, #00ffff, #ff0080",
+        "glitchEffects": "text-shadow offsets",
+        "borders": "tech-inspired lines"
+      },
+      "components": [
+        "Neon borders",
+        "Glitch text",
+        "Tech panels",
+        "HUD elements"
+      ],
+      "colorSuggestions": {
+        "primary": ["neon pink", "cyan", "electric blue"],
+        "background": ["black", "dark purple"],
+        "accent": ["laser green", "hot pink"]
+      }
+    },
+    {
+      "id": "organic-biophilic",
+      "name": "Organic Biophilic",
+      "category": "General",
+      "characteristics": [
+        "Nature-inspired",
+        "Organic shapes",
+        "Natural color palettes",
+        "Plant imagery",
+        "Sustainable aesthetics"
+      ],
+      "useCases": ["Wellness", "Healthcare", "Eco-brands", "Outdoor Lifestyle"],
+      "components": [
+        "Organic shapes",
+        "Nature illustrations",
+        "Earthy textures",
+        "Plant-based icons"
+      ],
+      "colorSuggestions": {
+        "primary": ["greens", "browns", "earth tones"],
+        "accent": ["leaf green", "sky blue"],
+        "background": ["natural whites", "warm beiges"]
+      }
+    },
+    {
+      "id": "ai-native-ui",
+      "name": "AI-Native UI",
+      "category": "General",
+      "characteristics": [
+        "AI-first interactions",
+        "Smart suggestions",
+        "Adaptive interfaces",
+        "Predictive elements",
+        "Conversational UI"
+      ],
+      "useCases": ["AI Products", "Smart Tools", "Automation Platforms"],
+      "components": [
+        "AI chat interfaces",
+        "Smart suggestions",
+        "Adaptive layouts",
+        "Predictive inputs"
+      ],
+      "colorSuggestions": {
+        "primary": ["futuristic blues", "purples"],
+        "background": ["clean whites", "subtle gradients"],
+        "accent": ["intelligent highlights"]
+      }
+    },
+    {
+      "id": "memphis-design",
+      "name": "Memphis Design",
+      "category": "General",
+      "characteristics": [
+        "Bold geometric shapes",
+        "Vibrant colors",
+        "Playful patterns",
+        "Random elements",
+        "80s nostalgia"
+      ],
+      "useCases": ["Creative Brands", "Events", "Fashion", "Art"],
+      "components": [
+        "Geometric decorations",
+        "Patterned backgrounds",
+        "Bold color blocks",
+        "Playful icons"
+      ],
+      "colorSuggestions": {
+        "primary": ["yellow", "blue", "red", "black"],
+        "patterns": ["triangles", "squiggles", "dots"],
+        "background": ["white or black"]
+      }
+    },
+    {
+      "id": "vaporwave",
+      "name": "Vaporwave",
+      "category": "General",
+      "characteristics": [
+        "80s/90s aesthetics",
+        "Glitch art",
+        "Statues",
+        "Neon pink/cyan",
+        "Retro tech imagery"
+      ],
+      "useCases": ["Music", "Art", "Nostalgic Brands", "Entertainment"],
+      "components": [
+        "Glitch effects",
+        "Retro statues",
+        "Neon gradients",
+        "Vaporwave imagery"
+      ],
+      "colorSuggestions": {
+        "primary": ["hot pink", "cyan"],
+        "background": ["purple gradients"],
+        "accent": ["retro tech colors"]
+      }
+    },
+    {
+      "id": "dimensional-layering",
+      "name": "Dimensional Layering",
+      "category": "General",
+      "characteristics": [
+        "Multiple depth layers",
+        "Parallax effects",
+        "3D transforms",
+        "Stacked elements",
+        "Deep shadows"
+      ],
+      "useCases": ["Interactive Stories", "Portfolio Sites", "Brand Experiences"],
+      "css": {
+        "perspective": "1000px",
+        "transformStyle": "preserve-3d",
+        "parallax": "scroll-based transforms",
+        "shadows": "layered shadows for depth"
+      },
+      "components": [
+        "Layered cards",
+        "Parallax sections",
+        "3D elements",
+        "Depth-based navigation"
+      ],
+      "colorSuggestions": {
+        "primary": ["any palette"],
+        "focus": ["depth and layering"]
+      }
+    },
+    {
+      "id": "exaggerated-minimalism",
+      "name": "Exaggerated Minimalism",
+      "category": "General",
+      "characteristics": [
+        "Extreme whitespace",
+        "Ultra-large typography",
+        "Single element focus",
+        "Maximum simplicity",
+        "Bold reduction"
+      ],
+      "useCases": ["Luxury Brands", "Art Sites", "Minimalist Products"],
+      "css": {
+        "maxWhitespace": "80%+ whitespace",
+        "fontSize": "up to 200px",
+        "elements": "single focal point per section",
+        "colors": "limited to 1-2 colors"
+      },
+      "components": [
+        "Giant headlines",
+        "Single CTA buttons",
+        "Minimal navigation",
+        "Sparse content"
+      ],
+      "colorSuggestions": {
+        "primary": ["black", "white", "single accent"],
+        "background": ["vast white space"],
+        "typography": ["ultra-large"]
+      }
+    },
+    {
+      "id": "kinetic-typography",
+      "name": "Kinetic Typography",
+      "category": "General",
+      "characteristics": [
+        "Moving text",
+        "Animated letters",
+        "Dynamic fonts",
+        "Motion-based messaging",
+        "Text as visual element"
+      ],
+      "useCases": ["Creative Portfolios", "Brand Sites", "Art Projects"],
+      "components": [
+        "Animated headlines",
+        "Moving letters",
+        "Dynamic text effects",
+        "Kinetic messages"
+      ],
+      "colorSuggestions": {
+        "primary": ["bold colors"],
+        "focus": ["typography animation"]
+      }
+    },
+    {
+      "id": "parallax-storytelling",
+      "name": "Parallax Storytelling",
+      "category": "General",
+      "characteristics": [
+        "Scroll-based narrative",
+        "Multi-layer parallax",
+        "Story progression",
+        "Immersive experience",
+        "Visual storytelling"
+      ],
+      "useCases": ["Brand Stories", "Interactive Articles", "Narrative Sites"],
+      "components": [
+        "Parallax sections",
+        "Story panels",
+        "Scroll-triggered animations",
+        "Narrative elements"
+      ],
+      "colorSuggestions": {
+        "primary": ["mood-appropriate colors"],
+        "focus": ["storytelling experience"]
+      }
+    },
+    {
+      "id": "swiss-modernism-2",
+      "name": "Swiss Modernism 2.0",
+      "category": "General",
+      "characteristics": [
+        "Evolved Swiss style",
+        "Modern touches",
+        "Clean grids",
+        "Professional typography",
+        "Contemporary minimalism"
+      ],
+      "useCases": ["Corporate Sites", "B2B SaaS", "Professional Services"],
+      "css": {
+        "grid": "12-column system",
+        "typography": "modern sans-serif",
+        "spacing": "consistent 8px grid",
+        "colors": "professional palette"
+      },
+      "components": [
+        "Clean navigation",
+        "Professional cards",
+        "Structured layouts",
+        "Modern forms"
+      ],
+      "colorSuggestions": {
+        "primary": ["navy", "black", "dark gray"],
+        "accent": ["single accent color"],
+        "background": ["white", "light gray"]
+      }
+    },
+    {
+      "id": "hud-scifi-fui",
+      "name": "HUD / Sci-Fi FUI",
+      "category": "General",
+      "characteristics": [
+        "Heads-up display",
+        "Futuristic UI",
+        "Data visualization",
+        "Sci-fi aesthetics",
+        "Technical overlays"
+      ],
+      "useCases": ["Gaming", "Tech Demos", "Future Concepts", "Data Visualization"],
+      "components": [
+        "HUD overlays",
+        "Technical borders",
+        "Data displays",
+        "Sci-fi controls"
+      ],
+      "colorSuggestions": {
+        "primary": ["green", "cyan", "orange"],
+        "background": ["black", "dark blue"],
+        "tech": ["technical accents"]
+      }
+    },
+    {
+      "id": "pixel-art",
+      "name": "Pixel Art",
+      "category": "General",
+      "characteristics": [
+        "8-bit aesthetics",
+        "Blocky elements",
+        "Retro gaming",
+        "Pixelated imagery",
+        "Nostalgic tech"
+      ],
+      "useCases": ["Gaming", "Retro Brands", "Entertainment", "Nostalgic Apps"],
+      "components": [
+        "Pixel buttons",
+        "Retro icons",
+        "Pixel fonts",
+        "Blocky UI elements"
+      ],
+      "colorSuggestions": {
+        "primary": ["retro color palettes"],
+        "background": ["black", "bright colors"],
+        "aesthetic": ["8-bit limited colors"]
+      }
+    },
+    {
+      "id": "bento-grids",
+      "name": "Bento Grids",
+      "category": "General",
+      "characteristics": [
+        "Bento box inspired",
+        "Rectangular modules",
+        "Organized chaos",
+        "Content-first",
+        "Modular design"
+      ],
+      "useCases": ["Content Sites", "Aggregators", "Dashboards", "Portfolios"],
+      "css": {
+        "display": "grid",
+        "gridTemplateColumns": "auto-fit",
+        "gridAutoFlow": "dense",
+        "gap": "12-20px"
+      },
+      "components": [
+        "Variable cards",
+        "Content modules",
+        "Flexible widgets",
+        "Grid-based sections"
+      ],
+      "colorSuggestions": {
+        "primary": ["any palette"],
+        "focus": ["grid organization"]
+      }
+    },
+    {
+      "id": "spatial-ui-visionos",
+      "name": "Spatial UI (VisionOS)",
+      "category": "General",
+      "characteristics": [
+        "3D spatial design",
+        "AR/MR inspired",
+        "Floating elements",
+        "Depth and perspective",
+        "Immersive interfaces"
+      ],
+      "useCases": ["AR/VR Apps", "Spatial Computing", "Future Tech"],
+      "css": {
+        "perspective": "1000px+",
+        "transform3d": "full 3D transforms",
+        "spatialLayout": "z-axis positioning",
+        "floating": "elements in space"
+      },
+      "components": [
+        "Floating panels",
+        "3D controls",
+        "Spatial navigation",
+        "Depth-layered content"
+      ],
+      "colorSuggestions": {
+        "primary": ["futuristic gradients"],
+        "background": ["depth-based"],
+        "materials": ["glass", "metal", "light"]
+      }
+    },
+    {
+      "id": "e-ink-paper",
+      "name": "E-Ink / Paper",
+      "category": "General",
+      "characteristics": [
+        "E-reader aesthetics",
+        "High contrast",
+        "No gradients",
+        "Paper-like textures",
+        "Eye-friendly"
+      ],
+      "useCases": ["Reading Apps", "E-books", "Documentation", "Academic Sites"],
+      "css": {
+        "background": "#F5F5DC or #FFFFFF",
+        "textColor": "#000000",
+        "noGradients": true,
+        "highContrast": "WCAG AAA"
+      },
+      "components": [
+        "Paper-textured cards",
+        "Clean typography",
+        "Simple buttons",
+        "Minimal decoration"
+      ],
+      "colorSuggestions": {
+        "primary": ["black on white/beige"],
+        "background": ["paper colors"],
+        "grayscale": ["dominant, limited color"]
+      }
+    },
+    {
+      "id": "gen-z-chaos",
+      "name": "Gen Z Chaos",
+      "category": "General",
+      "characteristics": [
+        "Maximalist aesthetics",
+        "Clashing patterns",
+        "Bold colors",
+        "Unconventional layouts",
+        "Anti-design principles"
+      ],
+      "useCases": ["Gen Z Brands", "Fashion", "Entertainment", "Social"],
+      "components": [
+        "Overlapping elements",
+        "Bold typography",
+        "Chaotic layouts",
+        "Experimental navigation"
+      ],
+      "colorSuggestions": {
+        "primary": ["clashing colors"],
+        "patterns": ["mixed patterns"],
+        "aesthetic": ["intentionally chaotic"]
+      }
+    },
+    {
+      "id": "biomimetic-organic-2",
+      "name": "Biomimetic / Organic 2.0",
+      "category": "General",
+      "characteristics": [
+        "Advanced biophilic design",
+        "Nature-inspired forms",
+        "Sustainable aesthetics",
+        "Organic patterns",
+        "Eco-conscious"
+      ],
+      "useCases": ["Sustainable Brands", "Wellness", "Eco-products", "Healthcare"],
+      "components": [
+        "Organic forms",
+        "Natural textures",
+        "Biomimetic patterns",
+        "Eco-inspired icons"
+      ],
+      "colorSuggestions": {
+        "primary": ["earth tones", "natural greens"],
+        "accent": ["sky blues", "sunset oranges"],
+        "background": ["natural materials"]
+      }
+    },
+    {
+      "id": "anti-polish-raw",
+      "name": "Anti-Polish / Raw",
+      "category": "General",
+      "characteristics": [
+        "Intentionally unfinished",
+        "Raw aesthetics",
+        "Hand-crafted feel",
+        "Imperfect elements",
+        "Authentic imperfection"
+      ],
+      "useCases": ["Artistic Projects", "Personal Brands", "Creative Sites"],
+      "components": [
+        "Raw edges",
+        "Hand-drawn elements",
+        "Unfinished looks",
+        "Authentic textures"
+      ],
+      "colorSuggestions": {
+        "primary": ["natural tones"],
+        "aesthetic": ["intentionally raw"],
+        "texture": ["visible imperfections"]
+      }
+    },
+    {
+      "id": "tactile-digital",
+      "name": "Tactile Digital",
+      "category": "General",
+      "characteristics": [
+        "Tactile feedback",
+        "Touchable interfaces",
+        "Physical textures",
+        "Haptic-inspired design",
+        "Sensory experience"
+      ],
+      "useCases": ["Touch Apps", "Interactive Installations", "Kids Apps"],
+      "components": [
+        "Textured buttons",
+        "Touchable cards",
+        "Physical controls",
+        "Tactile feedback"
+      ],
+      "colorSuggestions": {
+        "primary": ["rich, saturated colors"],
+        "texture": ["visible textures"],
+        "feel": ["tactile quality"]
+      }
+    },
+    {
+      "id": "nature-distilled",
+      "name": "Nature Distilled",
+      "category": "General",
+      "characteristics": [
+        "Minimalist nature",
+        "Organic simplicity",
+        "Natural colors",
+        "Subtle textures",
+        "Refined earthiness"
+      ],
+      "useCases": ["Wellness", "Eco-brands", "Organic Products"],
+      "components": [
+        "Simple organic shapes",
+        "Natural color palette",
+        "Subtle textures",
+        "Clean typography"
+      ],
+      "colorSuggestions": {
+        "primary": ["muted earth tones"],
+        "accent": ["soft greens", "gentle blues"],
+        "background": ["natural whites", "warm beiges"]
+      }
+    },
+    {
+      "id": "interactive-cursor",
+      "name": "Interactive Cursor",
+      "category": "General",
+      "characteristics": [
+        "Custom cursor behavior",
+        "Cursor interactions",
+        "Hover effects",
+        "Follow animations",
+        "Pointer-based UX"
+      ],
+      "useCases": ["Creative Portfolios", "Interactive Sites", "Art Projects"],
+      "components": [
+        "Custom cursors",
+        "Hover reveals",
+        "Cursor trails",
+        "Interactive hotspots"
+      ],
+      "colorSuggestions": {
+        "primary": ["brand colors"],
+        "cursor": ["custom designed"],
+        "feedback": ["visual cursor states"]
+      }
+    },
+    {
+      "id": "voice-first-multimodal",
+      "name": "Voice-First Multimodal",
+      "category": "General",
+      "characteristics": [
+        "Voice primary interface",
+        "Multimodal inputs",
+        "Conversational UX",
+        "Audio feedback",
+        "Natural language"
+      ],
+      "useCases": ["Voice Apps", "AI Assistants", "Accessibility", "Smart Home"],
+      "components": [
+        "Voice input controls",
+        "Audio feedback",
+        "Conversation UI",
+        "Multimodal inputs"
+      ],
+      "colorSuggestions": {
+        "primary": ["minimal visual"],
+        "feedback": ["audio + visual"],
+        "interface": ["voice-first"]
+      }
+    },
+    {
+      "id": "3d-product-preview",
+      "name": "3D Product Preview",
+      "category": "General",
+      "characteristics": [
+        "Interactive 3D products",
+        "360° viewing",
+        "Product customization",
+        "Realistic rendering",
+        "Spatial experience"
+      ],
+      "useCases": ["E-commerce", "Product Showcases", "Configurators"],
+      "tools": ["Three.js", "React Three Fiber", "Model viewers"],
+      "components": [
+        "3D product viewers",
+        "360° rotation",
+        "Color pickers",
+        "Configuration panels"
+      ],
+      "colorSuggestions": {
+        "primary": ["product-based"],
+        "background": ["neutral for products"],
+        "lighting": ["realistic"]
+      }
+    },
+    {
+      "id": "gradient-mesh-aurora",
+      "name": "Gradient Mesh / Aurora",
+      "category": "General",
+      "characteristics": [
+        "Gradient mesh backgrounds",
+        "Flowing color transitions",
+        "Mesh gradients",
+        "Aurora effects",
+        "Color blending"
+      ],
+      "useCases": ["Modern Apps", "Creative Sites", "Brand Experiences"],
+      "css": {
+        "background": "gradient mesh",
+        "blendingModes": "overlay, screen, multiply",
+        "animations": "slow flowing transitions",
+        "gradients": "multi-stop gradients"
+      },
+      "components": [
+        "Gradient backgrounds",
+        "Color-blended cards",
+        "Mesh buttons",
+        "Flowing text"
+      ],
+      "colorSuggestions": {
+        "primary": ["complementary gradients"],
+        "blending": ["smooth transitions"],
+        "animation": ["slow, flowing"]
+      }
+    },
+    {
+      "id": "editorial-grid",
+      "name": "Editorial Grid",
+      "category": "General",
+      "characteristics": [
+        "Magazine-style layouts",
+        "Editorial typography",
+        "Grid-based design",
+        "Content hierarchy",
+        "Print-inspired"
+      ],
+      "useCases": ["Content Sites", "Magazines", "Blogs", "Publications"],
+      "components": [
+        "Editorial headlines",
+        "Grid layouts",
+        "Pull quotes",
+        "Feature sections"
+      ],
+      "colorSuggestions": {
+        "primary": ["print-inspired palettes"],
+        "typography": ["serif + sans-serif"],
+        "layout": ["strong grid"]
+      }
+    },
+    {
+      "id": "chromatic-aberration",
+      "name": "Chromatic Aberration",
+      "category": "General",
+      "characteristics": [
+        "RGB split effects",
+        "Glitch aesthetics",
+        "Color separation",
+        "Distorted visuals",
+        "Technical artifacts"
+      ],
+      "useCases": ["Creative Sites", "Art Projects", "Gaming", "Music"],
+      "css": {
+        "textShadow": "RGB offset shadows",
+        "colorChannelEffects": "RGB separation",
+        "distortion": "intentional visual artifacts"
+      },
+      "components": [
+        "Glitch text",
+        "RGB split images",
+        "Distorted buttons",
+        "Artifact effects"
+      ],
+      "colorSuggestions": {
+        "primary": ["RGB colors"],
+        "effects": ["red/cyan split"],
+        "background": ["dark for effect visibility"]
+      }
+    },
+    {
+      "id": "vintage-analog",
+      "name": "Vintage Analog",
+      "category": "General",
+      "characteristics": [
+        "Analog tech nostalgia",
+        "Vintage aesthetics",
+        "Film photography",
+        "Retro colors",
+        "Old-school feel"
+      ],
+      "useCases": ["Nostalgic Brands", "Art Projects", "Photography", "Vintage Shops"],
+      "components": [
+        "Film grain effects",
+        "Vintage typography",
+        "Retro colors",
+        "Analog textures"
+      ],
+      "colorSuggestions": {
+        "primary": ["vintage film colors"],
+        "effects": ["film grain", "sepia"],
+        "aesthetic": ["retro analog"]
+      }
+    },
+    {
+      "id": "hero-centric-design",
+      "name": "Hero-Centric Design",
+      "category": "Landing Page",
+      "characteristics": [
+        "Large hero section",
+        "Bold headline",
+        "Clear CTA",
+        "Impactful visuals",
+        "Single-focus message"
+      ],
+      "useCases": ["Product Launches", "Startup Pages", "Campaign Pages"],
+      "components": [
+        "Full-screen hero",
+        "Bold headlines",
+        "Primary CTA",
+        "Supporting visuals"
+      ],
+      "colorSuggestions": {
+        "primary": ["brand colors"],
+        "hero": ["bold background"],
+        "cta": ["high contrast button"]
+      }
+    },
+    {
+      "id": "conversion-optimized",
+      "name": "Conversion-Optimized",
+      "category": "Landing Page",
+      "characteristics": [
+        "Sales-focused layout",
+        "Clear value proposition",
+        "Trust signals",
+        "Optimized CTAs",
+        "Minimal distractions"
+      ],
+      "useCases": ["SaaS", "E-commerce", "Lead Generation"],
+      "components": [
+        "Benefit-focused copy",
+        "Trust badges",
+        "Clear CTAs",
+        "Testimonials"
+      ],
+      "colorSuggestions": {
+        "primary": ["trust-inspiring colors"],
+        "cta": ["high contrast action colors"],
+        "background": ["clean, focused"]
+      }
+    },
+    {
+      "id": "feature-rich-showcase",
+      "name": "Feature-Rich Showcase",
+      "category": "Landing Page",
+      "characteristics": [
+        "Multiple feature sections",
+        "Detailed explanations",
+        "Visual demonstrations",
+        "Comprehensive info",
+        "Scroll-based reveal"
+      ],
+      "useCases": ["Complex Products", "Feature-Rich Apps", "Enterprise Software"],
+      "components": [
+        "Feature sections",
+        "Demo videos",
+        "Detailed cards",
+        "Interactive demos"
+      ],
+      "colorSuggestions": {
+        "primary": ["organizational colors"],
+        "sections": ["color-coded features"],
+        "background": ["clean for readability"]
+      }
+    },
+    {
+      "id": "minimal-direct",
+      "name": "Minimal & Direct",
+      "category": "Landing Page",
+      "characteristics": [
+        "Extreme minimalism",
+        "Single message",
+        "Direct CTA",
+        "No distractions",
+        "Clear focus"
+      ],
+      "useCases": ["Simple Products", "Apps", "Direct Response"],
+      "components": [
+        "Simple headline",
+        "Single CTA",
+        "Minimal copy",
+        "Clean layout"
+      ],
+      "colorSuggestions": {
+        "primary": ["minimal colors"],
+        "background": ["white or single color"],
+        "focus": ["clarity over aesthetics"]
+      }
+    },
+    {
+      "id": "social-proof-focused",
+      "name": "Social Proof-Focused",
+      "category": "Landing Page",
+      "characteristics": [
+        "Testimonial-driven",
+        "User reviews",
+        "Trust indicators",
+        "Social validation",
+        "Community focus"
+      ],
+      "useCases": ["Consumer Products", "Services", "Marketplaces"],
+      "components": [
+        "Testimonial sections",
+        "Review cards",
+        "User counts",
+        "Trust badges"
+      ],
+      "colorSuggestions": {
+        "primary": ["trust-building colors"],
+        "accents": ["highlight positive reviews"],
+        "background": ["clean for readability"]
+      }
+    },
+    {
+      "id": "interactive-product-demo",
+      "name": "Interactive Product Demo",
+      "category": "Landing Page",
+      "characteristics": [
+        "Interactive experiences",
+        "Try-before-buy",
+        "Hands-on demos",
+        "Engaging interactions",
+        "Product immersion"
+      ],
+      "useCases": ["SaaS", "Apps", "Interactive Tools"],
+      "components": [
+        "Live demos",
+        "Interactive tutorials",
+        "Playful interactions",
+        "Product previews"
+      ],
+      "colorSuggestions": {
+        "primary": ["engaging colors"],
+        "interactive": ["hover states", "active feedback"],
+        "background": ["clean for focus"]
+      }
+    },
+    {
+      "id": "trust-authority",
+      "name": "Trust & Authority",
+      "category": "Landing Page",
+      "characteristics": [
+        "Authority-building",
+        "Professional credentials",
+        "Expert positioning",
+        "Trust signals",
+        "Credibility markers"
+      ],
+      "useCases": ["Professional Services", "B2B", "Consulting"],
+      "components": [
+        "Credentials sections",
+        "Expert bios",
+        "Certifications",
+        "Trust badges"
+      ],
+      "colorSuggestions": {
+        "primary": ["professional colors"],
+        "authority": ["navy", "dark blue", "black"],
+        "background": ["clean, professional"]
+      }
+    },
+    {
+      "id": "storytelling-driven",
+      "name": "Storytelling-Driven",
+      "category": "Landing Page",
+      "characteristics": [
+        "Narrative structure",
+        "Emotional connection",
+        "Story progression",
+        "Brand journey",
+        "Engaging content"
+      ],
+      "useCases": ["Brand Stories", "Mission-Driven", "Cause-Based"],
+      "components": [
+        "Story sections",
+        "Narrative elements",
+        "Emotional imagery",
+        "Journey mapping"
+      ],
+      "colorSuggestions": {
+        "primary": ["mood-appropriate"],
+        "emotional": ["evocative colors"],
+        "background": ["story-supporting"]
+      }
+    },
+    {
+      "id": "data-dense-dashboard",
+      "name": "Data-Dense Dashboard",
+      "category": "BI Dashboard",
+      "characteristics": [
+        "Maximum data visibility",
+        "Compact layouts",
+        "Information density",
+        "Small multiples",
+        "Efficient space use"
+      ],
+      "useCases": ["Analytics", "Monitoring", "Data Analysis", "Operations"],
+      "components": [
+        "Compact charts",
+        "Data tables",
+        "KPI cards",
+        "Multiple widgets"
+      ],
+      "colorSuggestions": {
+        "primary": ["data-friendly colors"],
+        "charts": ["distinct palette"],
+        "background": ["light or dark for contrast"]
+      }
+    },
+    {
+      "id": "heat-map-heatmap",
+      "name": "Heat Map & Heatmap",
+      "category": "BI Dashboard",
+      "characteristics": [
+        "Color-coded data",
+        "Visual density",
+        "Pattern recognition",
+        "Hot spots",
+        "Gradient scales"
+      ],
+      "useCases": ["Analytics", "User Behavior", "Geographic Data", "Activity Monitoring"],
+      "components": [
+        "Heat map charts",
+        "Color scales",
+        "Intensity legends",
+        "Geographic maps"
+      ],
+      "colorSuggestions": {
+        "primary": ["gradient scales"],
+        "heat": ["green-yellow-red"],
+        "cold": ["blue-white-red"],
+        "scales": ["sequential", "diverging"]
+      }
+    },
+    {
+      "id": "executive-dashboard",
+      "name": "Executive Dashboard",
+      "category": "BI Dashboard",
+      "characteristics": [
+        "High-level KPIs",
+        "Summary views",
+        "Clean presentation",
+        "Strategic metrics",
+        "Decision-focused"
+      ],
+      "useCases": ["C-Suite", "Executive Reporting", "Board Presentations"],
+      "components": [
+        "KPI summaries",
+        "Trend indicators",
+        "Executive charts",
+        "Strategic metrics"
+      ],
+      "colorSuggestions": {
+        "primary": ["professional colors"],
+        "kpi": ["bold accent colors"],
+        "background": ["clean, minimal"]
+      }
+    },
+    {
+      "id": "real-time-monitoring",
+      "name": "Real-Time Monitoring",
+      "category": "BI Dashboard",
+      "characteristics": [
+        "Live data feeds",
+        "Real-time updates",
+        "Alert systems",
+        "Current status",
+        "Dynamic metrics"
+      ],
+      "useCases": ["Operations", "DevOps", "System Monitoring", "Live Tracking"],
+      "components": [
+        "Live charts",
+        "Status indicators",
+        "Alert panels",
+        "Real-time counters"
+      ],
+      "colorSuggestions": {
+        "primary": ["status colors"],
+        "alerts": ["red for critical", "yellow for warning"],
+        "background": ["dark for monitoring"]
+      }
+    },
+    {
+      "id": "drill-down-analytics",
+      "name": "Drill-Down Analytics",
+      "category": "BI Dashboard",
+      "characteristics": [
+        "Hierarchical data",
+        "Drill-down capability",
+        "Progressive disclosure",
+        "Deep exploration",
+        "Interactive layers"
+      ],
+      "useCases": ["Business Intelligence", "Data Exploration", "Analysis Tools"],
+      "components": [
+        "Drill-down charts",
+        "Hierarchical tables",
+        "Breadcrumbs",
+        "Level indicators"
+      ],
+      "colorSuggestions": {
+        "primary": ["level-based colors"],
+        "depth": ["darker for deeper levels"],
+        "interactive": ["hover to drill"]
+      }
+    },
+    {
+      "id": "comparative-analysis",
+      "name": "Comparative Analysis",
+      "category": "BI Dashboard",
+      "characteristics": [
+        "Side-by-side comparison",
+        "Benchmarking",
+        "Variance analysis",
+        "Relative metrics",
+        "Comparative views"
+      ],
+      "useCases": ["Performance Analysis", "Competitor Analysis", "Period Comparisons"],
+      "components": [
+        "Comparison charts",
+        "Benchmark lines",
+        "Variance indicators",
+        "Side-by-side views"
+      ],
+      "colorSuggestions": {
+        "primary": ["distinct comparison colors"],
+        "baseline": ["neutral gray"],
+        "variance": ["green positive", "red negative"]
+      }
+    },
+    {
+      "id": "predictive-analytics",
+      "name": "Predictive Analytics",
+      "category": "BI Dashboard",
+      "characteristics": [
+        "Forecasting views",
+        "Trend projections",
+        "Predictive models",
+        "Future scenarios",
+        "AI-driven insights"
+      ],
+      "useCases": ["Planning", "Forecasting", "Predictive Modeling"],
+      "components": [
+        "Forecast charts",
+        "Confidence intervals",
+        "Scenario selectors",
+        "Trend lines"
+      ],
+      "colorSuggestions": {
+        "primary": ["actual vs predicted colors"],
+        "forecasts": ["dashed lines"],
+        "confidence": ["shaded regions"]
+      }
+    },
+    {
+      "id": "user-behavior-analytics",
+      "name": "User Behavior Analytics",
+      "category": "BI Dashboard",
+      "characteristics": [
+        "User journey tracking",
+        "Behavior patterns",
+        "Funnel analysis",
+        "Segmentation",
+        "User insights"
+      ],
+      "useCases": ["Product Analytics", "UX Research", "Marketing Analytics"],
+      "components": [
+        "Funnel charts",
+        "User journeys",
+        "Cohort analysis",
+        "Segment views"
+      ],
+      "colorSuggestions": {
+        "primary": ["user-friendly colors"],
+        "funnels": ["gradient steps"],
+        "segments": ["distinct colors"]
+      }
+    },
+    {
+      "id": "financial-dashboard",
+      "name": "Financial Dashboard",
+      "category": "BI Dashboard",
+      "characteristics": [
+        "Financial metrics",
+        "Money formats",
+        "Budget tracking",
+        "Financial health",
+        "Fiscal periods"
+      ],
+      "useCases": ["Finance", "Accounting", "Budget Management"],
+      "components": [
+        "Financial KPIs",
+        "Budget vs actual",
+        "Trend lines",
+        "Money formats"
+      ],
+      "colorSuggestions": {
+        "primary": ["financial colors"],
+        "positive": ["green"],
+        "negative": ["red"],
+        "background": ["professional"]
+      }
+    },
+    {
+      "id": "sales-intelligence",
+      "name": "Sales Intelligence",
+      "category": "BI Dashboard",
+      "characteristics": [
+        "Sales metrics",
+        "Pipeline tracking",
+        "Conversion funnels",
+        "Revenue tracking",
+        "Sales performance"
+      ],
+      "useCases": ["Sales Teams", "CRM", "Revenue Operations"],
+      "components": [
+        "Pipeline views",
+        "Sales funnels",
+        "Performance charts",
+        "Leaderboards"
+      ],
+      "colorSuggestions": {
+        "primary": ["sales-friendly colors"],
+        "pipeline": ["stage-based colors"],
+        "performance": ["green for high"]
+      }
+    }
+  ]
+}

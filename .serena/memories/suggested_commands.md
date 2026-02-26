@@ -1,0 +1,12 @@
+# 推荐命令 (Windows)
+- 安装依赖: `npm install`
+- 联合开发: `npm run dev`
+- 单独后端: `npm run dev:backend`
+- 单独前端: `npm run dev:frontend`
+- 构建: `npm run build`
+- 测试: `npm run test`
+- 覆盖率: `npm run test:coverage`
+- 环境检查: `npm run check-env`
+- 平台检测: `npm run platform:detect`
+- 组件创建: `npm run component:create`
+- 常用系统命令(PowerShell): `Get-ChildItem`, `Get-Content`, `Set-Location`, `Select-String`, `git status`
