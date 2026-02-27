@@ -24,8 +24,9 @@ export { ModeRouter } from './prompt/router';
 // Agent System
 export { Agent } from './agent/agent';
 
-// LLM Service
-export { LLMService } from './llm/service';
+// LLM Service (backed by LLMClient)
+export { LLMService } from './llm/index';
+export { LLMClient, createLLMClient, getDefaultLLMClient } from './llm/index';
 
 // Session Management
 export { SessionStorage } from './session/storage';

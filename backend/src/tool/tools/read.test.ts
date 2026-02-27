@@ -1,6 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import * as fs from 'fs/promises';
-import * as os from 'os';
 import * as path from 'path';
 import { ReadTool } from './read';
 import { FileStorage } from '../../storage/file-storage';
@@ -45,14 +44,16 @@ describe('read tool', () => {
     vi.spyOn(FileStorage, 'getFile').mockReturnValue(null);
     vi.spyOn(FileStorage, 'getAllFiles').mockReturnValue([]);
 
-    const tmpFile = path.join(os.tmpdir(), `read-tool-test-${Date.now()}.txt`);
+    const relativePath = `.codex-read-tool-tests/read-tool-test-${Date.now()}.txt`;
+    const tmpFile = path.join(process.cwd(), relativePath);
+    await fs.mkdir(path.dirname(tmpFile), { recursive: true });
     await fs.writeFile(tmpFile, 'line1\nline2', 'utf-8');
 
     const tool = await ReadTool.init();
     try {
       const result = await tool.execute(
         {
-          filePath: tmpFile,
+          filePath: relativePath,
         },
         {
           sessionID: 's2',
@@ -65,10 +66,80 @@ describe('read tool', () => {
       );
 
       expect(result.output).toContain('line1');
-      expect(result.metadata?.filePath).toContain('read-tool-test-');
+      expect(result.metadata?.relativePath).toBe(relativePath);
+      expect(result.metadata?.filePath).toBe(tmpFile);
     } finally {
       await fs.unlink(tmpFile).catch(() => undefined);
     }
+  });
+
+  it('blocks absolute filesystem paths', async () => {
+    vi.spyOn(FileStorage, 'getFile').mockReturnValue(null);
+    vi.spyOn(FileStorage, 'getAllFiles').mockReturnValue([]);
+
+    const tool = await ReadTool.init();
+    const result = await tool.execute(
+      {
+        filePath: path.resolve('backend/package.json'),
+      },
+      {
+        sessionID: 's-abs',
+        messageID: 'm-abs',
+        agent: 'backend-agent',
+        abort: new AbortController().signal,
+        metadata: () => undefined,
+        ask: async () => undefined,
+      }
+    );
+
+    expect(result.output).toContain('PATH_NOT_ALLOWED');
+    expect(result.metadata?.error).toContain('Absolute paths are not allowed');
+  });
+
+  it('blocks traversal paths', async () => {
+    vi.spyOn(FileStorage, 'getFile').mockReturnValue(null);
+    vi.spyOn(FileStorage, 'getAllFiles').mockReturnValue([]);
+
+    const tool = await ReadTool.init();
+    const result = await tool.execute(
+      {
+        filePath: '../package.json',
+      },
+      {
+        sessionID: 's-traversal',
+        messageID: 'm-traversal',
+        agent: 'backend-agent',
+        abort: new AbortController().signal,
+        metadata: () => undefined,
+        ask: async () => undefined,
+      }
+    );
+
+    expect(result.output).toContain('PATH_NOT_ALLOWED');
+    expect(result.metadata?.error).toContain('Path traversal is not allowed');
+  });
+
+  it('blocks null-byte paths', async () => {
+    vi.spyOn(FileStorage, 'getFile').mockReturnValue(null);
+    vi.spyOn(FileStorage, 'getAllFiles').mockReturnValue([]);
+
+    const tool = await ReadTool.init();
+    const result = await tool.execute(
+      {
+        filePath: 'src/unsafe.txt\u0000payload',
+      },
+      {
+        sessionID: 's-null-byte',
+        messageID: 'm-null-byte',
+        agent: 'backend-agent',
+        abort: new AbortController().signal,
+        metadata: () => undefined,
+        ask: async () => undefined,
+      }
+    );
+
+    expect(result.output).toContain('PATH_NOT_ALLOWED');
+    expect(result.metadata?.error).toContain('Null bytes are not allowed');
   });
 
   it('requires write-first flow for frontend agent when session artifacts are empty', async () => {

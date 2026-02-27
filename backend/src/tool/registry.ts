@@ -6,8 +6,20 @@
  * with filtering and discovery capabilities.
  */
 
-import type { ToolInfo, ToolRegistration, ToolFilterOptions } from '@ai-frontend/shared-types';
+import type {
+  ToolInfo,
+  ToolRegistration,
+  ToolFilterOptions,
+  ToolContext,
+  ToolMetadata,
+  ToolExecutionResult,
+} from '@ai-frontend/shared-types';
 import { Agent } from '../agent/agent';
+import {
+  enforcePermission,
+  buildToolExecutionPermissionRequest,
+  type PermissionPolicyContext,
+} from './permission-policy';
 
 /**
  * Tool Registry namespace
@@ -17,6 +29,97 @@ export namespace ToolRegistry {
    * Internal storage for registered tools
    */
   const registry = new Map<string, ToolRegistration>();
+
+  export interface ToolExecutionPolicyOptions {
+    providerID?: string;
+    modelID?: string;
+    agentID: string;
+    sessionID: string;
+    messageID: string;
+    abort: AbortSignal;
+    callID?: string;
+    permissionSource?: PermissionPolicyContext['source'];
+    onToolCall?: ToolContext['onToolCall'];
+    onToolResult?: ToolContext['onToolResult'];
+  }
+
+  interface AccessDecision {
+    allowed: boolean;
+    reason?: string;
+  }
+
+  function evaluateProviderAccess(
+    registration: ToolRegistration,
+    providerID?: string
+  ): AccessDecision {
+    if (!providerID || !registration.supportedProviders?.length) {
+      return { allowed: true };
+    }
+
+    if (registration.supportedProviders.includes(providerID)) {
+      return { allowed: true };
+    }
+
+    return {
+      allowed: false,
+      reason: `Tool "${registration.id}" is not available for provider "${providerID}"`,
+    };
+  }
+
+  function evaluateAgentAccess(toolID: string, agentID?: string): AccessDecision {
+    if (!agentID) {
+      return { allowed: true };
+    }
+
+    const agent = Agent.get(agentID);
+    if (!agent) {
+      return { allowed: true };
+    }
+
+    const enabled = agent.enabledTools?.length ? new Set(agent.enabledTools) : undefined;
+    if (enabled && !enabled.has(toolID)) {
+      return {
+        allowed: false,
+        reason: `Tool "${toolID}" is not enabled for agent "${agentID}"`,
+      };
+    }
+
+    const disabled = agent.disabledTools?.length ? new Set(agent.disabledTools) : undefined;
+    if (disabled?.has(toolID)) {
+      return {
+        allowed: false,
+        reason: `Tool "${toolID}" is disabled for agent "${agentID}"`,
+      };
+    }
+
+    return { allowed: true };
+  }
+
+  export function assertExecutable(
+    id: string,
+    options: Pick<ToolExecutionPolicyOptions, 'providerID' | 'agentID'>
+  ): ToolRegistration {
+    const registration = registry.get(id);
+    if (!registration) {
+      throw new Error(`Tool not found: ${id}`);
+    }
+
+    if (!registration.enabled) {
+      throw new Error(`Tool is disabled: ${id}`);
+    }
+
+    const providerAccess = evaluateProviderAccess(registration, options.providerID);
+    if (!providerAccess.allowed) {
+      throw new Error(providerAccess.reason || `Tool "${id}" is not executable`);
+    }
+
+    const agentAccess = evaluateAgentAccess(id, options.agentID);
+    if (!agentAccess.allowed) {
+      throw new Error(agentAccess.reason || `Tool "${id}" is not executable`);
+    }
+
+    return registration;
+  }
 
   /**
    * Register a tool
@@ -87,26 +190,12 @@ export namespace ToolRegistry {
 
       // Filter by provider
       if (options.providerID) {
-        tools = tools.filter(t => !t.supportedProviders || t.supportedProviders.includes(options.providerID!));
+        tools = tools.filter(t => evaluateProviderAccess(t, options.providerID).allowed);
       }
 
       // Filter by agent (if agent has specific tool restrictions)
       if (options.agentID) {
-        const agent = Agent.get(options.agentID);
-        if (agent) {
-          const enabled = agent.enabledTools?.length ? new Set(agent.enabledTools) : undefined;
-          const disabled = agent.disabledTools?.length ? new Set(agent.disabledTools) : undefined;
-
-          tools = tools.filter(t => {
-            if (enabled && !enabled.has(t.id)) {
-              return false;
-            }
-            if (disabled?.has(t.id)) {
-              return false;
-            }
-            return true;
-          });
-        }
+        tools = tools.filter(t => evaluateAgentAccess(t.id, options.agentID).allowed);
       }
     }
 
@@ -188,6 +277,66 @@ export namespace ToolRegistry {
   export function isEnabled(id: string): boolean {
     const registration = registry.get(id);
     return registration?.enabled ?? false;
+  }
+
+  export async function executeWithPolicy(
+    id: string,
+    args: Record<string, unknown>,
+    options: ToolExecutionPolicyOptions
+  ): Promise<ToolExecutionResult<ToolMetadata>> {
+    const registration = assertExecutable(id, {
+      providerID: options.providerID,
+      agentID: options.agentID,
+    });
+
+    const initialized = await registration.info.init({ agent: options.agentID });
+    const callID =
+      options.callID?.trim() ||
+      `${options.messageID}-${id}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const permissionContext: PermissionPolicyContext = {
+      source: options.permissionSource ?? 'llm-service',
+      agent: options.agentID,
+      sessionID: options.sessionID,
+      messageID: options.messageID,
+      callID,
+      toolName: id,
+    };
+
+    options.onToolCall?.({
+      toolName: id,
+      callID,
+      args,
+    });
+
+    await enforcePermission(buildToolExecutionPermissionRequest(id, args), permissionContext);
+
+    const toolContext: ToolContext = {
+      sessionID: options.sessionID,
+      messageID: options.messageID,
+      agent: options.agentID,
+      abort: options.abort,
+      callID,
+      metadata: (data) => {
+        console.log(`[Tool] ${id} metadata:`, data);
+      },
+      ask: async request => {
+        await enforcePermission(request, permissionContext);
+      },
+      onToolCall: options.onToolCall,
+      onToolResult: options.onToolResult,
+    };
+
+    const result = await initialized.execute(args, toolContext);
+
+    options.onToolResult?.({
+      toolName: id,
+      callID,
+      title: result.title,
+      output: result.output,
+      metadata: result.metadata,
+    });
+
+    return result;
   }
 }
 

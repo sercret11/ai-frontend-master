@@ -48,6 +48,32 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null;
 }
 
+export function tryAcquireStreamMessageLock(lockRef: { current: boolean }): boolean {
+  if (lockRef.current) {
+    return false;
+  }
+  lockRef.current = true;
+  return true;
+}
+
+export function releaseStreamMessageLock(lockRef: { current: boolean }): void {
+  lockRef.current = false;
+}
+
+export function isExpectedStreamAbortError(error: unknown): boolean {
+  if (error instanceof Error) {
+    return error.name === 'AbortError';
+  }
+  if (isRecord(error)) {
+    return error['name'] === 'AbortError';
+  }
+  return false;
+}
+
+export function shouldReportStreamError(error: unknown): boolean {
+  return !isExpectedStreamAbortError(error);
+}
+
 function buildRuntimeApiUrl(
   apiUrl: string,
   backendSessionId: string | null,
@@ -260,13 +286,20 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
 
   const messages = globalContext ? globalContext.messages : localMessages;
   const setMessages = globalContext ? globalContext.setMessages : setLocalMessages;
+  const currentSessionId = globalContext?.currentSessionId ?? null;
   const backendSessionId = globalContext?.backendSessionId ?? null;
+  const bindBackendSessionId = globalContext?.bindBackendSessionId;
   const setBackendSessionId = globalContext?.setBackendSessionId;
+  const streamMessageLockRef = useRef(false);
   const backendSessionIdRef = useRef<string | null>(backendSessionId);
+  const latestContextBackendSessionIdRef = useRef<string | null>(backendSessionId);
   const normalizedApiBaseUrl = normalizeApiBaseUrl(apiUrl);
 
   useEffect(() => {
-    backendSessionIdRef.current = backendSessionId;
+    latestContextBackendSessionIdRef.current = backendSessionId;
+    if (!streamMessageLockRef.current) {
+      backendSessionIdRef.current = backendSessionId;
+    }
   }, [backendSessionId]);
 
   const ackPatch = useCallback(
@@ -511,6 +544,11 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
 
   const streamMessage = useCallback(
     async (content: string) => {
+      if (!tryAcquireStreamMessageLock(streamMessageLockRef)) {
+        return;
+      }
+
+      const requestLocalSessionId = currentSessionId;
       const userMessage: StreamMessage = {
         id: Date.now().toString(),
         role: 'user',
@@ -521,6 +559,7 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
 
       setIsStreaming(true);
       clearRunState();
+      activeRunIdRef.current = null;
       const requestSessionId = backendSessionIdRef.current;
 
       if (endpoint === 'assemble') {
@@ -638,6 +677,15 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
         let filesCount = 0;
         let sessionId: string | undefined;
 
+        const applyBackendSessionUpdate = (nextSessionId: string) => {
+          backendSessionIdRef.current = nextSessionId;
+          if (requestLocalSessionId && bindBackendSessionId) {
+            bindBackendSessionId(requestLocalSessionId, nextSessionId);
+            return;
+          }
+          setBackendSessionId?.(nextSessionId);
+        };
+
         const upsertToolCall = (
           callID: string,
           updater: (existing: ToolCall | undefined) => ToolCall
@@ -720,10 +768,7 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
                 : null;
             if (eventSessionId) {
               sessionId = eventSessionId;
-              if (backendSessionIdRef.current !== eventSessionId) {
-                backendSessionIdRef.current = eventSessionId;
-                setBackendSessionId?.(eventSessionId);
-              }
+              applyBackendSessionUpdate(eventSessionId);
             }
 
             workerRef.current?.postMessage({
@@ -824,8 +869,7 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
                 filesCount = event.filesCount || filesCount;
                 sessionId = event.sessionId;
                 if (event.sessionId) {
-                  backendSessionIdRef.current = event.sessionId;
-                  setBackendSessionId?.(event.sessionId);
+                  applyBackendSessionUpdate(event.sessionId);
                 }
                 if (endpoint === 'assemble') {
                   setPatchQueueDepth(0);
@@ -892,16 +936,25 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
 
         onComplete?.({ sessionId, filesCount });
       } catch (error) {
+        if (!shouldReportStreamError(error)) {
+          clearRunState(endpoint === 'assemble' ? 'Assembly stream interrupted.' : 'Stream interrupted.');
+          workerRef.current?.postMessage({
+            type: 'RUN_STOP',
+            runId: activeRunIdRef.current || undefined,
+          });
+          return;
+        }
+
+        const normalizedError = error instanceof Error ? error : new Error(String(error));
         if (endpoint === 'assemble') {
-          const errorMessage = error instanceof Error ? error.message : String(error);
           setExecutorState({
             phase: 'error',
             message: 'Assembly request failed.',
             executorId: 'sandpack-renderer',
-            error: errorMessage,
+            error: normalizedError.message,
           });
         }
-        onError?.(error as Error);
+        onError?.(normalizedError);
       } finally {
         if (textRevealTimer) {
           clearTimeout(textRevealTimer);
@@ -914,9 +967,14 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
         setCurrentRuntimeEvents([]);
         setCurrentToolCalls([]);
         abortControllerRef.current = null;
+        activeRunIdRef.current = null;
+        releaseStreamMessageLock(streamMessageLockRef);
+        backendSessionIdRef.current = latestContextBackendSessionIdRef.current;
       }
     },
     [
+      bindBackendSessionId,
+      currentSessionId,
       normalizedApiBaseUrl,
       clearRunState,
       endpoint,
@@ -956,6 +1014,7 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
       runId: activeRunIdRef.current || undefined,
     });
     abortControllerRef.current = null;
+    activeRunIdRef.current = null;
   }, [clearRunState, currentContent, endpoint, setMessages]);
 
   const clearMessages = useCallback(() => {

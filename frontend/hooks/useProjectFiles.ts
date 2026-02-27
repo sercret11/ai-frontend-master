@@ -15,7 +15,6 @@ import { normalizeApiBaseUrl } from '../utils/api-base';
 
 const START_POLLING_DEBOUNCE_MS = 500;
 const STABLE_FILE_TOTAL_ROUNDS = 120;
-const recentPollingStarts = new Map<string, number>();
 
 function normalizePollingParams(params: FileQueryParams = {}): string {
   const normalizedEntries = Object.entries(params)
@@ -29,12 +28,27 @@ function buildPollingSignature(sessionID: string, params: FileQueryParams = {}):
   return `${sessionID}:${normalizePollingParams(params)}`;
 }
 
-function pruneRecentPollingStarts(now: number): void {
-  recentPollingStarts.forEach((startedAt, signature) => {
-    if (now - startedAt > START_POLLING_DEBOUNCE_MS) {
-      recentPollingStarts.delete(signature);
+export function pruneRecentPollingStarts(
+  registry: Map<string, number>,
+  now: number,
+  debounceWindowMs: number = START_POLLING_DEBOUNCE_MS
+): void {
+  registry.forEach((startedAt, signature) => {
+    if (now - startedAt > debounceWindowMs) {
+      registry.delete(signature);
     }
   });
+}
+
+export function shouldDebouncePollingStart(
+  registry: Map<string, number>,
+  signature: string,
+  now: number,
+  debounceWindowMs: number = START_POLLING_DEBOUNCE_MS
+): boolean {
+  pruneRecentPollingStarts(registry, now, debounceWindowMs);
+  const lastStartAt = registry.get(signature);
+  return typeof lastStartAt === 'number' && now - lastStartAt < debounceWindowMs;
 }
 
 export interface UseProjectFilesOptions {
@@ -97,6 +111,7 @@ export function useProjectFiles(options: UseProjectFilesOptions = {}): UseProjec
   const [pagination, setPagination] = useState<UseProjectFilesReturn['pagination']>(null);
   const onFilesLoadedRef = useRef(onFilesLoaded);
   const onErrorRef = useRef(onError);
+  const recentPollingStartsRef = useRef<Map<string, number>>(new Map());
 
   const pollingRef = useRef<{
     intervalId: NodeJS.Timeout | null;
@@ -302,11 +317,7 @@ export function useProjectFiles(options: UseProjectFilesOptions = {}): UseProjec
 
     const pollingSignature = buildPollingSignature(sessionID, params);
     const now = Date.now();
-
-    pruneRecentPollingStarts(now);
-
-    const lastStartAt = recentPollingStarts.get(pollingSignature);
-    if (typeof lastStartAt === 'number' && now - lastStartAt < START_POLLING_DEBOUNCE_MS) {
+    if (shouldDebouncePollingStart(recentPollingStartsRef.current, pollingSignature, now)) {
       console.log('[useProjectFiles] Polling request debounced', { sessionID, pollingSignature });
       return;
     }
@@ -322,7 +333,7 @@ export function useProjectFiles(options: UseProjectFilesOptions = {}): UseProjec
       return;
     }
 
-    recentPollingStarts.set(pollingSignature, now);
+    recentPollingStartsRef.current.set(pollingSignature, now);
     stopPolling();
 
     const nextPollingKey = pollingRef.current.pollingKey + 1;
@@ -390,7 +401,7 @@ export function useProjectFiles(options: UseProjectFilesOptions = {}): UseProjec
     const nextPollingKey = pollingRef.current.pollingKey + 1;
 
     if (currentSessionID) {
-      recentPollingStarts.delete(buildPollingSignature(currentSessionID, currentParams));
+      recentPollingStartsRef.current.delete(buildPollingSignature(currentSessionID, currentParams));
     }
 
     stopPolling();
@@ -413,6 +424,7 @@ export function useProjectFiles(options: UseProjectFilesOptions = {}): UseProjec
   useEffect(() => {
     return () => {
       stopPolling();
+      recentPollingStartsRef.current.clear();
     };
   }, [stopPolling]);
 

@@ -5,6 +5,7 @@ import { useProjectStore } from '../../lib/stores/projectStore';
 import { useProjectFiles } from '../../hooks/useProjectFiles';
 import { withApiAuthHeaders } from '../../utils/api-auth';
 import { normalizeApiBaseUrl } from '../../utils/api-base';
+import { canonicalizeProjectPath, splitProjectPath } from '../../lib/services/path-utils';
 
 /**
  * Infer a file path from code content and language.
@@ -404,7 +405,11 @@ const CodeViewInner: React.FC = () => {
 
     if (projectFiles && projectFiles.length > 0) {
       projectFiles.forEach(file => {
-        files.set(file.path, file.content);
+        const normalizedPath = canonicalizeProjectPath(file.path);
+        if (!normalizedPath) {
+          return;
+        }
+        files.set(normalizedPath, file.content);
       });
       return files;
     }
@@ -432,7 +437,10 @@ const CodeViewInner: React.FC = () => {
     };
 
     generatedFiles.forEach((_content, filePath) => {
-      const parts = filePath.split('/');
+      const parts = splitProjectPath(filePath);
+      if (parts.length === 0) {
+        return;
+      }
       let currentNode = root;
 
       parts.forEach((part, index) => {
@@ -470,7 +478,7 @@ const CodeViewInner: React.FC = () => {
     const directories = new Set<string>();
 
     files.forEach(file => {
-      const parts = file.split('/');
+      const parts = splitProjectPath(file);
       parts.slice(0, -1).forEach(dir => {
         directories.add(dir);
       });
@@ -506,9 +514,13 @@ const CodeViewInner: React.FC = () => {
   };
 
   const handleSelectFile = (path: string) => {
-    setSelectedPath(path);
+    const normalizedPath = canonicalizeProjectPath(path);
+    if (!normalizedPath) {
+      return;
+    }
+    setSelectedPath(normalizedPath);
 
-    const content = generatedFiles.get(path);
+    const content = generatedFiles.get(normalizedPath);
     if (content) {
       setFileContent(content);
     }

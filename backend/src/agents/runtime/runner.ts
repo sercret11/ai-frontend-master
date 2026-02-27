@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { LLMService } from '../../llm/service';
+import { LLMService } from '../../llm/index';
 import { SessionManager } from '../../session/manager';
 import { FileStorage } from '../../storage/file-storage';
 import type {

@@ -10,6 +10,7 @@ import type {
 interface AssemblySessionState {
   sessionId: string;
   runId: string | null;
+  baseRevision: number;
   revision: number;
   acknowledgedRevision: number;
   executor: string;
@@ -67,6 +68,7 @@ export class AssemblySessionGraphService {
       const merged = this.mergeGraph(state.baseGraph, options.graph);
       state.baseGraph = merged;
       state.graph = merged;
+      state.baseRevision = 0;
       state.patches = [];
       state.revision = 0;
       state.acknowledgedRevision = 0;
@@ -108,8 +110,15 @@ export class AssemblySessionGraphService {
     };
     state.patches.push(patchRecord);
 
-    if (state.patches.length > MAX_PATCH_HISTORY) {
-      state.patches.splice(0, state.patches.length - MAX_PATCH_HISTORY);
+    const overflow = state.patches.length - MAX_PATCH_HISTORY;
+    if (overflow > 0) {
+      const trimmed = state.patches.splice(0, overflow);
+      const trimmedTopRevision = trimmed[trimmed.length - 1]?.revision;
+      state.baseGraph = this.rebuildGraphFromBase(state.baseGraph, trimmed);
+      if (typeof trimmedTopRevision === 'number') {
+        state.baseRevision = Math.max(state.baseRevision, trimmedTopRevision);
+        state.acknowledgedRevision = Math.max(state.acknowledgedRevision, state.baseRevision);
+      }
     }
 
     state.graph = this.applyPatchToGraph(state.graph, normalizedPatch);
@@ -168,15 +177,11 @@ export class AssemblySessionGraphService {
     }
 
     const now = Date.now();
-    state.acknowledgedRevision = Math.max(state.acknowledgedRevision, revision);
+    state.acknowledgedRevision = Math.max(state.acknowledgedRevision, revision, state.baseRevision);
 
-    if (targetPatch) {
-      targetPatch.acknowledgedAt = now;
-    } else {
-      for (const item of state.patches) {
-        if (item.revision <= state.acknowledgedRevision && item.acknowledgedAt === undefined) {
-          item.acknowledgedAt = now;
-        }
+    for (const item of state.patches) {
+      if (item.revision <= state.acknowledgedRevision && item.acknowledgedAt === undefined) {
+        item.acknowledgedAt = now;
       }
     }
 
@@ -220,11 +225,11 @@ export class AssemblySessionGraphService {
       };
     }
 
-    if (targetRevision < 0 || targetRevision > state.revision) {
+    if (targetRevision < state.baseRevision || targetRevision > state.revision) {
       return {
         ok: false,
         reason: 'REVISION_NOT_FOUND',
-        message: `target revision ${targetRevision} is out of range 0..${state.revision}`,
+        message: `target revision ${targetRevision} is out of replayable range ${state.baseRevision}..${state.revision}`,
         snapshot: this.toSnapshot(state),
       };
     }
@@ -244,7 +249,10 @@ export class AssemblySessionGraphService {
     const removedPatchCount = state.patches.length - retained.length;
     state.patches = retained;
     state.revision = targetRevision;
-    state.acknowledgedRevision = Math.min(state.acknowledgedRevision, targetRevision);
+    state.acknowledgedRevision = Math.max(
+      state.baseRevision,
+      Math.min(state.acknowledgedRevision, targetRevision)
+    );
     state.graph = this.rebuildGraphFromBase(state.baseGraph, state.patches);
     state.updatedAt = Date.now();
 
@@ -292,6 +300,7 @@ export class AssemblySessionGraphService {
     const state: AssemblySessionState = {
       sessionId,
       runId: resolvedRunId,
+      baseRevision: 0,
       revision: 0,
       acknowledgedRevision: 0,
       executor: DEFAULT_EXECUTOR,

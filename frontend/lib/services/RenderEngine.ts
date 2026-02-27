@@ -17,6 +17,7 @@ import {
   attachExecutionMetadata,
   readExecutionMetadata,
 } from '../rendering';
+import { canonicalizeProjectPath, normalizeProjectFiles } from './path-utils';
 import type {
   RenderingExecutionMetadata,
   RenderingExecutor,
@@ -123,7 +124,7 @@ function toRenderingProjectType(projectType: SupportedProjectType): RenderingPro
 }
 
 function toRenderingFiles(files: readonly ProjectFileLike[]): RenderingProjectFile[] {
-  return files.map(file => ({
+  return normalizeProjectFiles(files).map(file => ({
     path: file.path,
     content: file.content,
   }));
@@ -226,17 +227,14 @@ function upsertFile(
   path: string,
   content: string
 ): RenderingProjectFile[] {
-  const existingIndex = files.findIndex(file => file.path === path);
-  if (existingIndex === -1) {
-    return [...files, { path, content }];
+  const normalizedPath = canonicalizeProjectPath(path);
+  if (!normalizedPath) {
+    return normalizeProjectFiles(files);
   }
 
-  return files.map((file, index) => {
-    if (index === existingIndex) {
-      return { path, content };
-    }
-    return file;
-  });
+  const nextFiles = files.filter(file => canonicalizeProjectPath(file.path) !== normalizedPath);
+  nextFiles.push({ path: normalizedPath, content });
+  return normalizeProjectFiles(nextFiles);
 }
 
 export class RenderEngine {
@@ -362,18 +360,32 @@ export class RenderEngine {
       return;
     }
 
-    const nextRequest = this.updateRequestWithFileDiff(session.request, projectType, path, content);
+    const normalizedPath = canonicalizeProjectPath(path);
+    if (!normalizedPath) {
+      return;
+    }
+
+    const nextRequest = this.updateRequestWithFileDiff(session.request, projectType, normalizedPath, content);
     this.sessions.set(projectType, {
       ...session,
       request: nextRequest,
     });
 
     const executor = this.executors.get(session.executorId);
-    if (!executor?.applyFileDiff) {
+    if (!executor) {
       return;
     }
 
-    await executor.applyFileDiff(path, content, nextRequest);
+    if (!executor.applyFileDiff) {
+      await executor.execute(nextRequest);
+      return;
+    }
+
+    try {
+      await executor.applyFileDiff(normalizedPath, content, nextRequest);
+    } catch {
+      await executor.execute(nextRequest);
+    }
   }
 
   private updateRequestWithFileDiff(

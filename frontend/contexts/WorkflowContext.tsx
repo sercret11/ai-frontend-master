@@ -37,6 +37,7 @@ interface WorkflowContextType {
   sessions: SessionMetadata[];
   currentSessionId: string | null;
   backendSessionId: string | null;
+  bindBackendSessionId: (localSessionId: string, backendSessionId: string | null) => void;
   setBackendSessionId: (sessionId: string | null) => void;
   createSession: (title?: string) => string;
   switchSession: (id: string) => void;
@@ -126,6 +127,23 @@ const parseBackendSessionMap = (rawValue: string | null): Record<string, string>
     console.warn('Failed to parse backend session map:', error);
     return {};
   }
+};
+
+export const bindBackendSessionIdToLocalSession = (
+  bindings: Record<string, string>,
+  localSessionId: string,
+  backendSessionId: string | null
+): Record<string, string> => {
+  if (!localSessionId) {
+    return bindings;
+  }
+
+  if (backendSessionId) {
+    return { ...bindings, [localSessionId]: backendSessionId };
+  }
+
+  const { [localSessionId]: _removed, ...rest } = bindings;
+  return rest;
 };
 
 const createSessionMetadata = (id: string, title: string, timestamp: number): SessionMetadata => ({
@@ -338,22 +356,24 @@ export const WorkflowProvider: React.FC<WorkflowProviderProps> = ({ children }) 
     };
   }, [currentSessionId, messages, sessions]);
 
+  const bindBackendSessionId = useCallback(
+    (localSessionId: string, nextBackendSessionId: string | null) => {
+      setSessionBackendIds(prev =>
+        bindBackendSessionIdToLocalSession(prev, localSessionId, nextBackendSessionId)
+      );
+    },
+    []
+  );
+
   const setBackendSessionId = useCallback(
     (nextBackendSessionId: string | null) => {
       if (!currentSessionId) {
         return;
       }
 
-      setSessionBackendIds(prev => {
-        if (nextBackendSessionId) {
-          return { ...prev, [currentSessionId]: nextBackendSessionId };
-        }
-
-        const { [currentSessionId]: _removed, ...rest } = prev;
-        return rest;
-      });
+      bindBackendSessionId(currentSessionId, nextBackendSessionId);
     },
-    [currentSessionId]
+    [bindBackendSessionId, currentSessionId]
   );
 
   const saveToStorage = useCallback(() => {
@@ -368,16 +388,11 @@ export const WorkflowProvider: React.FC<WorkflowProviderProps> = ({ children }) 
       }
 
       localStorage.setItem(STORAGE_KEY_BACKEND_ID_MAP, JSON.stringify(sessionBackendIds));
-
-      if (backendSessionId) {
-        localStorage.setItem(STORAGE_KEY_BACKEND_ID, backendSessionId);
-      } else {
-        localStorage.removeItem(STORAGE_KEY_BACKEND_ID);
-      }
+      localStorage.removeItem(STORAGE_KEY_BACKEND_ID);
     } catch (error) {
       console.warn('Failed to save workflow context to storage:', error);
     }
-  }, [backendSessionId, currentSessionId, messages, persistSessionMessages, sessionBackendIds, sessions]);
+  }, [currentSessionId, messages, persistSessionMessages, sessionBackendIds, sessions]);
 
   const loadFromStorage = useCallback(() => {
     try {
@@ -469,6 +484,7 @@ export const WorkflowProvider: React.FC<WorkflowProviderProps> = ({ children }) 
       sessions,
       currentSessionId,
       backendSessionId,
+      bindBackendSessionId,
       setBackendSessionId,
       createSession,
       switchSession,
@@ -488,6 +504,7 @@ export const WorkflowProvider: React.FC<WorkflowProviderProps> = ({ children }) 
       sessions,
       currentSessionId,
       backendSessionId,
+      bindBackendSessionId,
       setBackendSessionId,
       createSession,
       switchSession,

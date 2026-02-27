@@ -33,6 +33,14 @@ const DEFAULT_ALLOWED_COMMANDS = [
 
 const SHELL_OPERATOR_PATTERN = /[;&|`<>$]|[\r\n]/;
 const TOKEN_PATTERN = /"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'|([^\s]+)/g;
+const INLINE_EXECUTION_FLAGS: Record<string, Set<string>> = {
+  node: new Set(['-e', '--eval', '-p', '--print']),
+  python: new Set(['-c']),
+  python3: new Set(['-c']),
+  pwsh: new Set(['-c', '-command', '-encodedcommand', '-enc']),
+  powershell: new Set(['-c', '-command', '-encodedcommand', '-enc']),
+  'powershell.exe': new Set(['-c', '-command', '-encodedcommand', '-enc']),
+};
 
 const bashToolSchema = z.object({
   command: z
@@ -76,6 +84,30 @@ function parseCommandTokens(command: string): string[] {
   }
 
   return tokens;
+}
+
+function findBlockedInlineExecutionFlag(
+  executable: string,
+  args: string[]
+): string | null {
+  const blockedFlags = INLINE_EXECUTION_FLAGS[executable.toLowerCase()];
+  if (!blockedFlags || args.length === 0) {
+    return null;
+  }
+
+  for (const arg of args) {
+    const normalizedArg = arg.toLowerCase();
+    if (blockedFlags.has(normalizedArg)) {
+      return arg;
+    }
+
+    const flagWithValueMatch = normalizedArg.match(/^(-{1,2}[a-z0-9-]+)[:=].+$/i);
+    if (flagWithValueMatch && blockedFlags.has(flagWithValueMatch[1])) {
+      return arg;
+    }
+  }
+
+  return null;
 }
 
 function resolveWorkspaceCwd(inputCwd?: string): { cwd: string; workspaceRoot: string } {
@@ -205,6 +237,13 @@ export const BashTool = Tool.define('bash', {
     }
 
     const args = tokens.slice(1);
+    const blockedFlag = findBlockedInlineExecutionFlag(executable, args);
+    if (blockedFlag) {
+      throw new Error(
+        `inline interpreter execution is blocked: ${executable} ${blockedFlag}`
+      );
+    }
+
     const resolvedExecutable = resolveExecutableForPlatform(executable);
 
     try {
@@ -264,4 +303,3 @@ export const BashTool = Tool.define('bash', {
     }
   },
 });
-

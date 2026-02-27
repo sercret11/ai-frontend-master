@@ -12,7 +12,7 @@ import * as path from 'path';
 import { z } from 'zod';
 import type { FileOperationMetadata, ToolContext, ToolExecutionResult } from '@ai-frontend/shared-types';
 import { FileStorage } from '../../storage/file-storage';
-import { normalizeWorkspaceRelativePath } from '../../security/path-safety';
+import { normalizeWorkspaceRelativePath, resolvePathWithinBase } from '../../security/path-safety';
 
 // Define parameters schema using Zod
 const readToolSchema = z.object({
@@ -32,6 +32,11 @@ const READ_BUDGET_BY_MESSAGE = new Map<string, ReadBudgetState>();
 const MAX_READ_CALLS_PER_MESSAGE = 8;
 const MAX_UNIQUE_READ_PATHS_PER_MESSAGE = 4;
 
+type ValidatedReadPath = {
+  canonicalInputPath: string;
+  safeRelativePath: string | null;
+};
+
 function normalizePathLike(input: string): string {
   return input.replace(/\\/g, '/').replace(/^\.\//, '').trim();
 }
@@ -39,6 +44,29 @@ function normalizePathLike(input: string): string {
 function normalizeBudgetPath(input: string): string {
   const normalized = normalizePathLike(input).replace(/\/+/g, '/').replace(/\/$/, '');
   return normalized || '.';
+}
+
+function validateReadPathInput(filePath: string): ValidatedReadPath {
+  const trimmed = (filePath || '').trim();
+  if (!trimmed) {
+    throw new Error('Path must not be empty');
+  }
+
+  const posixPath = trimmed.replace(/\\/g, '/');
+  const withoutTrailingSlash = posixPath.replace(/\/+$/, '');
+
+  if (withoutTrailingSlash === '' || withoutTrailingSlash === '.') {
+    return {
+      canonicalInputPath: '.',
+      safeRelativePath: null,
+    };
+  }
+
+  const safeRelativePath = normalizeWorkspaceRelativePath(withoutTrailingSlash);
+  return {
+    canonicalInputPath: posixPath.endsWith('/') ? `${safeRelativePath}/` : safeRelativePath,
+    safeRelativePath,
+  };
 }
 
 function resolveSessionDirectoryListing(
@@ -114,10 +142,25 @@ export const ReadTool = Tool.define('read', {
   description: 'Read the contents of a file from the filesystem with support for line ranges and large files',
   parameters: readToolSchema,
   async execute(params, ctx: ToolContext<FileOperationMetadata>): Promise<ReadToolResult> {
-    let filepath = params.filePath;
+    let validatedPath: ValidatedReadPath;
+    try {
+      validatedPath = validateReadPathInput(params.filePath);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      return {
+        title: 'Invalid Path',
+        metadata: {
+          filePath: params.filePath,
+          error: `PATH_NOT_ALLOWED: ${errorMessage}`,
+        } as FileOperationMetadata,
+        output: `PATH_NOT_ALLOWED: ${errorMessage}`,
+      };
+    }
+
+    let filepath = validatedPath.canonicalInputPath;
     let content = '';
-    let metadataPath = params.filePath;
-    let relativePath = params.filePath;
+    let metadataPath = validatedPath.canonicalInputPath;
+    let relativePath = validatedPath.safeRelativePath ?? '.';
     let allowFilesystemFallback = true;
 
     if (ctx.sessionID) {
@@ -130,12 +173,12 @@ export const ReadTool = Tool.define('read', {
           uniquePaths: new Set<string>(),
         };
         budgetState.totalCalls += 1;
-        budgetState.uniquePaths.add(normalizeBudgetPath(params.filePath));
+        budgetState.uniquePaths.add(normalizeBudgetPath(validatedPath.canonicalInputPath));
         READ_BUDGET_BY_MESSAGE.set(readBudgetKey, budgetState);
         console.log('[ReadTool] Session-aware read', {
           sessionID: ctx.sessionID,
           messageID: ctx.messageID,
-          filePath: params.filePath,
+          filePath: validatedPath.canonicalInputPath,
           sessionFiles: sessionFiles.length,
           readCount: budgetState.totalCalls,
           uniquePathCount: budgetState.uniquePaths.size,
@@ -153,14 +196,14 @@ export const ReadTool = Tool.define('read', {
           console.warn('[ReadTool] Read budget exceeded', {
             sessionID: ctx.sessionID,
             messageID: ctx.messageID,
-            filePath: params.filePath,
+            filePath: validatedPath.canonicalInputPath,
             readCount: budgetState.totalCalls,
             uniquePathCount: budgetState.uniquePaths.size,
           });
           return {
             title: 'Read Budget Exceeded',
             metadata: {
-              filePath: params.filePath,
+              filePath: validatedPath.canonicalInputPath,
               error: `READ_BUDGET_EXCEEDED: Maximum ${MAX_READ_CALLS_PER_MESSAGE} read calls or ${MAX_UNIQUE_READ_PATHS_PER_MESSAGE} unique paths allowed per iteration when session artifacts exist`,
             } as FileOperationMetadata,
             output: `READ_BUDGET_EXCEEDED: You already used ${budgetState.totalCalls} read calls across ${budgetState.uniquePaths.size} unique paths in this iteration. Stop reading and use apply_diff to modify session artifacts.`,
@@ -168,7 +211,7 @@ export const ReadTool = Tool.define('read', {
         }
       }
 
-      const sessionFile = resolveSessionFile(ctx.sessionID, params.filePath);
+      const sessionFile = resolveSessionFile(ctx.sessionID, validatedPath.canonicalInputPath);
       if (sessionFile) {
         content = sessionFile.content;
         metadataPath = sessionFile.path;
@@ -179,8 +222,8 @@ export const ReadTool = Tool.define('read', {
           return {
             title: 'Write Structure First',
             metadata: {
-              filePath: params.filePath,
-              relativePath: params.filePath,
+              filePath: validatedPath.canonicalInputPath,
+              relativePath: validatedPath.canonicalInputPath,
               error:
                 'WRITE_FIRST_REQUIRED: session has no artifacts yet; create runtime structure files before read',
             } as FileOperationMetadata,
@@ -189,7 +232,10 @@ export const ReadTool = Tool.define('read', {
           };
         }
 
-        const directoryListing = resolveSessionDirectoryListing(sessionFiles, params.filePath);
+        const directoryListing = resolveSessionDirectoryListing(
+          sessionFiles,
+          validatedPath.canonicalInputPath
+        );
         if (directoryListing) {
           return {
             title: `${directoryListing.rootPath} (session files)`,
@@ -205,7 +251,7 @@ export const ReadTool = Tool.define('read', {
           };
         }
 
-        if (!path.isAbsolute(params.filePath)) {
+        if (validatedPath.safeRelativePath) {
           const hasSessionFiles = sessionFiles.length > 0;
           if (hasSessionFiles) {
             allowFilesystemFallback = false;
@@ -215,12 +261,20 @@ export const ReadTool = Tool.define('read', {
     }
 
     if (!content && allowFilesystemFallback) {
-      // Resolve relative paths
-      if (!path.isAbsolute(filepath)) {
-        filepath = path.resolve(process.cwd(), filepath);
+      if (!validatedPath.safeRelativePath) {
+        return {
+          title: 'Invalid Path',
+          metadata: {
+            filePath: validatedPath.canonicalInputPath,
+            relativePath,
+            error: 'PATH_NOT_ALLOWED: Directory path is not allowed for filesystem reads',
+          } as FileOperationMetadata,
+          output: 'PATH_NOT_ALLOWED: Directory path is not allowed for filesystem reads',
+        };
       }
+      filepath = resolvePathWithinBase(process.cwd(), validatedPath.safeRelativePath);
       metadataPath = filepath;
-      relativePath = path.relative(process.cwd(), filepath);
+      relativePath = validatedPath.safeRelativePath;
     }
 
     try {

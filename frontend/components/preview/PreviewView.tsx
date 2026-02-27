@@ -9,6 +9,7 @@ import {
 import type { SandpackPredefinedTemplate } from '@codesandbox/sandpack-react';
 import { useProjectStore } from '../../lib/stores/projectStore';
 import { applyAstSurgery, parseSandpackErrorSignal } from '../../lib/sandpack/ast-surgery';
+import { canonicalizeProjectPath, normalizeProjectFiles } from '../../lib/services/path-utils';
 
 type PreviewViewState = 'empty' | 'assembling' | 'code' | 'error' | 'idle';
 type SandpackLifecycleState = 'ready' | 'disposing' | 'bootstrapping';
@@ -62,25 +63,12 @@ function resolveTemplate(projectType: string | null): SandpackPredefinedTemplate
 
 function normalizeFiles(files: Array<{ path: string; content: string }>): Record<string, string> {
   const result: Record<string, string> = {};
-  for (const file of files) {
-    const path = file.path.startsWith('/') ? file.path : `/${file.path}`;
-    result[path] = file.content;
-  }
-
-  if (!result['/src/main.tsx'] && !result['/src/main.jsx']) {
-    result['/src/main.tsx'] = `import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App";
-
-ReactDOM.createRoot(document.getElementById("root")!).render(<App />);
-`;
-  }
-
-  if (!result['/src/App.tsx'] && !result['/src/App.jsx']) {
-    result['/src/App.tsx'] = `export default function App() {
-  return <div style={{ padding: 24, fontFamily: "system-ui" }}>Ready</div>;
-}
-`;
+  for (const file of normalizeProjectFiles(files)) {
+    const normalizedPath = canonicalizeProjectPath(file.path);
+    if (!normalizedPath) {
+      continue;
+    }
+    result[`/${normalizedPath}`] = file.content;
   }
 
   return result;
@@ -88,16 +76,22 @@ ReactDOM.createRoot(document.getElementById("root")!).render(<App />);
 
 function toFileMap(files: Array<{ path: string; content: string }>): Record<string, string> {
   const map: Record<string, string> = {};
-  for (const file of files) {
-    map[file.path] = file.content;
+  for (const file of normalizeProjectFiles(files)) {
+    const normalizedPath = canonicalizeProjectPath(file.path);
+    if (!normalizedPath) {
+      continue;
+    }
+    map[normalizedPath] = file.content;
   }
   return map;
 }
 
 function fromFileMap(files: Record<string, string>): Array<{ path: string; content: string }> {
-  return Object.entries(files)
+  return normalizeProjectFiles(
+    Object.entries(files)
     .sort(([left], [right]) => left.localeCompare(right))
-    .map(([path, content]) => ({ path, content }));
+    .map(([path, content]) => ({ path, content }))
+  );
 }
 
 function SandpackStatusBridge(): null {

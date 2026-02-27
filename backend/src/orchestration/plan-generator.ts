@@ -6,6 +6,7 @@ import type {
   PlanGenerationInput,
   UIBlueprint,
 } from './types';
+import { normalizeTaskDependencies, validateUniqueTaskIds } from './scheduler.js';
 
 const UI_LIBRARY_PACKAGE_MAP: Record<string, string> = {
   shadcn: '@radix-ui/react-slot',
@@ -403,15 +404,20 @@ function buildTasksWithDependencies(templates: TaskTemplate[], seed: string): Ex
     retryLimit: template.retryLimit,
     metadata: template.metadata,
   }));
+  const normalizedTaskIds = validateUniqueTaskIds(tasks);
+  const normalizedTasks = tasks.map((task, index) => ({
+    ...task,
+    id: normalizedTaskIds[index],
+  }));
 
   const tasksByPhase = new Map<ExecutionTask['phase'], ExecutionTask[]>();
-  for (const task of tasks) {
+  for (const task of normalizedTasks) {
     const list = tasksByPhase.get(task.phase) || [];
     list.push(task);
     tasksByPhase.set(task.phase, list);
   }
 
-  return tasks.map(task => {
+  return normalizedTasks.map(task => {
     const template = templates.find(item => item.phase === task.phase && item.name === task.name);
     if (!template?.dependsOnPhases || template.dependsOnPhases.length === 0) {
       return task;
@@ -421,7 +427,7 @@ function buildTasksWithDependencies(templates: TaskTemplate[], seed: string): Ex
     );
     return {
       ...task,
-      dependencies: Array.from(new Set(dependencies)),
+      dependencies: normalizeTaskDependencies({ dependencies }),
     };
   });
 }

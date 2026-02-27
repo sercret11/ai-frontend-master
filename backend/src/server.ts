@@ -15,7 +15,7 @@ import { createServer } from 'http';
 import cors from 'cors';
 import type { NextFunction, Request, Response } from 'express';
 import { SessionManager } from './session/manager';
-import { LLMService } from './llm/service';
+import { LLMService } from './llm/index';
 import { SessionStorage } from './session/storage';
 import {
   FileStorage,
@@ -1566,7 +1566,7 @@ app.post('/api/runtime/sessions/:sessionId/patch/ack', (req, res) => {
   return res.json({
     ok: true,
     sessionId,
-    revision,
+    revision: ackResult.snapshot.acknowledgedRevision,
     acknowledgedRevision: ackResult.snapshot.acknowledgedRevision,
     acknowledgedPatchId: ackResult.acknowledgedPatchId ?? null,
     pendingPatches: ackResult.snapshot.pendingPatches.length,
@@ -1654,16 +1654,12 @@ app.get('/api/runtime/sessions/:sessionId/snapshot', (req, res) => {
   const runId =
     typeof req.query.runId === 'string' && req.query.runId.trim() ? req.query.runId.trim() : undefined;
 
-  let snapshot = assemblySessionGraphService.getSnapshot(sessionId, runId);
+  const snapshot = assemblySessionGraphService.getSnapshot(sessionId, runId);
   if (!snapshot) {
-    const session = SessionManager.get(sessionId);
-    if (!session) {
-      return res.status(404).json({
-        error: 'SESSION_NOT_FOUND',
-        message: `Session not found: ${sessionId}`,
-      });
-    }
-    snapshot = assemblySessionGraphService.ensureSession(sessionId, runId);
+    return res.status(404).json({
+      error: 'SESSION_NOT_FOUND',
+      message: `Assembly snapshot not found: ${sessionId}`,
+    });
   }
 
   return res.json({

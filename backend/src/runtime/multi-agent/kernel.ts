@@ -1,25 +1,33 @@
 import type { AgentRuntimeID } from '@ai-frontend/shared-types';
-import { SessionManager } from '../../session/manager';
-import { FileStorage } from '../../storage/file-storage';
-import { getRuntimeAgent } from '../../agents/runtime';
 import { MultiAgentBlackboard } from './blackboard';
 import { MultiAgentEventBus } from './event-bus';
-import { mergePatchIntents } from './patch-crdt';
 import type {
-  AgentExecutionContext,
-  AgentExecutionResult,
-  ConflictRecord,
   MultiAgentKernelInput,
   MultiAgentTask,
-  PatchIntent,
-  QualityGateState,
 } from './types';
 
-interface TaskRunResult {
-  task: MultiAgentTask;
-  result: AgentExecutionResult;
-}
+// Three-layer architecture imports
+import { AnalysisLayer } from '../../analysis/analysis-layer';
+import { PlanningLayer } from '../../planning/planning-layer';
+import { ExecutionLayer } from '../../execution/execution-layer';
+import { ThreeLayerOrchestrator } from '../../orchestration/three-layer-orchestrator';
 
+// LLM infrastructure imports
+import { LLMClient } from '../../llm/client';
+import { RetryEngine } from '../../llm/retry';
+import { OpenAIAdapter } from '../../llm/adapters/openai';
+import { AnthropicAdapter } from '../../llm/adapters/anthropic';
+import { GoogleAdapter } from '../../llm/adapters/google';
+import type { ProviderID } from '../../llm/types';
+import type { ProviderAdapter } from '../../llm/adapters/types';
+
+/**
+ * Legacy wave-based task definitions.
+ *
+ * These are no longer used for execution (the ThreeLayerOrchestrator handles
+ * scheduling), but are kept so that `getBlackboardSnapshot()` returns a
+ * backwards-compatible shape for any consumers that inspect the task list.
+ */
 const MULTI_AGENT_TASKS: MultiAgentTask[] = [
   {
     id: 'task-planner',
@@ -84,260 +92,103 @@ export class MultiAgentKernel {
   private readonly blackboard = new MultiAgentBlackboard();
 
   constructor(private readonly input: MultiAgentKernelInput) {
+    // Register legacy tasks for backwards-compatible blackboard snapshots.
     this.blackboard.setTasks(MULTI_AGENT_TASKS);
   }
 
-  private emit(event: Parameters<MultiAgentKernelInput['emitRuntimeEvent']>[0]) {
-    const runtimeEvent = this.input.emitRuntimeEvent(event);
-    this.eventBus.publish(runtimeEvent);
-    return runtimeEvent;
-  }
-
-  private createAgentContext(task: MultiAgentTask): AgentExecutionContext {
-    return {
-      sessionId: this.input.sessionId,
-      runId: this.input.runId,
-      userMessage: this.input.userMessage,
-      task,
-      routeDecision: this.input.routeDecision,
-      modelProvider: this.input.modelProvider,
-      modelId: this.input.modelId,
-      platform: this.input.platform,
-      techStack: this.input.techStack,
-      emitRuntimeEvent: this.input.emitRuntimeEvent,
-      abortSignal: this.input.abortSignal,
-    };
-  }
-
-  private async runTask(task: MultiAgentTask): Promise<TaskRunResult> {
-    const waveId = `wave-${task.wave}`;
-    this.emit({
-      type: 'agent.task.started',
-      agentId: task.agentId,
-      taskId: task.id,
-      waveId,
-      title: task.title,
-      goal: task.goal,
-      displayHint: 'important',
-    });
-
-    try {
-      const agent = getRuntimeAgent(task.agentId);
-      const result = await agent.run(this.createAgentContext(task));
-      this.emit({
-        type: 'agent.task.completed',
-        agentId: task.agentId,
-        taskId: task.id,
-        waveId,
-        success: result.success,
-        summary: result.summary,
-        displayHint: 'summary',
-      });
-      return { task, result };
-    } catch (error) {
-      const reason = error instanceof Error ? error.message : String(error);
-      this.emit({
-        type: 'agent.task.blocked',
-        agentId: task.agentId,
-        taskId: task.id,
-        waveId,
-        reason,
-        displayHint: 'important',
-      });
-      return {
-        task,
-        result: {
-          success: false,
-          summary: reason,
-          assistantText: '',
-          patchIntents: [],
-          touchedFiles: [],
-        },
-      };
-    }
-  }
-
-  private async runWave(wave: number): Promise<TaskRunResult[]> {
-    const tasks = MULTI_AGENT_TASKS.filter(task => task.wave === wave);
-    if (tasks.length === 0) {
-      return [];
-    }
-    if (tasks.length === 1) {
-      const [single] = tasks;
-      if (!single) return [];
-      return [await this.runTask(single)];
-    }
-    return Promise.all(tasks.map(task => this.runTask(task)));
-  }
-
-  private publishPatchBatch(wave: number, intents: PatchIntent[]): ConflictRecord[] {
-    const waveId = `wave-${wave}`;
-    const batch = mergePatchIntents(waveId, intents);
-    this.emit({
-      type: 'patch.batch.merged',
-      waveId,
-      patchBatchId: batch.id,
-      patchCount: batch.merged.length,
-      touchedFiles: batch.touchedFiles,
-      displayHint: 'summary',
-    });
-    batch.conflicts.forEach(conflict => {
-      this.blackboard.addConflict(conflict);
-      this.emit({
-        type: 'conflict.detected',
-        waveId: conflict.waveId,
-        conflictId: conflict.id,
-        filePath: conflict.filePath,
-        involvedAgents: conflict.intents.map(item => item.agentId),
-        reason: conflict.reason,
-        displayHint: 'important',
-      });
-    });
-    return batch.conflicts;
-  }
-
-  private async resolveConflicts(conflicts: ConflictRecord[]): Promise<void> {
-    for (const conflict of conflicts) {
-      const architectTask: MultiAgentTask = {
-        id: `task-resolve-${conflict.id}`,
-        title: `Resolve ${conflict.filePath}`,
-        agentId: 'architect-agent',
-        wave: 99,
-        dependsOn: [],
-        goal: `resolve conflict for ${conflict.filePath}`,
-      };
-      const result = await this.runTask(architectTask);
-      if (!result.result.success) {
-        continue;
-      }
-      this.blackboard.resolveConflict(conflict.id);
-      this.emit({
-        type: 'conflict.resolved',
-        waveId: conflict.waveId,
-        conflictId: conflict.id,
-        filePath: conflict.filePath,
-        resolvedBy: 'architect-agent',
-        resolution: 'merged',
-        displayHint: 'summary',
-      });
-    }
-  }
-
-  private updateQualityGate(gate: QualityGateState): void {
-    this.blackboard.upsertQualityGate(gate);
-    this.emit({
-      type: 'quality.gate.updated',
-      gate: gate.gate,
-      status: gate.status,
-      score: gate.score,
-      summary: gate.summary,
-      displayHint: 'important',
-    });
-  }
-
-  private shouldAbort(): boolean {
-    return this.input.abortSignal.aborted;
-  }
-
+  /**
+   * Run the three-layer orchestration pipeline.
+   *
+   * Internally creates the AnalysisLayer, PlanningLayer, ExecutionLayer and
+   * ThreeLayerOrchestrator, then delegates the full run to the orchestrator.
+   *
+   * The public interface (constructor, run, getEventLog, getBlackboardSnapshot)
+   * remains unchanged so that the API layer and WebSocket layer require no
+   * modifications.
+   *
+   * 需求: R10.1, R10.2, R10.3
+   */
   async run(): Promise<void> {
-    this.emit({
-      type: 'render.pipeline.stage',
-      adapter: 'sandpack-renderer',
-      stage: 'plan',
-      status: 'started',
-      message: 'multi-agent kernel started',
-      displayHint: 'important',
+    // ------------------------------------------------------------------
+    // 1. Build LLMClient from environment configuration
+    // ------------------------------------------------------------------
+    const provider = (process.env.AI_DEFAULT_PROVIDER ?? 'openai') as ProviderID;
+    const model = process.env.AI_DEFAULT_MODEL ?? 'gpt-4o';
+
+    const adapters = new Map<ProviderID, ProviderAdapter>();
+    adapters.set(
+      'openai',
+      new OpenAIAdapter({
+        baseUrl: process.env.OPENAI_BASE_URL,
+        apiKey: process.env.OPENAI_API_KEY ?? '',
+        protocol: 'responses',
+      }),
+    );
+    adapters.set(
+      'anthropic',
+      new AnthropicAdapter({
+        baseUrl: process.env.ANTHROPIC_BASE_URL,
+        apiKey: process.env.ANTHROPIC_API_KEY ?? '',
+      }),
+    );
+    adapters.set(
+      'google',
+      new GoogleAdapter({
+        baseUrl: process.env.GOOGLE_BASE_URL,
+        apiKey: process.env.GOOGLE_API_KEY ?? '',
+      }),
+    );
+
+    const retryEngine = new RetryEngine();
+    const llmClient = new LLMClient(adapters, retryEngine);
+
+    // ------------------------------------------------------------------
+    // 2. Instantiate the three layers
+    // ------------------------------------------------------------------
+    const analysisLayer = new AnalysisLayer({
+      llmClient,
+      provider,
+      model,
     });
 
-    SessionManager.addUserMessage(this.input.sessionId, this.input.userMessage);
-
-    const allIntents: PatchIntent[] = [];
-    let totalSuccess = true;
-    let wavesCompleted = 0;
-
-    for (const wave of [1, 2, 3, 4]) {
-      if (this.shouldAbort()) {
-        break;
-      }
-
-      const results = await this.runWave(wave);
-      wavesCompleted += 1;
-      results.forEach(item => {
-        totalSuccess = totalSuccess && item.result.success;
-        allIntents.push(...item.result.patchIntents);
-      });
-      this.blackboard.addPatchIntents(allIntents);
-
-      if (wave === 3) {
-        const waveIntents = results.flatMap(item => item.result.patchIntents);
-        const conflicts = this.publishPatchBatch(3, waveIntents);
-        if (conflicts.length > 0) {
-          await this.resolveConflicts(conflicts);
-        }
-      }
-    }
-
-    let filesCount = FileStorage.getAllFiles(this.input.sessionId).length;
-    const qualityFailed = !totalSuccess || filesCount === 0;
-    this.updateQualityGate({
-      gate: 'delivery',
-      status: qualityFailed ? 'failed' : 'passed',
-      score: qualityFailed ? (filesCount === 0 ? 45 : 65) : 92,
-      summary: qualityFailed
-        ? filesCount === 0
-          ? 'quality gate failed: no runtime artifacts emitted'
-          : 'quality gate failed and needs repair'
-        : 'quality gate passed with stable outputs',
+    const planningLayer = new PlanningLayer({
+      llmClient,
+      provider,
+      model,
+      blackboard: this.blackboard,
     });
 
-    if (qualityFailed && !this.shouldAbort()) {
-      const repairTask: MultiAgentTask = {
-        id: 'task-repair',
-        title: 'Repair Pass',
-        agentId: 'repair-agent',
-        wave: 5,
-        dependsOn: ['task-quality'],
-        goal: 'repair failed quality gate',
-      };
-      const repairResult = await this.runTask(repairTask);
-      filesCount = FileStorage.getAllFiles(this.input.sessionId).length;
-      totalSuccess = repairResult.result.success && filesCount > 0;
-      this.updateQualityGate({
-        gate: 'delivery',
-        status: totalSuccess ? 'passed' : 'failed',
-        score: totalSuccess ? 88 : 60,
-        summary: totalSuccess
-          ? 'quality gate recovered after repair pass'
-          : 'quality gate still failing after repair pass',
-      });
-    }
+    const executionLayer = new ExecutionLayer(
+      this.blackboard,
+      llmClient,
+      provider,
+      model,
+    );
 
-    const finalFilesCount = FileStorage.getAllFiles(this.input.sessionId).length;
-    const finalSuccess = totalSuccess && finalFilesCount > 0;
-    const terminationReason = this.shouldAbort()
-      ? 'user_abort'
-      : finalSuccess
-        ? 'goal_reached'
-        : finalFilesCount === 0
-          ? 'empty_model_output'
-          : 'error';
+    // ------------------------------------------------------------------
+    // 3. Create orchestrator and delegate
+    // ------------------------------------------------------------------
+    const orchestrator = new ThreeLayerOrchestrator(
+      analysisLayer,
+      planningLayer,
+      executionLayer,
+      this.blackboard,
+      this.eventBus,
+    );
 
-    this.emit({
-      type: 'render.pipeline.stage',
-      adapter: 'sandpack-renderer',
-      stage: 'publish',
-      status: finalSuccess ? 'completed' : 'failed',
-      message: finalSuccess ? 'multi-agent kernel completed' : 'multi-agent kernel finished with failures',
-      displayHint: 'summary',
-    });
+    // Wrap emitRuntimeEvent so events are also published to our local
+    // eventBus, keeping getEventLog() functional.
+    const originalEmit = this.input.emitRuntimeEvent;
+    const wrappedInput: MultiAgentKernelInput = {
+      ...this.input,
+      emitRuntimeEvent: (event) => {
+        const runtimeEvent = originalEmit(event);
+        this.eventBus.publish(runtimeEvent);
+        return runtimeEvent;
+      },
+    };
 
-    this.emit({
-      type: 'run.completed',
-      success: finalSuccess,
-      filesCount: finalFilesCount,
-      terminationReason,
-      iterations: wavesCompleted,
-    });
+    await orchestrator.run(wrappedInput);
   }
 
   getEventLog() {

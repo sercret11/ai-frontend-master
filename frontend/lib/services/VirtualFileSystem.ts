@@ -4,6 +4,8 @@
  * 提供文件管理功能，支持目录结构、文件读写等操作
  */
 
+import { canonicalizeProjectPath, splitProjectPath } from './path-utils';
+
 export interface VirtualFile {
   name: string;
   path: string;
@@ -57,8 +59,18 @@ export class VirtualFileSystem {
    */
   initializeFiles(projectFiles: { path: string; content: string }[]): void {
     this.files.clear();
+    this.operations = [];
 
+    const normalizedFiles = new Map<string, string>();
     projectFiles.forEach(({ path, content }) => {
+      const normalizedPath = canonicalizeProjectPath(path);
+      if (!normalizedPath) {
+        return;
+      }
+      normalizedFiles.set(normalizedPath, content);
+    });
+
+    normalizedFiles.forEach((content, path) => {
       this.setFile(path, content);
     });
   }
@@ -67,17 +79,21 @@ export class VirtualFileSystem {
    * Get a file by path
    */
   getFile(path: string): VirtualFile | undefined {
-    return this.files.get(path);
+    return this.files.get(canonicalizeProjectPath(path));
   }
 
   /**
    * Set file content
    */
   setFile(path: string, content: string): void {
-    const existing = this.files.get(path);
+    const normalizedPath = canonicalizeProjectPath(path);
+    if (!normalizedPath) {
+      return;
+    }
+    const existing = this.files.get(normalizedPath);
     const file: VirtualFile = existing || {
-      name: path.split('/').pop() || path,
-      path,
+      name: splitProjectPath(normalizedPath).pop() || normalizedPath,
+      path: normalizedPath,
       type: 'file',
     };
 
@@ -85,34 +101,37 @@ export class VirtualFileSystem {
     file.size = content.length;
     file.lastModified = Date.now();
 
-    this.files.set(path, file);
-    this.recordOperation('update', path);
+    this.files.set(normalizedPath, file);
+    this.recordOperation('update', normalizedPath);
   }
 
   /**
    * Create directory
    */
   createDirectory(path: string): void {
-    if (this.files.has(path)) return;
+    const normalizedPath = canonicalizeProjectPath(path);
+    if (!normalizedPath || this.files.has(normalizedPath)) return;
 
     const file: VirtualFile = {
-      name: path.split('/').pop() || path,
-      path,
+      name: splitProjectPath(normalizedPath).pop() || normalizedPath,
+      path: normalizedPath,
       type: 'directory',
       children: [],
     };
 
-    this.files.set(path, file);
-    this.recordOperation('create', path);
+    this.files.set(normalizedPath, file);
+    this.recordOperation('create', normalizedPath);
   }
 
   /**
    * Delete file
    */
   deleteFile(path: string): boolean {
-    const deleted = this.files.delete(path);
+    const normalizedPath = canonicalizeProjectPath(path);
+    if (!normalizedPath) return false;
+    const deleted = this.files.delete(normalizedPath);
     if (deleted) {
-      this.recordOperation('delete', path);
+      this.recordOperation('delete', normalizedPath);
     }
     return deleted;
   }
@@ -121,16 +140,20 @@ export class VirtualFileSystem {
    * Rename file
    */
   renameFile(oldPath: string, newPath: string): boolean {
-    const file = this.files.get(oldPath);
+    const normalizedOldPath = canonicalizeProjectPath(oldPath);
+    const normalizedNewPath = canonicalizeProjectPath(newPath);
+    if (!normalizedOldPath || !normalizedNewPath) return false;
+
+    const file = this.files.get(normalizedOldPath);
     if (!file) return false;
 
-    file.path = newPath;
-    file.name = newPath.split('/').pop() || newPath;
+    file.path = normalizedNewPath;
+    file.name = splitProjectPath(normalizedNewPath).pop() || normalizedNewPath;
     file.lastModified = Date.now();
 
-    this.files.delete(oldPath);
-    this.files.set(newPath, file);
-    this.recordOperation('rename', newPath, oldPath);
+    this.files.delete(normalizedOldPath);
+    this.files.set(normalizedNewPath, file);
+    this.recordOperation('rename', normalizedNewPath, normalizedOldPath);
 
     return true;
   }
@@ -147,7 +170,10 @@ export class VirtualFileSystem {
       .forEach((file) => {
         if (processed.has(file.path)) return;
 
-        const parts = file.path.split('/');
+        const parts = splitProjectPath(file.path);
+        if (parts.length === 0) {
+          return;
+        }
         let currentLevel = root;
         let currentPath = '';
 

@@ -12,7 +12,7 @@ import type {
 } from '@ai-frontend/shared-types';
 import { FileStorage } from '../storage/file-storage';
 import { getRequiredFiles, isSupportedProjectTemplate, matchesRequiredFile } from './required-files';
-import { LLMService } from '../llm/service';
+import { LLMService } from '../llm/index';
 import { CodeQualityChecker } from './code-quality-checker';
 import { SelfRepairAgent } from './self-repair-agent';
 import { v4 as uuidv4 } from 'uuid';

@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import type { RenderPipelineStageEvent, RuntimeEvent } from '@ai-frontend/shared-types';
 import { VirtualFileSystem, getVFS, resetVFS } from '../services/VirtualFileSystem';
 import type { VirtualFile } from '../services/VirtualFileSystem';
+import { canonicalizeProjectPath, normalizeProjectFiles, splitProjectPath } from '../services/path-utils';
 
 export interface ProjectFile {
   path: string;
@@ -64,6 +65,14 @@ function isRuntimeEventRelevant(event: RuntimeEvent): boolean {
 
 function isProjectType(value: unknown): value is ProjectType {
   return value === 'next-js' || value === 'react-vite' || value === 'react-native' || value === 'uniapp';
+}
+
+function resolveSelectedFileFromVfs(
+  vfs: VirtualFileSystem,
+  selectedFile: VirtualFile | null | undefined
+): VirtualFile | null {
+  const selectedPath = selectedFile?.path ? canonicalizeProjectPath(selectedFile.path) : '';
+  return selectedPath ? vfs.getFile(selectedPath) || null : null;
 }
 
 export interface CompilerState {
@@ -145,17 +154,19 @@ export const useProjectStore = create<CompilerState>()(
 
       setFiles: files => {
         const vfs = getVFS();
-        vfs.initializeFiles(files);
+        const normalizedFiles = normalizeProjectFiles(files);
+        vfs.initializeFiles(normalizedFiles);
 
         set({
-          files,
+          files: normalizedFiles,
           fileTree: vfs.getFileTree(),
+          selectedFile: resolveSelectedFileFromVfs(vfs, get().selectedFile),
           previewUrl: null,
           lastHealthyPreviewUrl: null,
           revision: 0,
           previewMode: null,
           executorState: createInitialExecutorState(
-            files.length > 0 ? 'Files loaded, waiting for render' : 'Waiting for task'
+            normalizedFiles.length > 0 ? 'Files loaded, waiting for render' : 'Waiting for task'
           ),
           patchQueueDepth: 0,
           injuryMode: false,
@@ -172,24 +183,31 @@ export const useProjectStore = create<CompilerState>()(
         })),
 
       updateFile: async (path, content) => {
+        const normalizedPath = canonicalizeProjectPath(path);
+        if (!normalizedPath) {
+          return;
+        }
         const { vfs } = get();
-        vfs.setFile(path, content);
+        vfs.setFile(normalizedPath, content);
 
         set(state => ({
-          files: state.files.map(file => (file.path === path ? { ...file, content } : file)),
+          files: normalizeProjectFiles([
+            ...state.files.filter(file => canonicalizeProjectPath(file.path) !== normalizedPath),
+            { path: normalizedPath, content },
+          ]),
           fileTree: vfs.getFileTree(),
+          selectedFile: resolveSelectedFileFromVfs(vfs, state.selectedFile),
           revision: state.revision + 1,
         }));
-
-        const selectedFile = get().selectedFile;
-        if (selectedFile && selectedFile.path === path) {
-          set({ selectedFile: vfs.getFile(path) || null });
-        }
       },
 
       createFile: (path, content) => {
+        const normalizedPath = canonicalizeProjectPath(path);
+        if (!normalizedPath) {
+          return;
+        }
         const { vfs } = get();
-        const parts = path.split('/');
+        const parts = splitProjectPath(normalizedPath);
         for (let index = 1; index < parts.length - 1; index += 1) {
           const dirPath = parts.slice(0, index + 1).join('/');
           if (!vfs.getFile(dirPath)) {
@@ -197,47 +215,58 @@ export const useProjectStore = create<CompilerState>()(
           }
         }
 
-        vfs.setFile(path, content);
+        vfs.setFile(normalizedPath, content);
         set(state => ({
-          files: [...state.files, { path, content }],
+          files: normalizeProjectFiles([...state.files, { path: normalizedPath, content }]),
           fileTree: vfs.getFileTree(),
           revision: state.revision + 1,
         }));
       },
 
       deleteFile: path => {
+        const normalizedPath = canonicalizeProjectPath(path);
+        if (!normalizedPath) {
+          return;
+        }
         const { vfs } = get();
-        if (!vfs.deleteFile(path)) {
+        if (!vfs.deleteFile(normalizedPath)) {
           return;
         }
 
         set(state => ({
-          files: state.files.filter(file => file.path !== path),
+          files: state.files.filter(file => file.path !== normalizedPath),
           fileTree: vfs.getFileTree(),
-          selectedFile: state.selectedFile?.path === path ? null : state.selectedFile,
+          selectedFile: state.selectedFile?.path === normalizedPath ? null : state.selectedFile,
           revision: state.revision + 1,
         }));
       },
 
       renameFile: (oldPath, newPath) => {
+        const normalizedOldPath = canonicalizeProjectPath(oldPath);
+        const normalizedNewPath = canonicalizeProjectPath(newPath);
+        if (!normalizedOldPath || !normalizedNewPath) {
+          return;
+        }
         const { vfs } = get();
-        const file = vfs.getFile(oldPath);
+        const file = vfs.getFile(normalizedOldPath);
         if (!file) {
           return;
         }
 
         const content = file.content ?? '';
-        vfs.setFile(newPath, content);
-        vfs.deleteFile(oldPath);
+        vfs.setFile(normalizedNewPath, content);
+        vfs.deleteFile(normalizedOldPath);
 
         set(state => ({
-          files: [
-            ...state.files.filter(item => item.path !== oldPath && item.path !== newPath),
-            { path: newPath, content },
-          ],
+          files: normalizeProjectFiles([
+            ...state.files.filter(item => item.path !== normalizedOldPath && item.path !== normalizedNewPath),
+            { path: normalizedNewPath, content },
+          ]),
           fileTree: vfs.getFileTree(),
           selectedFile:
-            state.selectedFile?.path === oldPath ? vfs.getFile(newPath) || null : state.selectedFile,
+            state.selectedFile?.path === normalizedOldPath
+              ? vfs.getFile(normalizedNewPath) || null
+              : state.selectedFile,
           revision: state.revision + 1,
         }));
       },
@@ -371,10 +400,21 @@ export const useProjectStore = create<CompilerState>()(
     {
       name: 'project-storage',
       partialize: state => ({
-        files: state.files,
+        files: normalizeProjectFiles(state.files),
         projectType: state.projectType,
       }),
       version: 2,
+      onRehydrateStorage: () => state => {
+        if (!state) return;
+        const vfs = getVFS();
+        const normalizedFiles = normalizeProjectFiles(state.files || []);
+        vfs.initializeFiles(normalizedFiles);
+
+        state.files = normalizedFiles;
+        state.vfs = vfs;
+        state.fileTree = vfs.getFileTree();
+        state.selectedFile = resolveSelectedFileFromVfs(vfs, state.selectedFile);
+      },
     }
   )
 );

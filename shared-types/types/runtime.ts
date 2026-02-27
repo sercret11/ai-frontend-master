@@ -52,9 +52,11 @@ export type RuntimeToolCallState =
 export type AgentRuntimeID =
   | 'planner-agent'
   | 'architect-agent'
+  | 'scaffold-agent'
   | 'page-agent'
   | 'interaction-agent'
   | 'state-agent'
+  | 'style-agent'
   | 'quality-agent'
   | 'repair-agent'
   | 'research-agent';

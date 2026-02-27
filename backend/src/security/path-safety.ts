@@ -1,6 +1,6 @@
 import path from 'path';
 
-const WINDOWS_DRIVE_PREFIX = /^[a-zA-Z]:[\\/]/;
+const WINDOWS_DRIVE_PREFIX = /^[a-zA-Z]:(?:[\\/]|$)/;
 const UNC_PREFIX = /^\\\\/;
 
 function toPosixPath(input: string): string {
@@ -15,6 +15,9 @@ export function normalizeWorkspaceRelativePath(rawPath: string): string {
   const trimmed = (rawPath || '').trim();
   if (!trimmed) {
     throw new Error('Path must not be empty');
+  }
+  if (trimmed.includes('\0')) {
+    throw new Error('Null bytes are not allowed');
   }
 
   const posixInput = toPosixPath(trimmed);
@@ -50,4 +53,3 @@ export function resolvePathWithinBase(baseDir: string, relativePath: string): st
 
   return resolvedTarget;
 }
-

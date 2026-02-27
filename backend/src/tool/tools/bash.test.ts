@@ -31,8 +31,15 @@ async function executeBash(command: string) {
   );
 }
 
+const originalAllowedCommands = process.env.BASH_ALLOWED_COMMANDS;
+
 describe('bash tool regression', () => {
   afterEach(() => {
+    if (typeof originalAllowedCommands === 'string') {
+      process.env.BASH_ALLOWED_COMMANDS = originalAllowedCommands;
+    } else {
+      delete process.env.BASH_ALLOWED_COMMANDS;
+    }
     vi.restoreAllMocks();
     mockPlatform.mockReset();
     mockPlatform.mockReturnValue('win32');
@@ -61,5 +68,30 @@ describe('bash tool regression', () => {
     mockPlatform.mockReturnValue('linux');
 
     await expect(executeBash('echo plain-mode')).rejects.toThrow(/not allowlisted/i);
+  });
+
+  it('blocks inline node eval flags', async () => {
+    mockPlatform.mockReturnValue('linux');
+
+    await expect(executeBash('node -e "console.log(1)"')).rejects.toThrow(
+      /inline interpreter execution is blocked/i
+    );
+  });
+
+  it('blocks inline python execution flags', async () => {
+    mockPlatform.mockReturnValue('linux');
+
+    await expect(executeBash('python -c "print(1)"')).rejects.toThrow(
+      /inline interpreter execution is blocked/i
+    );
+  });
+
+  it('blocks inline powershell command flags when allowlisted', async () => {
+    process.env.BASH_ALLOWED_COMMANDS = 'node,pwsh';
+    mockPlatform.mockReturnValue('linux');
+
+    await expect(executeBash('pwsh -Command "Get-Date"')).rejects.toThrow(
+      /inline interpreter execution is blocked/i
+    );
   });
 });

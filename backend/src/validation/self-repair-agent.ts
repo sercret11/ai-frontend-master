@@ -22,7 +22,7 @@ import {
   type VisualDiffBundleRef,
 } from './search-augmented-repair';
 import { config } from '../config';
-import { LLMService } from '../llm/service';
+import { LLMService } from '../llm/index';
 import { ToolRegistry } from '../tool/registry';
 import { enforcePermission } from '../tool/permission-policy';
 import type { RepairAttempt } from './repair-types';

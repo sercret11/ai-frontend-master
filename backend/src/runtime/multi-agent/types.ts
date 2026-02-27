@@ -4,6 +4,8 @@ import type {
   RuntimeEvent,
   RuntimeEventPayload,
 } from '@ai-frontend/shared-types';
+import type { SessionDocument } from '../../analysis/types';
+import type { ExecutionPlan } from '../../planning/types';
 
 export interface MultiAgentTask {
   id: string;
@@ -110,3 +112,14 @@ export interface MultiAgentKernelInput {
   abortSignal: AbortSignal;
 }
 
+
+// ============================================================================
+// Extended Blackboard types for three-layer architecture
+// ============================================================================
+
+export interface ExtendedBlackboardSnapshot extends BlackboardSnapshot {
+  sessionDocuments: SessionDocument[];
+  executionPlan: ExecutionPlan | null;
+  generatedComponents: string[];
+  failedTasks: Array<{ taskId: string; error: string }>;
+}

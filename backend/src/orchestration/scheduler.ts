@@ -1,9 +1,59 @@
-import type { ExecutionPlan, ExecutionSchedule, ExecutionTask, ScheduledTaskGroup } from './types';
+﻿import type { ExecutionPlan, ExecutionSchedule, ExecutionTask, ScheduledTaskGroup } from './types';
 
 interface TaskNode {
   task: ExecutionTask;
   indegree: number;
   dependents: string[];
+}
+
+interface DependencySource {
+  dependsOn?: unknown;
+  dependencies?: unknown;
+}
+
+function normalizeTaskId(taskId: unknown): string {
+  return String(taskId).trim();
+}
+
+export function normalizeTaskDependencies(task: DependencySource): string[] {
+  const rawDependencies = [
+    ...(Array.isArray(task.dependencies) ? task.dependencies : []),
+    ...(Array.isArray(task.dependsOn) ? task.dependsOn : []),
+  ];
+
+  return Array.from(
+    new Set(
+      rawDependencies
+        .map(String)
+        .map(item => item.trim())
+        .filter(Boolean),
+    ),
+  );
+}
+
+export function validateUniqueTaskIds<T extends { id: unknown }>(tasks: T[]): string[] {
+  const seen = new Set<string>();
+  const duplicates = new Set<string>();
+  const normalizedIds: string[] = [];
+
+  for (const task of tasks) {
+    const taskId = normalizeTaskId(task.id);
+    if (!taskId) {
+      throw new Error('Execution plan contains a task with an empty ID');
+    }
+    normalizedIds.push(taskId);
+    if (seen.has(taskId)) {
+      duplicates.add(taskId);
+      continue;
+    }
+    seen.add(taskId);
+  }
+
+  if (duplicates.size > 0) {
+    throw new Error(`Execution plan contains duplicate task IDs: ${Array.from(duplicates).join(', ')}`);
+  }
+
+  return normalizedIds;
 }
 
 function stableTaskSort(tasks: ExecutionTask[]): ExecutionTask[] {
@@ -31,14 +81,18 @@ function selectBatch(ready: ExecutionTask[]): ExecutionTask[] {
   return sorted.filter(task => task.mode === 'parallel');
 }
 
-/**
- * 根据依赖关系生成可执行调度波次
- */
 export function createExecutionSchedule(plan: ExecutionPlan): ExecutionSchedule {
+  const normalizedTaskIds = validateUniqueTaskIds(plan.tasks);
+  const normalizedTasks = plan.tasks.map((task, index) => ({
+    ...task,
+    id: normalizedTaskIds[index],
+    dependencies: normalizeTaskDependencies(task),
+  }));
+
   const nodeMap = new Map<string, TaskNode>();
   const missingDependencyRefs: Array<{ taskId: string; dependencyId: string }> = [];
 
-  for (const task of plan.tasks) {
+  for (const task of normalizedTasks) {
     nodeMap.set(task.id, {
       task,
       indegree: 0,
@@ -46,7 +100,7 @@ export function createExecutionSchedule(plan: ExecutionPlan): ExecutionSchedule 
     });
   }
 
-  for (const task of plan.tasks) {
+  for (const task of normalizedTasks) {
     const node = nodeMap.get(task.id);
     if (!node) continue;
 
@@ -61,43 +115,35 @@ export function createExecutionSchedule(plan: ExecutionPlan): ExecutionSchedule 
     }
   }
 
-  const pending = new Set(plan.tasks.map(task => task.id));
+  if (missingDependencyRefs.length > 0) {
+    const details = missingDependencyRefs
+      .map(ref => `${ref.taskId}->${ref.dependencyId}`)
+      .join(', ');
+    throw new Error(`Execution plan contains missing dependency references: ${details}`);
+  }
+
+  const pending = new Set(normalizedTasks.map(task => task.id));
   const groups: ScheduledTaskGroup[] = [];
   const orderedTaskIds: string[] = [];
   let wave = 0;
-  let hasCycle = false;
 
   while (pending.size > 0) {
     const ready = stableTaskSort(
       [...pending]
         .map(taskId => nodeMap.get(taskId))
         .filter((node): node is TaskNode => Boolean(node && node.indegree === 0))
-        .map(node => node.task)
+        .map(node => node.task),
     );
 
     if (ready.length === 0) {
-      // 兜底：检测到环后按优先级串行退化，避免调度阻塞。
-      hasCycle = true;
-      const fallbackTask = stableTaskSort(
+      const cycleTaskIds = stableTaskSort(
         [...pending]
           .map(taskId => nodeMap.get(taskId))
           .filter((node): node is TaskNode => Boolean(node))
-          .map(node => node.task)
-      )[0];
-
-      if (!fallbackTask) break;
-
-      wave += 1;
-      groups.push({
-        id: `group-${wave}`,
-        mode: 'serial',
-        taskIds: [fallbackTask.id],
-        tasks: [fallbackTask],
-        wave,
-      });
-      orderedTaskIds.push(fallbackTask.id);
-      pending.delete(fallbackTask.id);
-      continue;
+          .map(node => node.task),
+      ).map(task => task.id);
+      const details = cycleTaskIds.join(', ') || 'unknown';
+      throw new Error(`Execution plan contains cyclic dependencies: ${details}`);
     }
 
     const batch = selectBatch(ready);
@@ -128,14 +174,9 @@ export function createExecutionSchedule(plan: ExecutionPlan): ExecutionSchedule 
     }
   }
 
-  if (missingDependencyRefs.length > 0) {
-    hasCycle = true;
-  }
-
   return {
     groups,
     orderedTaskIds,
-    hasCycle,
+    hasCycle: false,
   };
 }
-

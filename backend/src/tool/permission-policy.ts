@@ -55,6 +55,8 @@ const HIGH_RISK_ALLOWED_AGENTS = new Set([
   'self-repair',
 ]);
 
+const MAX_TOOL_ARGS_PREVIEW_LENGTH = 2000;
+
 function collectRequestText(request: PermissionRequest): string {
   const metadataText = [
     request.metadata?.title,
@@ -71,6 +73,34 @@ function collectRequestText(request: PermissionRequest): string {
     .filter(Boolean)
     .join(' ')
     .toLowerCase();
+}
+
+function stringifyToolArgs(args: Record<string, unknown>): string {
+  try {
+    const serialized = JSON.stringify(args);
+    if (!serialized) {
+      return '';
+    }
+    return serialized.slice(0, MAX_TOOL_ARGS_PREVIEW_LENGTH);
+  } catch {
+    return String(args).slice(0, MAX_TOOL_ARGS_PREVIEW_LENGTH);
+  }
+}
+
+export function buildToolExecutionPermissionRequest(
+  toolName: string,
+  args: Record<string, unknown>
+): PermissionRequest {
+  const argsPreview = stringifyToolArgs(args);
+  return {
+    permission: `tool.execute.${toolName}`,
+    patterns: [`tool:${toolName}`, argsPreview].filter(Boolean),
+    metadata: {
+      title: `Execute tool ${toolName}`,
+      toolName,
+      argsPreview,
+    },
+  };
 }
 
 export function evaluatePermission(
