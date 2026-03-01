@@ -5,7 +5,12 @@
  */
 
 import type { RuntimeEventPayload, RuntimeEvent } from '@ai-frontend/shared-types';
-import type { PatchIntent } from '../runtime/multi-agent/types';
+import type {
+  PatchIntent,
+  RuntimeBudgetConsumption,
+  RuntimeBudgetStopReason,
+  RuntimeExecutionBudget,
+} from '../runtime/multi-agent/types';
 import type { ExecutionPlan, ExecutionAgentID } from '../planning/types';
 
 // Re-export ExecutionAgentID for convenience
@@ -24,6 +29,7 @@ export interface ExecutionLayerInput {
   userMessage: string;
   platform?: string;
   techStack: string[];
+  runtimeBudget?: RuntimeExecutionBudget;
   abortSignal: AbortSignal;
   emitRuntimeEvent: RuntimeEventEmitter;
 }
@@ -34,6 +40,8 @@ export interface ExecutionLayerOutput {
   touchedFiles: string[];
   degradedTasks: string[];
   unresolvedIssues: string[];
+  budgetUsage?: RuntimeBudgetConsumption;
+  budgetStopReason?: RuntimeBudgetStopReason;
 }
 
 /**
@@ -48,6 +56,7 @@ export interface ExecutionContext {
   userMessage: string;
   platform?: string;
   techStack: string[];
+  runtimeBudget?: RuntimeExecutionBudget;
   abortSignal: AbortSignal;
   emitRuntimeEvent: RuntimeEventEmitter;
 }

@@ -1,25 +1,28 @@
 import type { RuntimeAgent } from '../../runtime/multi-agent/types';
 import { runLlmBackedAgent } from '../../agents/runtime/runner';
+import { buildExecutionContractSection } from './prompt-context';
 
-function buildQualityPrompt(userMessage: string): string {
+function buildQualityPrompt(context: Parameters<RuntimeAgent['buildPrompt']>[0]): string {
   return [
     'You are QualityAgent (Execution Layer).',
-    'Validate the generated code for completeness, consistency, and runnability.',
-    'Report concrete gaps and produce repair directives when needed.',
+    'Validate generated code for completeness, consistency, runtime readiness, and analysis-contract alignment.',
+    'You must not ask for repository access. You already have workspace access via read/grep/glob/bash tools.',
     '',
     'Responsibilities:',
-    '- Check file completeness: all referenced files exist',
-    '- Verify import consistency: all imports resolve to existing exports',
-    '- Validate TypeScript types: no type errors in generated code',
-    '- Check route reachability: all routes have corresponding page components',
-    '- Verify component export completeness: all used components are properly exported',
+    '- Verify file completeness, imports, and type consistency',
+    '- Check route reachability and component export integrity',
+    '- Detect generic placeholder-only navigation/page structures not grounded in requirements',
+    '- Verify visible interaction/state transitions exist for core workflows',
+    '',
+    'Output contract:',
+    '- If all checks pass, output QUALITY_PASSED.',
+    '- Otherwise output QUALITY_FAILED and a numbered list of actionable issues with file paths.',
     '',
     'Constraints:',
-    '- Use bash to run type-checking and lint commands.',
-    '- Report issues as structured findings with file path, line, and description.',
-    '- Do not fix issues yourself — repair-agent handles that.',
+    '- Use bash for deterministic verification when possible (type check/build/lint).',
+    '- Do not apply code changes yourself; repair-agent handles fixes.',
     '',
-    `User requirement: ${userMessage}`,
+    buildExecutionContractSection(context),
   ].join('\n');
 }
 
@@ -29,11 +32,11 @@ export const qualityAgent: RuntimeAgent = {
   defaultGoal: 'validate generated code for completeness, consistency, and runnability',
   fallbackAgentId: 'frontend-implementer',
   allowedTools: ['read', 'grep', 'glob', 'bash'],
-  buildPrompt: context => buildQualityPrompt(context.userMessage),
+  buildPrompt: context => buildQualityPrompt(context),
   run: async context =>
     runLlmBackedAgent(
       context,
       'frontend-implementer',
-      buildQualityPrompt(context.userMessage),
+      buildQualityPrompt(context),
     ),
 };

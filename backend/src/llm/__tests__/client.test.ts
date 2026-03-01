@@ -62,6 +62,36 @@ function makeMockAdapter(overrides?: Partial<ProviderAdapter>): ProviderAdapter 
 // Tests
 // ---------------------------------------------------------------------------
 
+describe('LLMClient timeout defaults', () => {
+  const originalTimeout = process.env.LLM_REQUEST_TIMEOUT_MS;
+
+  afterEach(() => {
+    if (originalTimeout === undefined) {
+      delete process.env.LLM_REQUEST_TIMEOUT_MS;
+      return;
+    }
+    process.env.LLM_REQUEST_TIMEOUT_MS = originalTimeout;
+  });
+
+  it('uses 10-minute default timeout when env is unset', () => {
+    delete process.env.LLM_REQUEST_TIMEOUT_MS;
+    const adapter = makeMockAdapter();
+    const adapters = new Map<ProviderID, ProviderAdapter>([['openai', adapter]]);
+    const client = new LLMClient(adapters, new RetryEngine({ maxRetries: 0 }));
+
+    expect((client as unknown as { requestTimeoutMs: number }).requestTimeoutMs).toBe(600000);
+  });
+
+  it('uses env timeout override when it is valid', () => {
+    process.env.LLM_REQUEST_TIMEOUT_MS = '45000';
+    const adapter = makeMockAdapter();
+    const adapters = new Map<ProviderID, ProviderAdapter>([['openai', adapter]]);
+    const client = new LLMClient(adapters, new RetryEngine({ maxRetries: 0 }));
+
+    expect((client as unknown as { requestTimeoutMs: number }).requestTimeoutMs).toBe(45000);
+  });
+});
+
 describe('LLMClient.complete', () => {
   let fetchSpy: any;
 
@@ -87,6 +117,73 @@ describe('LLMClient.complete', () => {
 
     expect(adapter.buildRequest).toHaveBeenCalledWith(params);
     expect(adapter.parseResponse).toHaveBeenCalledWith({ id: 'resp-1', output: [] });
+    expect(result).toEqual(MOCK_RESPONSE);
+  });
+
+  it('accepts SSE payload in complete() by extracting response body', async () => {
+    const adapter = makeMockAdapter();
+    const adapters = new Map<ProviderID, ProviderAdapter>([['openai', adapter]]);
+    const client = new LLMClient(adapters, new RetryEngine({ maxRetries: 0 }));
+
+    const sseBody = [
+      'event: response.created',
+      'data: {"type":"response.created","response":{"id":"resp-1"}}',
+      '',
+      'event: response.completed',
+      'data: {"type":"response.completed","response":{"id":"resp-1","output":[]}}',
+      '',
+    ].join('\n');
+
+    fetchSpy.mockResolvedValueOnce(
+      new Response(sseBody, {
+        status: 200,
+        headers: { 'Content-Type': 'text/event-stream' },
+      }),
+    );
+
+    const result = await client.complete(makeParams());
+
+    expect(adapter.parseResponse).toHaveBeenCalledWith({ id: 'resp-1', output: [] });
+    expect(result).toEqual(MOCK_RESPONSE);
+  });
+
+  it('builds fallback response from SSE deltas when response object is absent', async () => {
+    const adapter = makeMockAdapter();
+    const adapters = new Map<ProviderID, ProviderAdapter>([['openai', adapter]]);
+    const client = new LLMClient(adapters, new RetryEngine({ maxRetries: 0 }));
+
+    const sseBody = [
+      'event: response.output_text.delta',
+      'data: {"type":"response.output_text.delta","delta":"Hello"}',
+      '',
+      'event: response.output_text.delta',
+      'data: {"type":"response.output_text.delta","delta":" world"}',
+      '',
+      'event: response.completed',
+      'data: {"type":"response.completed"}',
+      '',
+    ].join('\n');
+
+    fetchSpy.mockResolvedValueOnce(
+      new Response(sseBody, {
+        status: 200,
+        headers: { 'Content-Type': 'text/event-stream' },
+      }),
+    );
+
+    const result = await client.complete(makeParams());
+
+    const parsedInput = (adapter.parseResponse as ReturnType<typeof vi.fn>).mock.calls[0]?.[0] as
+      | Record<string, unknown>
+      | undefined;
+    expect(parsedInput).toBeDefined();
+    const output = parsedInput?.output as Array<Record<string, unknown>>;
+    expect(Array.isArray(output)).toBe(true);
+    expect(output[0]).toEqual({
+      type: 'message',
+      role: 'assistant',
+      content: [{ type: 'output_text', text: 'Hello world' }],
+    });
     expect(result).toEqual(MOCK_RESPONSE);
   });
 

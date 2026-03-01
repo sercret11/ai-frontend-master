@@ -117,6 +117,16 @@ describe('RetryEngine.isRetryable', () => {
     expect(engine.isRetryable(new Error('generic'))).toBe(false);
     expect(engine.isRetryable({})).toBe(false);
   });
+
+  it('handles numeric network error code without throwing', () => {
+    expect(() =>
+      engine.isRetryable({
+        name: 'AbortError',
+        message: 'This operation was aborted',
+        code: 20,
+      }),
+    ).not.toThrow();
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -197,7 +207,7 @@ describe('RetryEngine.execute – max retries', () => {
       expect(callCount).toBe(3);
       // Should be wrapped as LLMError
       expect(err.message).toBe('server error');
-      expect(err.retryable).toBe(false);
+      expect(err.retryable).toBe(true);
       expect(err.statusCode).toBe(500);
     }
   });

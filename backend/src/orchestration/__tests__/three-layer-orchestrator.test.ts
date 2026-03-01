@@ -85,6 +85,7 @@ function createMockEmitter(): {
 function createKernelInput(
   userMessage: string,
   emitter: (event: RuntimeEventPayload) => RuntimeEvent,
+  runtimeBudget?: MultiAgentKernelInput['runtimeBudget'],
 ): MultiAgentKernelInput {
   return {
     sessionId: `test-session-${Date.now()}`,
@@ -98,6 +99,7 @@ function createKernelInput(
     },
     platform: 'web',
     techStack: ['React', 'TypeScript'],
+    runtimeBudget,
     emitRuntimeEvent: emitter,
     abortSignal: new AbortController().signal,
   };
@@ -270,6 +272,201 @@ describe('ThreeLayerOrchestrator', () => {
       // Planning and execution should NOT have been called
       expect(mockPlanningLayer.run).not.toHaveBeenCalled();
       expect(mockExecutionLayer.run).not.toHaveBeenCalled();
+    });
+
+    it('should retry transient analysis errors and continue pipeline on recovery', async () => {
+      const blackboard = new MultiAgentBlackboard();
+      const eventBus = new MultiAgentEventBus();
+
+      const transientError = Object.assign(new Error('fetch failed'), {
+        code: 'ECONNRESET',
+      });
+
+      const mockAnalysisLayer = {
+        run: vi
+          .fn()
+          .mockRejectedValueOnce(transientError)
+          .mockResolvedValue({
+            success: true,
+            documents: [
+              { id: 'doc-1', agentId: 'product-manager', createdAt: Date.now(), version: 1, content: {} },
+              { id: 'doc-2', agentId: 'frontend-architect', createdAt: Date.now(), version: 1, content: {} },
+              { id: 'doc-3', agentId: 'ui-expert', createdAt: Date.now(), version: 1, content: {} },
+              { id: 'doc-4', agentId: 'ux-expert', createdAt: Date.now(), version: 1, content: {} },
+            ],
+          }),
+      } as unknown as AnalysisLayer;
+
+      const mockPlanningLayer = {
+        run: vi.fn().mockResolvedValue({
+          id: 'plan-1',
+          createdAt: Date.now(),
+          tasks: [],
+        }),
+      } as unknown as PlanningLayer;
+
+      const mockExecutionLayer = {
+        run: vi.fn().mockResolvedValue({
+          success: true,
+          patchIntents: [],
+          touchedFiles: ['src/App.tsx'],
+          degradedTasks: [],
+          unresolvedIssues: [],
+        }),
+      } as unknown as ExecutionLayer;
+
+      const orchestrator = new ThreeLayerOrchestrator(
+        mockAnalysisLayer,
+        mockPlanningLayer,
+        mockExecutionLayer,
+        blackboard,
+        eventBus,
+      );
+
+      const previousAttempts = process.env.RUNTIME_STAGE_RETRY_ATTEMPTS;
+      const previousDelay = process.env.RUNTIME_STAGE_RETRY_BASE_DELAY_MS;
+      process.env.RUNTIME_STAGE_RETRY_ATTEMPTS = '2';
+      process.env.RUNTIME_STAGE_RETRY_BASE_DELAY_MS = '1';
+
+      try {
+        const { emitter } = createMockEmitter();
+        const input = createKernelInput('test message', emitter);
+        await expect(orchestrator.run(input)).resolves.not.toThrow();
+      } finally {
+        if (previousAttempts === undefined) {
+          delete process.env.RUNTIME_STAGE_RETRY_ATTEMPTS;
+        } else {
+          process.env.RUNTIME_STAGE_RETRY_ATTEMPTS = previousAttempts;
+        }
+        if (previousDelay === undefined) {
+          delete process.env.RUNTIME_STAGE_RETRY_BASE_DELAY_MS;
+        } else {
+          process.env.RUNTIME_STAGE_RETRY_BASE_DELAY_MS = previousDelay;
+        }
+      }
+
+      expect(mockAnalysisLayer.run).toHaveBeenCalledTimes(2);
+      expect(mockPlanningLayer.run).toHaveBeenCalledTimes(1);
+      expect(mockExecutionLayer.run).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('Execution Layer Degraded Output Propagation', () => {
+    it('emits a non-empty run.error when execution is degraded only by failed tasks', async () => {
+      const blackboard = new MultiAgentBlackboard();
+      const eventBus = new MultiAgentEventBus();
+
+      const mockAnalysisLayer = {
+        run: vi.fn().mockResolvedValue({
+          success: true,
+          documents: [
+            { id: 'doc-1', agentId: 'product-manager', createdAt: Date.now(), version: 1, content: {} },
+            { id: 'doc-2', agentId: 'frontend-architect', createdAt: Date.now(), version: 1, content: {} },
+            { id: 'doc-3', agentId: 'ui-expert', createdAt: Date.now(), version: 1, content: {} },
+            { id: 'doc-4', agentId: 'ux-expert', createdAt: Date.now(), version: 1, content: {} },
+          ],
+        }),
+      } as unknown as AnalysisLayer;
+
+      const mockPlanningLayer = {
+        run: vi.fn().mockResolvedValue({
+          id: 'plan-1',
+          createdAt: Date.now(),
+          tasks: [],
+        }),
+      } as unknown as PlanningLayer;
+
+      const mockExecutionLayer = {
+        run: vi.fn().mockResolvedValue({
+          success: false,
+          patchIntents: [],
+          touchedFiles: ['src/pages/DashboardPage.tsx'],
+          degradedTasks: ['repair-1'],
+          unresolvedIssues: [],
+        }),
+      } as unknown as ExecutionLayer;
+
+      const orchestrator = new ThreeLayerOrchestrator(
+        mockAnalysisLayer,
+        mockPlanningLayer,
+        mockExecutionLayer,
+        blackboard,
+        eventBus,
+      );
+
+      const { emitter, events } = createMockEmitter();
+      const input = createKernelInput('test message', emitter);
+
+      await expect(orchestrator.run(input)).resolves.not.toThrow();
+
+      const errorEvents = events.filter(e => e.type === 'run.error');
+      expect(errorEvents.length).toBeGreaterThanOrEqual(1);
+      const errorPayload = errorEvents[0] as any;
+      expect(errorPayload.error).toContain('degraded tasks');
+      expect(errorPayload.error).toContain('repair-1');
+    });
+
+    it('forwards runtime budget to execution layer and emits budget stop signal', async () => {
+      const blackboard = new MultiAgentBlackboard();
+      const eventBus = new MultiAgentEventBus();
+
+      const mockAnalysisLayer = {
+        run: vi.fn().mockResolvedValue({
+          success: true,
+          documents: [
+            { id: 'doc-1', agentId: 'product-manager', createdAt: Date.now(), version: 1, content: {} },
+            { id: 'doc-2', agentId: 'frontend-architect', createdAt: Date.now(), version: 1, content: {} },
+            { id: 'doc-3', agentId: 'ui-expert', createdAt: Date.now(), version: 1, content: {} },
+            { id: 'doc-4', agentId: 'ux-expert', createdAt: Date.now(), version: 1, content: {} },
+          ],
+        }),
+      } as unknown as AnalysisLayer;
+
+      const mockPlanningLayer = {
+        run: vi.fn().mockResolvedValue({
+          id: 'plan-1',
+          createdAt: Date.now(),
+          tasks: [],
+        }),
+      } as unknown as PlanningLayer;
+
+      const mockExecutionLayer = {
+        run: vi.fn().mockResolvedValue({
+          success: false,
+          patchIntents: [],
+          touchedFiles: ['src/generated/task-1.ts'],
+          degradedTasks: [],
+          unresolvedIssues: ['maxToolCalls reached'],
+          budgetStopReason: 'maxToolCalls',
+        }),
+      } as unknown as ExecutionLayer;
+
+      const orchestrator = new ThreeLayerOrchestrator(
+        mockAnalysisLayer,
+        mockPlanningLayer,
+        mockExecutionLayer,
+        blackboard,
+        eventBus,
+      );
+
+      const { emitter, events } = createMockEmitter();
+      const input = createKernelInput('test budget message', emitter, {
+        maxToolCalls: 1,
+        maxIterations: 3,
+      });
+
+      await expect(orchestrator.run(input)).resolves.not.toThrow();
+
+      expect(mockExecutionLayer.run).toHaveBeenCalledTimes(1);
+      const executionInput = (mockExecutionLayer.run as any).mock.calls[0][0];
+      expect(executionInput.runtimeBudget).toMatchObject({
+        maxToolCalls: 1,
+        maxIterations: 3,
+      });
+
+      const blockedEvent = events.find(event => event.type === 'agent.task.blocked');
+      expect(blockedEvent).toBeDefined();
+      expect((blockedEvent as any).reason).toContain('maxToolCalls');
     });
   });
 

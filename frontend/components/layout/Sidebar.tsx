@@ -308,7 +308,8 @@ const SidebarComponent: React.FC = () => {
       try {
         const firstFile = loadedFiles[0];
         if (firstFile) {
-          const sessionResponse = await fetch(`${apiBaseUrl}/api/sessions/${firstFile.sessionID}`, {
+          const encodedSessionId = encodeURIComponent(firstFile.sessionID);
+          const sessionResponse = await fetch(`${apiBaseUrl}/api/sessions/${encodedSessionId}`, {
             headers: withApiAuthHeaders(),
           });
           if (sessionResponse.ok) {
@@ -409,11 +410,11 @@ const SidebarComponent: React.FC = () => {
   }, [backendSessionId]);
 
   useEffect(() => {
-    if (!backendSessionId || storeFileCount > 0) {
+    if (!backendSessionId || storeFileCount > 0 || isStreaming) {
       return;
     }
     requestPolling(backendSessionId, `${backendSessionId}:session-ready`);
-  }, [backendSessionId, requestPolling, storeFileCount]);
+  }, [backendSessionId, isStreaming, requestPolling, storeFileCount]);
 
   const isRunConsoleStreaming =
     isStreaming && (currentToolCalls.length > 0 || currentRuntimeEvents.length > 0);
@@ -572,28 +573,42 @@ const SidebarComponent: React.FC = () => {
           <MessageItem key={message.id} message={message} isStreaming={false} />
         ))}
 
-        {isStreaming &&
-          (currentContent || currentToolCalls.length > 0 || currentRuntimeEvents.length > 0) && (
-            <div className="flex justify-start">
-              <div className="max-w-[85%] rounded-2xl px-4 py-3 bg-gray-100 text-gray-900">
-                {currentContent && (
-                  <div className="text-sm prose prose-sm max-w-none dark:prose-invert">
+        {isStreaming && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500 space-y-4">
+            {/* Thinking / Content Card */}
+            <div className="w-full bg-white border border-blue-100 rounded-3xl shadow-sm overflow-hidden ring-1 ring-blue-50/50">
+              <div className="px-5 py-3 border-b border-blue-50 bg-blue-50/30 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Loader2 className="w-3.5 h-3.5 text-blue-600 animate-spin" />
+                  <span className="text-[10px] font-bold text-blue-700 uppercase tracking-tight">AI Thinking...</span>
+                </div>
+              </div>
+              
+              <div className="p-5">
+                {currentContent ? (
+                  <div className="text-sm prose prose-sm max-w-none prose-slate">
                     <ErrorBoundary>
                       <MarkdownRenderer content={currentContent} />
                     </ErrorBoundary>
+                    <span className="inline-block w-1.5 h-4 ml-1 bg-blue-600 animate-pulse align-middle rounded-full" />
                   </div>
-                )}
-                <div className="flex items-center gap-1 mt-2">
-                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                  <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
-                </div>
-                {(currentToolCalls.length > 0 || currentRuntimeEvents.length > 0) && (
-                  <RunConsole events={currentRuntimeEvents} toolCalls={currentToolCalls} />
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-4 bg-blue-600 animate-pulse rounded-full" />
+                    <span className="text-xs text-gray-400 italic">Formulating plan...</span>
+                  </div>
                 )}
               </div>
             </div>
-          )}
+
+            {/* LIVE TOOL ACTIONS: Rendered as independent bubbles during streaming */}
+            {(currentToolCalls.length > 0 || currentRuntimeEvents.length > 0) && (
+              <div className="animate-in slide-in-from-top-2 duration-300">
+                <RunConsole events={currentRuntimeEvents} toolCalls={currentToolCalls} />
+              </div>
+            )}
+          </div>
+        )}
 
         <div ref={messagesEndRef} />
       </div>

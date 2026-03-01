@@ -273,7 +273,8 @@ const CodeViewInner: React.FC = () => {
 
       if (loadedSessionId) {
         try {
-          const response = await fetch(`${apiBaseUrl}/api/sessions/${loadedSessionId}`, {
+          const encodedSessionId = encodeURIComponent(loadedSessionId);
+          const response = await fetch(`${apiBaseUrl}/api/sessions/${encodedSessionId}`, {
             headers: withApiAuthHeaders(),
           });
           if (response.ok) {
@@ -362,7 +363,8 @@ const CodeViewInner: React.FC = () => {
 
         if (!currentProjectType) {
           try {
-            const response = await fetch(`${apiBaseUrl}/api/sessions/${backendSessionId}`, {
+            const encodedSessionId = encodeURIComponent(backendSessionId);
+            const response = await fetch(`${apiBaseUrl}/api/sessions/${encodedSessionId}`, {
               headers: withApiAuthHeaders(),
             });
             if (response.ok) {

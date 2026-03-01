@@ -57,6 +57,14 @@ export interface CreateLLMClientOptions {
   googleApiKey?: string;
   /** Override for Google base URL (defaults to process.env.GOOGLE_BASE_URL) */
   googleBaseUrl?: string;
+  /** Override for Zhipu AI API key (defaults to process.env.ZHIPUAI_API_KEY) */
+  zhipuaiApiKey?: string;
+  /** Override for Zhipu AI base URL (defaults to process.env.ZHIPUAI_BASE_URL) */
+  zhipuaiBaseUrl?: string;
+  /** Override for DashScope API key (defaults to process.env.DASHSCOPE_API_KEY) */
+  dashscopeApiKey?: string;
+  /** Override for DashScope base URL (defaults to process.env.DASHSCOPE_BASE_URL) */
+  dashscopeBaseUrl?: string;
   /** Partial retry config overrides */
   retryConfig?: Partial<typeof DEFAULT_RETRY_CONFIG>;
 }
@@ -81,6 +89,7 @@ export function createLLMClient(options: CreateLLMClientOptions = {}): LLMClient
         apiKey: openaiKey,
         baseUrl: openaiBase || undefined,
         protocol: 'responses', // default to Responses API per design doc
+        providerId: 'openai',
       }),
     );
   }
@@ -107,6 +116,36 @@ export function createLLMClient(options: CreateLLMClientOptions = {}): LLMClient
       new GoogleAdapter({
         apiKey: googleKey,
         baseUrl: googleBase || undefined,
+      }),
+    );
+  }
+
+  // --- Zhipu AI ---
+  const zhipuaiKey = options.zhipuaiApiKey ?? process.env.ZHIPUAI_API_KEY ?? '';
+  if (zhipuaiKey) {
+    const zhipuaiBase = options.zhipuaiBaseUrl ?? process.env.ZHIPUAI_BASE_URL;
+    adapters.set(
+      'zhipuai',
+      new OpenAIAdapter({
+        apiKey: zhipuaiKey,
+        baseUrl: zhipuaiBase || undefined,
+        protocol: 'chat-completions',
+        providerId: 'zhipuai',
+      }),
+    );
+  }
+
+  // --- DashScope ---
+  const dashscopeKey = options.dashscopeApiKey ?? process.env.DASHSCOPE_API_KEY ?? '';
+  if (dashscopeKey) {
+    const dashscopeBase = options.dashscopeBaseUrl ?? process.env.DASHSCOPE_BASE_URL;
+    adapters.set(
+      'dashscope',
+      new OpenAIAdapter({
+        apiKey: dashscopeKey,
+        baseUrl: dashscopeBase || undefined,
+        protocol: 'chat-completions',
+        providerId: 'dashscope',
       }),
     );
   }
@@ -182,7 +221,7 @@ export namespace LLMService {
     mode?: 'creator' | 'implementer';
     platform?: 'web' | 'mobile' | 'desktop' | 'miniprogram';
     techStack?: string[];
-    modelProvider?: 'anthropic' | 'openai' | 'google';
+    modelProvider?: ProviderID;
     modelId?: string;
     apiKey?: string;
     baseURL?: string;
@@ -245,7 +284,6 @@ export namespace LLMService {
       agent: string;
       abort: AbortSignal;
       callID?: string;
-      onToolCall?: StreamInput['onToolCall'];
       onToolResult?: StreamInput['onToolResult'];
     },
   ): Promise<{ title: string; output: string; metadata?: ToolMetadata }> {
@@ -258,7 +296,6 @@ export namespace LLMService {
       abort: ctx.abort,
       callID: ctx.callID,
       permissionSource: 'llm-service',
-      onToolCall: ctx.onToolCall,
       onToolResult: ctx.onToolResult as any,
     });
     return {
@@ -488,6 +525,8 @@ export namespace LLMService {
 
     // Partial tool call accumulator
     const partialToolCalls = new Map<string, { name: string; argChunks: string[] }>();
+    const executedToolCallIDs = new Set<string>();
+    const pendingToolExecutions: Promise<void>[] = [];
 
     let textResolve: (value: string) => void;
     let toolCallsResolve: (
@@ -527,27 +566,60 @@ export namespace LLMService {
                 try {
                   parsedArgs = JSON.parse(partial.argChunks.join(''));
                 } catch { /* empty */ }
-                collectedToolCalls.push({
-                  toolName: partial.name,
-                  toolCallId: event.id,
-                  args: parsedArgs,
-                });
-                partialToolCalls.delete(event.id);
+                if (!executedToolCallIDs.has(event.id)) {
+                  executedToolCallIDs.add(event.id);
+                  collectedToolCalls.push({
+                    toolName: partial.name,
+                    toolCallId: event.id,
+                    args: parsedArgs,
+                  });
 
-                // Execute tool via callback (fire-and-forget for stream compat)
-                executeTool(partial.name, parsedArgs, {
-                  providerID: modelProvider,
-                  modelID: modelId,
-                  sessionID: input.sessionID,
-                  messageID: input.messageID,
-                  agent: resolvedAgentId!,
-                  abort: input.abort || new AbortController().signal,
-                  callID: event.id,
-                  onToolCall: input.onToolCall,
-                  onToolResult: input.onToolResult,
-                }).catch((err) => {
-                  console.error(`[LLM] Tool execution error for ${partial.name}:`, err);
-                });
+                  try {
+                    input.onToolCall?.({
+                      toolName: partial.name,
+                      callID: event.id,
+                      args: parsedArgs,
+                    });
+                  } catch (callbackError) {
+                    console.error('[LLM] onToolCall callback failed:', callbackError);
+                  }
+
+                  const toolExecution = (async () => {
+                    try {
+                      await executeTool(partial.name, parsedArgs, {
+                        providerID: modelProvider,
+                        modelID: modelId,
+                        sessionID: input.sessionID,
+                        messageID: input.messageID,
+                        agent: resolvedAgentId!,
+                        abort: input.abort || new AbortController().signal,
+                        callID: event.id,
+                        onToolResult: input.onToolResult,
+                      });
+                    } catch (err) {
+                      const errorMessage = err instanceof Error ? err.message : String(err);
+                      try {
+                        input.onToolResult?.({
+                          toolName: partial.name,
+                          callID: event.id,
+                          title: 'Tool Error',
+                          output: `Tool execution failed: ${errorMessage}`,
+                          metadata: {
+                            toolExecutionFailed: true,
+                            error: errorMessage,
+                          },
+                        });
+                      } catch (callbackError) {
+                        console.error('[LLM] onToolResult callback failed:', callbackError);
+                      }
+                      console.error(`[LLM] Tool execution error for ${partial.name}:`, err);
+                    }
+                  })();
+
+                  pendingToolExecutions.push(toolExecution);
+                }
+
+                partialToolCalls.delete(event.id);
               }
               break;
             }
@@ -557,6 +629,7 @@ export namespace LLMService {
           }
         }
       } finally {
+        await Promise.all(pendingToolExecutions);
         textResolve!(fullText);
         toolCallsResolve!(collectedToolCalls);
       }

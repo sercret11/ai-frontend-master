@@ -9,13 +9,18 @@ export enum LogLevel {
   ERROR = 3,
 }
 
+const isProductionEnv =
+  import.meta.env?.PROD ?? import.meta.env?.MODE === 'production';
+const isDevelopmentEnv =
+  import.meta.env?.DEV ?? import.meta.env?.MODE === 'development';
+
 class Logger {
   private level: LogLevel;
   private prefix: string;
 
   constructor(prefix: string = '', level: LogLevel = LogLevel.INFO) {
     this.prefix = prefix;
-    this.level = process.env['NODE_ENV'] === 'production' ? LogLevel.ERROR : level;
+    this.level = isProductionEnv ? LogLevel.ERROR : level;
   }
 
   private shouldLog(level: LogLevel): boolean {
@@ -30,7 +35,7 @@ class Logger {
 
   debug(message: string, ...args: unknown[]): void {
     if (!this.shouldLog(LogLevel.DEBUG)) return;
-    if (process.env['NODE_ENV'] === 'development') {
+    if (isDevelopmentEnv) {
       console.debug(this.formatMessage('DEBUG', message), ...args);
     }
   }

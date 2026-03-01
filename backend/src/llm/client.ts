@@ -23,8 +23,11 @@ import type { ProviderAdapter } from './adapters/types.js';
 import { RetryEngine } from './retry.js';
 import { StreamHandler } from './stream-handler.js';
 
+const DEFAULT_LLM_REQUEST_TIMEOUT_MS = 600_000;
+
 export class LLMClient {
   private streamHandler: StreamHandler;
+  private requestTimeoutMs: number;
 
   constructor(
     private adapters: Map<ProviderID, ProviderAdapter>,
@@ -32,6 +35,7 @@ export class LLMClient {
     streamHandler?: StreamHandler,
   ) {
     this.streamHandler = streamHandler ?? new StreamHandler();
+    this.requestTimeoutMs = this.resolveRequestTimeoutMs();
   }
 
   /**
@@ -53,12 +57,19 @@ export class LLMClient {
     const { url, headers, body } = adapter.buildRequest(params);
 
     return this.retryEngine.execute(async (signal: AbortSignal) => {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(body),
-        signal,
-      });
+      const requestSignal = this.createRequestSignal(signal, params.abortSignal);
+      const response = await Promise.race([
+        fetch(url, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify(body),
+          signal: requestSignal,
+        }),
+        this.rejectAfter(
+          this.requestTimeoutMs,
+          `LLM request timed out before response headers (provider=${params.provider}, model=${params.model})`,
+        ),
+      ]);
 
       if (!response.ok) {
         const errorBody = await response.text().catch(() => '');
@@ -71,9 +82,47 @@ export class LLMClient {
         throw adapter.convertError(response.status, parsedBody);
       }
 
-      const json: unknown = await response.json();
+      const rawBody = await Promise.race([
+        response.text(),
+        this.rejectAfter(
+          this.requestTimeoutMs,
+          `LLM response body timed out (provider=${params.provider}, model=${params.model})`,
+        ),
+      ]);
+      const bodyText = typeof rawBody === 'string' ? rawBody : '';
+      const parsedSse = this.extractResponseFromSSE(bodyText);
+      if (parsedSse != null) {
+        return adapter.parseResponse(parsedSse);
+      }
+
+      const trimmed = bodyText.trim();
+      const json: unknown = trimmed.length > 0 ? JSON.parse(trimmed) : {};
       return adapter.parseResponse(json);
     }, params.abortSignal);
+  }
+
+  /**
+   * Streaming-first completion used by multi-agent runtime paths.
+   *
+   * This method drains stream events and returns the final aggregated response.
+   * If the stream path fails for non-abort reasons, it falls back to one
+   * non-stream completion for compatibility.
+   */
+  async completeStreaming(params: LLMRequestParams): Promise<LLMResponse> {
+    const { events, response } = this.stream(params);
+    try {
+      for await (const _event of events) {
+        // Drain stream events to drive response aggregation.
+      }
+      return await response;
+    } catch (error: unknown) {
+      // Avoid unhandled rejection from the response promise when stream throws.
+      await response.catch(() => undefined);
+      if (this.isAbortError(error)) {
+        throw error;
+      }
+      return this.complete(params);
+    }
   }
 
   /**
@@ -117,6 +166,10 @@ export class LLMClient {
     const streamHandlerRef = this.streamHandler;
     const retryEngineRef = this.retryEngine;
     const isAbortErrorFn = this.isAbortError;
+    const createRequestSignalFn = this.createRequestSignal.bind(this);
+    const rejectAfterFn = this.rejectAfter.bind(this);
+    const extractResponseFromSSEFn = this.extractResponseFromSSE.bind(this);
+    const requestTimeoutMs = this.requestTimeoutMs;
     const maxStreamRetries = 2;
 
     async function* generateEvents(): AsyncGenerator<StreamEvent> {
@@ -124,11 +177,12 @@ export class LLMClient {
 
       while (attempt <= maxStreamRetries) {
         try {
+          const requestSignal = createRequestSignalFn(params.abortSignal);
           const response = await fetch(url, {
             method: 'POST',
             headers,
             body: JSON.stringify(streamBody),
-            signal: params.abortSignal,
+            signal: requestSignal,
           });
 
           if (!response.ok) {
@@ -140,6 +194,28 @@ export class LLMClient {
               parsedBody = errorBody;
             }
             throw resolvedAdapter.convertError(response.status, parsedBody);
+          }
+
+          const contentType = response.headers.get('content-type') ?? '';
+          const isSse = contentType.toLowerCase().includes('text/event-stream');
+          if (!isSse) {
+            const rawBody = await Promise.race([
+              response.text(),
+              rejectAfterFn(
+                requestTimeoutMs,
+                `LLM stream fallback body timed out (provider=${params.provider}, model=${params.model})`,
+              ),
+            ]);
+            const bodyText = typeof rawBody === 'string' ? rawBody : '';
+            const parsedSse = extractResponseFromSSEFn(bodyText);
+            if (parsedSse != null) {
+              resolveResponse(resolvedAdapter.parseResponse(parsedSse));
+              return;
+            }
+            const trimmed = bodyText.trim();
+            const json: unknown = trimmed.length > 0 ? JSON.parse(trimmed) : {};
+            resolveResponse(resolvedAdapter.parseResponse(json));
+            return;
           }
 
           // Accumulate text and tool calls from the stream
@@ -263,7 +339,7 @@ export class LLMClient {
       };
 
       // Call LLM
-      const response = await this.complete(currentParams);
+      const response = await this.completeStreaming(currentParams);
 
       // Check for empty response (no text and no tool calls)
       const isEmpty = !response.text.trim() && response.toolCalls.length === 0;
@@ -325,7 +401,7 @@ export class LLMClient {
       ...params,
       messages,
     };
-    return this.complete(finalParams);
+    return this.completeStreaming(finalParams);
   }
 
   /**
@@ -370,6 +446,194 @@ export class LLMClient {
       return (error as { name: string }).name === 'AbortError';
     }
     return false;
+  }
+
+  private resolveRequestTimeoutMs(): number {
+    const timeoutMs = Number(
+      process.env.LLM_REQUEST_TIMEOUT_MS ?? DEFAULT_LLM_REQUEST_TIMEOUT_MS,
+    );
+    if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+      return DEFAULT_LLM_REQUEST_TIMEOUT_MS;
+    }
+    return Math.floor(timeoutMs);
+  }
+
+  private extractResponseFromSSE(bodyText: string): Record<string, unknown> | null {
+    if (!bodyText || !bodyText.includes('event:')) {
+      return null;
+    }
+
+    const blocks = bodyText.split(/\r?\n\r?\n/);
+    let latestResponse: Record<string, unknown> | null = null;
+    const textDeltas: string[] = [];
+    const functionCalls = new Map<
+      string,
+      { id: string; name: string; argumentsDeltas: string[] }
+    >();
+
+    for (const block of blocks) {
+      if (!block.trim()) {
+        continue;
+      }
+      const lines = block.split(/\r?\n/);
+      let eventName = '';
+      const dataLines: string[] = [];
+
+      for (const line of lines) {
+        if (line.startsWith('event:')) {
+          eventName = line.slice(6).trim();
+          continue;
+        }
+        if (line.startsWith('data:')) {
+          dataLines.push(line.slice(5).trim());
+        }
+      }
+
+      if (dataLines.length === 0) {
+        continue;
+      }
+      const dataPayload = dataLines.join('\n').trim();
+      if (!dataPayload || dataPayload === '[DONE]') {
+        continue;
+      }
+
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(dataPayload);
+      } catch {
+        continue;
+      }
+
+      if (!parsed || typeof parsed !== 'object') {
+        continue;
+      }
+
+      const record = parsed as Record<string, unknown>;
+      const parsedEventType =
+        typeof record.type === 'string' ? record.type : '';
+      const eventType = eventName || parsedEventType;
+      const responseCandidate = record.response;
+      if (responseCandidate && typeof responseCandidate === 'object' && !Array.isArray(responseCandidate)) {
+        latestResponse = responseCandidate as Record<string, unknown>;
+        if (eventType === 'response.completed') {
+          break;
+        }
+        continue;
+      }
+
+      if (
+        eventType === 'response.output_text.delta' ||
+        eventType === 'response.content_part.delta'
+      ) {
+        const delta =
+          typeof record.delta === 'string' ? record.delta : '';
+        if (delta) {
+          textDeltas.push(delta);
+        }
+      }
+
+      if (eventType === 'response.output_item.added') {
+        const item = record.item as Record<string, unknown> | undefined;
+        if (item && item.type === 'function_call') {
+          const id =
+            typeof item.call_id === 'string'
+              ? item.call_id
+              : typeof item.id === 'string'
+                ? item.id
+                : '';
+          const name = typeof item.name === 'string' ? item.name : '';
+          const existing = functionCalls.get(id) ?? {
+            id,
+            name,
+            argumentsDeltas: [],
+          };
+          if (name && !existing.name) {
+            existing.name = name;
+          }
+          functionCalls.set(id, existing);
+        }
+      }
+
+      if (eventType === 'response.function_call_arguments.delta') {
+        const id =
+          typeof record.item_id === 'string' ? record.item_id : '';
+        if (id) {
+          const existing = functionCalls.get(id) ?? {
+            id,
+            name: '',
+            argumentsDeltas: [],
+          };
+          const delta =
+            typeof record.delta === 'string' ? record.delta : '';
+          if (delta) {
+            existing.argumentsDeltas.push(delta);
+          }
+          functionCalls.set(id, existing);
+        }
+      }
+
+      if (eventType === 'response.completed') {
+        const outputCandidate = record.output;
+        if (Array.isArray(outputCandidate)) {
+          latestResponse = record;
+          break;
+        }
+        continue;
+      }
+    }
+
+    if (latestResponse) {
+      return latestResponse;
+    }
+
+    if (textDeltas.length === 0 && functionCalls.size === 0) {
+      return null;
+    }
+
+    const output: Array<Record<string, unknown>> = [];
+    if (textDeltas.length > 0) {
+      output.push({
+        type: 'message',
+        role: 'assistant',
+        content: [{ type: 'output_text', text: textDeltas.join('') }],
+      });
+    }
+
+    for (const fnCall of functionCalls.values()) {
+      output.push({
+        type: 'function_call',
+        call_id: fnCall.id,
+        name: fnCall.name,
+        arguments: fnCall.argumentsDeltas.join(''),
+      });
+    }
+
+    return {
+      id: 'sse-fallback-response',
+      output,
+      status: 'completed',
+    };
+  }
+
+  private createRequestSignal(...signals: Array<AbortSignal | undefined>): AbortSignal {
+    const activeSignals = signals.filter(
+      (signal): signal is AbortSignal => signal !== undefined,
+    );
+    return AbortSignal.any([
+      ...activeSignals,
+      AbortSignal.timeout(this.requestTimeoutMs),
+    ]);
+  }
+
+  private rejectAfter(ms: number, message: string): Promise<never> {
+    return new Promise<never>((_, reject) => {
+      const timer = setTimeout(() => {
+        const timeoutError = new Error(message) as Error & { name: string };
+        timeoutError.name = 'TimeoutError';
+        reject(timeoutError);
+      }, ms);
+      timer.unref?.();
+    });
   }
 
   private makeProviderNotFoundError(provider: string): LLMError {

@@ -44,6 +44,11 @@ const AGENT_ALLOWED_TOOLS: Record<ExecutionAgentID, readonly string[]> = {
   'repair-agent': ['read', 'grep', 'glob', 'apply_diff', 'write', 'bash'],
 };
 
+const DEFAULT_PLANNING_TIMEOUT_MS = 120_000;
+const MIN_PLANNING_TIMEOUT_MS = 30_000;
+const MAX_PLANNING_TIMEOUT_MS = 300_000;
+const RETRY_PLANNING_TIMEOUT_MS = 45_000;
+
 // ============================================================================
 // Tool schema for structured LLM output
 // ============================================================================
@@ -111,6 +116,7 @@ export interface PlanningLayerConfig {
   blackboard: MultiAgentBlackboard;
   temperature?: number;
   maxOutputTokens?: number;
+  planningTimeoutMs?: number;
 }
 
 export class PlanningLayer {
@@ -120,6 +126,7 @@ export class PlanningLayer {
   private blackboard: MultiAgentBlackboard;
   private temperature?: number;
   private maxOutputTokens?: number;
+  private planningTimeoutMs: number;
 
   constructor(config: PlanningLayerConfig) {
     this.llmClient = config.llmClient;
@@ -128,6 +135,8 @@ export class PlanningLayer {
     this.blackboard = config.blackboard;
     this.temperature = config.temperature;
     this.maxOutputTokens = config.maxOutputTokens;
+    this.planningTimeoutMs =
+      config.planningTimeoutMs ?? this.resolvePlanningTimeoutMs();
   }
 
   /**
@@ -174,25 +183,7 @@ export class PlanningLayer {
         return { content: `Unknown tool: ${name}`, isError: true };
       };
 
-      await this.llmClient.completeWithTools(
-        {
-          provider: this.provider,
-          model: this.model,
-          systemPrompt,
-          messages: [
-            {
-              role: 'user',
-              content: 'Based on the analysis documents provided in the system prompt, generate an execution plan for this frontend project. Use the submit_execution_plan tool to submit the plan.',
-            },
-          ],
-          tools: [EXECUTION_PLAN_TOOL],
-          temperature: this.temperature,
-          maxOutputTokens: this.maxOutputTokens,
-          abortSignal: input.abortSignal,
-        },
-        toolExecutor,
-        3, // max 3 rounds should be enough for plan generation
-      );
+      await this.completePlanWithRetry(input, systemPrompt, toolExecutor);
 
       if (!planTasks || (planTasks as ExecutionPlanTask[]).length === 0) {
         throw new Error('LLM did not generate an execution plan via tool call');
@@ -337,6 +328,210 @@ export class PlanningLayer {
   // Private helpers
   // ==========================================================================
 
+  private async completePlanWithRetry(
+    input: PlanningLayerInput,
+    systemPrompt: string,
+    toolExecutor: ToolExecutor,
+  ): Promise<void> {
+    const maxAttempts = 2;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      const attemptTimeoutMs =
+        attempt > 1
+          ? Math.min(this.planningTimeoutMs, RETRY_PLANNING_TIMEOUT_MS)
+          : this.planningTimeoutMs;
+      const hardTimeoutMs = attemptTimeoutMs + 5_000;
+      try {
+        await this.withHardTimeout(
+          this.llmClient.completeWithTools(
+            {
+              provider: this.provider,
+              model: this.model,
+              systemPrompt,
+              messages: [
+                {
+                  role: 'user',
+                  content: 'Based on the analysis documents provided in the system prompt, generate an execution plan for this frontend project. Use the submit_execution_plan tool to submit the plan.',
+                },
+              ],
+              tools: [EXECUTION_PLAN_TOOL],
+              temperature: this.temperature,
+              maxOutputTokens: this.maxOutputTokens,
+              abortSignal: this.createPlanningAbortSignal(
+                input.abortSignal,
+                attemptTimeoutMs,
+              ),
+            },
+            toolExecutor,
+            3, // max 3 rounds should be enough for plan generation
+          ),
+          hardTimeoutMs,
+          `Planning layer hard timed out after ${hardTimeoutMs}ms`,
+        );
+        return;
+      } catch (error: unknown) {
+        const shouldRetry =
+          attempt < maxAttempts &&
+          !input.abortSignal.aborted &&
+          this.isTransientPlanningFailure(error);
+        if (shouldRetry) {
+          const retryAttempt = attempt + 1;
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          console.warn(
+            `[PlanningLayer] transient-error retry=${retryAttempt}/${maxAttempts} error=${errorMessage}`,
+          );
+          input.emitRuntimeEvent({
+            type: 'agent.task.progress',
+            agentId: 'planner-agent',
+            taskId: 'planning',
+            waveId: 'planning',
+            progressText: `规划层遇到瞬时异常，重试中 (${retryAttempt}/${maxAttempts})`,
+          });
+          continue;
+        }
+        throw error;
+      }
+    }
+  }
+
+  private resolvePlanningTimeoutMs(): number {
+    const timeoutMs = Number(
+      process.env.PLANNING_LAYER_TIMEOUT_MS ?? DEFAULT_PLANNING_TIMEOUT_MS,
+    );
+    if (!Number.isFinite(timeoutMs) || timeoutMs <= 0) {
+      return DEFAULT_PLANNING_TIMEOUT_MS;
+    }
+    return Math.min(
+      Math.max(Math.floor(timeoutMs), MIN_PLANNING_TIMEOUT_MS),
+      MAX_PLANNING_TIMEOUT_MS,
+    );
+  }
+
+  private withHardTimeout<T>(
+    promise: Promise<T>,
+    timeoutMs: number,
+    message: string,
+  ): Promise<T> {
+    return new Promise<T>((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        const timeoutError = new Error(message) as Error & { name: string };
+        timeoutError.name = 'TimeoutError';
+        reject(timeoutError);
+      }, timeoutMs);
+      timeout.unref?.();
+      promise.then(
+        (value) => {
+          clearTimeout(timeout);
+          resolve(value);
+        },
+        (error) => {
+          clearTimeout(timeout);
+          reject(error);
+        },
+      );
+    });
+  }
+
+  private createPlanningAbortSignal(parentSignal: AbortSignal, timeoutMs: number): AbortSignal {
+    if (timeoutMs <= 0) {
+      return parentSignal;
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      const timeoutError = new Error(
+        `Planning layer timed out after ${timeoutMs}ms`,
+      ) as Error & { name: string };
+      timeoutError.name = 'TimeoutError';
+      if (!controller.signal.aborted) {
+        controller.abort(timeoutError);
+      }
+    }, timeoutMs);
+
+    const clearTimeoutIfNeeded = () => {
+      clearTimeout(timeout);
+    };
+    controller.signal.addEventListener('abort', clearTimeoutIfNeeded, { once: true });
+
+    if (parentSignal.aborted) {
+      clearTimeoutIfNeeded();
+      if (!controller.signal.aborted) {
+        controller.abort(parentSignal.reason ?? new DOMException('Aborted', 'AbortError'));
+      }
+      return controller.signal;
+    }
+
+    parentSignal.addEventListener(
+      'abort',
+      () => {
+        clearTimeoutIfNeeded();
+        if (!controller.signal.aborted) {
+          controller.abort(parentSignal.reason ?? new DOMException('Aborted', 'AbortError'));
+        }
+      },
+      { once: true },
+    );
+
+    return controller.signal;
+  }
+
+  private isTransientPlanningFailure(error: unknown): boolean {
+    if (!(error instanceof Error)) {
+      return false;
+    }
+
+    const details = error as Error & {
+      code?: string | number;
+      status?: number;
+      statusCode?: number;
+      cause?: unknown;
+    };
+    if (details.name === 'TimeoutError') {
+      return true;
+    }
+    if (details.statusCode === 0 || details.status === 0) {
+      return true;
+    }
+
+    const status =
+      typeof details.statusCode === 'number'
+        ? details.statusCode
+        : typeof details.status === 'number'
+          ? details.status
+          : undefined;
+    if (status !== undefined && (status === 408 || status === 409 || status === 425 || status === 429 || status >= 500)) {
+      return true;
+    }
+
+    const rawCode =
+      typeof details.code === 'number'
+        ? String(details.code)
+        : typeof details.code === 'string'
+          ? details.code
+          : '';
+    const code = rawCode.toLowerCase();
+    if (
+      code.includes('timeout') ||
+      code.includes('etimedout') ||
+      code.includes('econnreset') ||
+      code.includes('econnaborted') ||
+      code.includes('overloaded') ||
+      code.includes('rate_limit')
+    ) {
+      return true;
+    }
+
+    const message = details.message.toLowerCase();
+    return (
+      message.includes('timeout') ||
+      message.includes('timed out') ||
+      message.includes('network') ||
+      message.includes('connection') ||
+      message.includes('temporar') ||
+      message.includes('rate limit') ||
+      message.includes('overloaded')
+    );
+  }
+
   private buildSystemPrompt(documents: SessionDocument[]): string {
     const docSections = documents.map((doc) => {
       const header = `## ${doc.agentId} (ID: ${doc.id})`;
@@ -372,14 +567,24 @@ ${docSections.join('\n\n')}
 - quality-agent depends on all code generation agents (Wave 4)
 - repair-agent depends on quality-agent (Wave 5, only if needed)
 
+# Quality Contract (Non-negotiable)
+
+- Every task must contribute to a complete, interactive, production-grade prototype outcome.
+- Do not generate plans that leave TODO/待实现/placeholder/skeleton-only deliverables.
+- Router provider must be mounted exactly once at the application entry (src/main.tsx). Do not mount BrowserRouter/RouterProvider again inside App or route modules.
+- Route semantics, page naming, and workflows must be grounded in the 4 analysis documents (product-manager, frontend-architect, ui-expert, ux-expert).
+- Do not output generic navigation-only plans (for example only dashboard/settings/modules/list detail shells without concrete product workflows).
+- Ensure interaction-agent and state-agent tasks explicitly cover event handlers, validation feedback, and loading/success/error UI transitions for core flows.
+
 # Instructions
 
 1. Analyze the documents to understand the project requirements, architecture, UI design, and UX flows.
-2. Create tasks for each agent based on the project needs.
+2. Create tasks for each agent based on the project needs and the quality contract above.
 3. Each task must specify: id, agentId, goal (clear description), dependsOn (task IDs), tools (from the agent's allowed tools).
 4. Only use the 7 agent IDs listed above.
 5. Only assign tools from each agent's allowed tools list.
-6. Call the submit_execution_plan tool with the complete task list.`;
+6. The plan must be executable without placeholder text or missing interaction flows.
+7. Call the submit_execution_plan tool with the complete task list.`;  
   }
 
   /**

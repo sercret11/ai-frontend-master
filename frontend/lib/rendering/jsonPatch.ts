@@ -34,6 +34,16 @@ function decodePointerToken(token: string): string {
   return token.replace(/~1/g, '/').replace(/~0/g, '~');
 }
 
+const DANGEROUS_POINTER_TOKENS = new Set(['__proto__', 'prototype', 'constructor']);
+
+function assertSafePointerTokens(tokens: readonly string[]): void {
+  for (const token of tokens) {
+    if (DANGEROUS_POINTER_TOKENS.has(token)) {
+      throw new Error(`Unsafe JSON pointer token: ${token}`);
+    }
+  }
+}
+
 function parsePointer(path: string): string[] {
   if (path === '') {
     return [];
@@ -41,7 +51,9 @@ function parsePointer(path: string): string[] {
   if (!path.startsWith('/')) {
     throw new Error(`Invalid JSON pointer: ${path}`);
   }
-  return path.slice(1).split('/').map(decodePointerToken);
+  const tokens = path.slice(1).split('/').map(decodePointerToken);
+  assertSafePointerTokens(tokens);
+  return tokens;
 }
 
 function parseArrayIndex(token: string, allowAppend: boolean): number | typeof ARRAY_APPEND_TOKEN {

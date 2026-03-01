@@ -77,6 +77,7 @@ export interface AgentExecutionContext {
   modelId?: string;
   platform?: 'web' | 'mobile' | 'desktop' | 'miniprogram';
   techStack: string[];
+  sessionDocuments?: SessionDocument[];
   emitRuntimeEvent: RuntimeEventEmitter;
   abortSignal: AbortSignal;
 }
@@ -87,6 +88,26 @@ export interface AgentExecutionResult {
   assistantText: string;
   patchIntents: PatchIntent[];
   touchedFiles: string[];
+}
+
+export interface RuntimeExecutionBudget {
+  maxIterations?: number;
+  maxDurationMs?: number;
+  maxToolCalls?: number;
+  targetScore?: number;
+}
+
+export type RuntimeBudgetStopReason =
+  | 'maxIterations'
+  | 'maxDurationMs'
+  | 'maxToolCalls'
+  | 'targetScore';
+
+export interface RuntimeBudgetConsumption {
+  usedIterations: number;
+  usedToolCalls: number;
+  elapsedMs: number;
+  finalScore?: number;
 }
 
 export interface RuntimeAgent {
@@ -108,6 +129,7 @@ export interface MultiAgentKernelInput {
   modelId?: string;
   platform?: 'web' | 'mobile' | 'desktop' | 'miniprogram';
   techStack: string[];
+  runtimeBudget?: RuntimeExecutionBudget;
   emitRuntimeEvent: RuntimeEventEmitter;
   abortSignal: AbortSignal;
 }

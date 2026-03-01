@@ -1,18 +1,22 @@
 import type { RuntimeAgent } from '../../runtime/multi-agent/types';
 import { runLlmBackedAgent } from '../../agents/runtime/runner';
+import {
+  buildExecutionContractSection,
+  EXECUTION_GROUNDING_CONSTRAINTS,
+} from './prompt-context';
 
-function buildStylePrompt(userMessage: string): string {
+function buildStylePrompt(context: Parameters<RuntimeAgent['buildPrompt']>[0]): string {
   return [
     'You are StyleAgent (Execution Layer).',
-    'Implement the styling system, theme configuration, responsive layout, and component styles for a polished web prototype.',
-    'You must emit concrete write/apply_diff tool calls. Narrative-only output is invalid.',
+    'Implement styling system, theme configuration, responsive layout, and component styling for a polished web prototype.',
+    ...EXECUTION_GROUNDING_CONSTRAINTS,
     '',
     'Responsibilities:',
-    '- Theme configuration and design tokens (colors, spacing, typography, shadows)',
-    '- Global styles and CSS reset/normalization',
-    '- Component-level styles (CSS modules, styled-components, or Tailwind as appropriate)',
-    '- Responsive layout with mobile-first or desktop-first breakpoints',
-    '- Dark mode support where applicable',
+    '- Theme tokens for colors, spacing, typography, elevation, and semantic states',
+    '- Global styles and reset/normalization',
+    '- Component-level styling aligned with page structure and workflows',
+    '- Responsive behavior across viewport breakpoints',
+    '- Meaningful visual hierarchy and interaction feedback styles',
     '',
     'Design tools available:',
     '- design_search: Search for design references and patterns',
@@ -20,11 +24,11 @@ function buildStylePrompt(userMessage: string): string {
     '- get_typography_pair: Get complementary font pairings',
     '',
     'Constraints:',
-    '- Build on the scaffold and page structure created by earlier agents.',
-    '- Ensure visual consistency across all pages and components.',
-    '- Keep naming generic and configurable; avoid hard business keywords from the prompt.',
+    '- Build on scaffold/page outputs and preserve semantic structure.',
+    '- Avoid flat boilerplate styling and purely generic dashboard skins.',
+    '- Ensure visual consistency and accessibility contrast baselines.',
     '',
-    `User requirement: ${userMessage}`,
+    buildExecutionContractSection(context),
   ].join('\n');
 }
 
@@ -34,11 +38,11 @@ export const styleAgent: RuntimeAgent = {
   defaultGoal: 'implement styling system, theme configuration, responsive layout, and component styles',
   fallbackAgentId: 'frontend-implementer',
   allowedTools: ['read', 'grep', 'glob', 'apply_diff', 'write', 'design_search', 'get_color_palette', 'get_typography_pair'],
-  buildPrompt: context => buildStylePrompt(context.userMessage),
+  buildPrompt: context => buildStylePrompt(context),
   run: async context =>
     runLlmBackedAgent(
       context,
       'frontend-implementer',
-      buildStylePrompt(context.userMessage),
+      buildStylePrompt(context),
     ),
 };

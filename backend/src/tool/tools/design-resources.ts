@@ -7,6 +7,7 @@
 
 import { Tool } from '../tool';
 import * as fs from 'fs/promises';
+import * as fsSync from 'fs';
 import * as path from 'path';
 import { z } from 'zod';
 import { Log } from '../../logging/log.js';
@@ -20,8 +21,16 @@ const resourceCache = new Map<string, any>();
 
 /**
  * 资源文件路径
+ *
+ * 本地联调时后端常以 `backend/` 为 cwd 启动，此时资源位于 `../assets`。
+ * 为避免工具在不同启动目录下找不到资源，按候选路径自动探测。
  */
-const ASSETS_DIR = path.resolve(process.cwd(), 'assets');
+const ASSETS_DIR_CANDIDATES = [
+  path.resolve(process.cwd(), 'assets'),
+  path.resolve(process.cwd(), '..', 'assets'),
+];
+const ASSETS_DIR = ASSETS_DIR_CANDIDATES.find(candidate => fsSync.existsSync(candidate))
+  ?? ASSETS_DIR_CANDIDATES[0];
 
 /**
  * 加载资源文件（带缓存）

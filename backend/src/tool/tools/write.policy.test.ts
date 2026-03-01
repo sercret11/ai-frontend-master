@@ -83,6 +83,44 @@ describe('write tool policy', () => {
     expect(saveSpy).toHaveBeenCalledTimes(1);
   });
 
+  it('allows overwrite for execution-capable agents even when mode=scaffold_only is passed', async () => {
+    vi.spyOn(FileStorage, 'getAllFiles').mockReturnValue([
+      {
+        id: 'f2x',
+        sessionID: 's2x',
+        path: 'src/App.tsx',
+        content: 'old',
+        language: 'typescript',
+        size: 3,
+        createdAt: Date.now(),
+      },
+    ]);
+    const saveSpy = vi.spyOn(FileStorage, 'saveFiles').mockReturnValue({
+      saved: 1,
+      errors: [],
+    });
+
+    const tool = await WriteTool.init();
+    const result = await tool.execute(
+      {
+        filePath: 'src/App.tsx',
+        content: 'new',
+        mode: 'scaffold_only',
+      },
+      {
+        sessionID: 's2x',
+        messageID: 'm2x',
+        agent: 'frontend-implementer',
+        abort: new AbortController().signal,
+        metadata: () => undefined,
+        ask: async () => undefined,
+      }
+    );
+
+    expect(result.output).toContain('File saved successfully');
+    expect(saveSpy).toHaveBeenCalledTimes(1);
+  });
+
   it('allows overwrite by default for frontend-creator agent', async () => {
     vi.spyOn(FileStorage, 'getAllFiles').mockReturnValue([
       {
@@ -119,6 +157,43 @@ describe('write tool policy', () => {
         sessionID: 's2b',
         messageID: 'm2b',
         agent: 'frontend-creator',
+        abort: new AbortController().signal,
+        metadata: () => undefined,
+        ask: async () => undefined,
+      }
+    );
+
+    expect(result.output).toContain('File saved successfully');
+    expect(saveSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('allows overwrite by default for execution agents', async () => {
+    vi.spyOn(FileStorage, 'getAllFiles').mockReturnValue([
+      {
+        id: 'f2d',
+        sessionID: 's2d',
+        path: 'src/pages/DashboardPage.tsx',
+        content: 'old',
+        language: 'typescript',
+        size: 3,
+        createdAt: Date.now(),
+      },
+    ]);
+    const saveSpy = vi.spyOn(FileStorage, 'saveFiles').mockReturnValue({
+      saved: 1,
+      errors: [],
+    });
+
+    const tool = await WriteTool.init();
+    const result = await tool.execute(
+      {
+        filePath: 'src/pages/DashboardPage.tsx',
+        content: 'new',
+      },
+      {
+        sessionID: 's2d',
+        messageID: 'm2d',
+        agent: 'page-agent',
         abort: new AbortController().signal,
         metadata: () => undefined,
         ask: async () => undefined,

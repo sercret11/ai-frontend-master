@@ -75,6 +75,28 @@ function resolveSelectedFileFromVfs(
   return selectedPath ? vfs.getFile(selectedPath) || null : null;
 }
 
+function areProjectFilesEqual(
+  left: ReadonlyArray<ProjectFile>,
+  right: ReadonlyArray<ProjectFile>
+): boolean {
+  if (left.length !== right.length) {
+    return false;
+  }
+
+  for (let index = 0; index < left.length; index += 1) {
+    const leftFile = left[index];
+    const rightFile = right[index];
+    if (!leftFile || !rightFile) {
+      return false;
+    }
+    if (leftFile.path !== rightFile.path || leftFile.content !== rightFile.content) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export interface CompilerState {
   files: ProjectFile[];
   projectType: ProjectType | null;
@@ -152,27 +174,32 @@ export const useProjectStore = create<CompilerState>()(
       injuryMode: false,
       lastSurgeryRecord: null,
 
-      setFiles: files => {
-        const vfs = getVFS();
-        const normalizedFiles = normalizeProjectFiles(files);
-        vfs.initializeFiles(normalizedFiles);
+      setFiles: files =>
+        set(state => {
+          const normalizedFiles = normalizeProjectFiles(files);
+          if (areProjectFilesEqual(state.files, normalizedFiles)) {
+            return state;
+          }
 
-        set({
-          files: normalizedFiles,
-          fileTree: vfs.getFileTree(),
-          selectedFile: resolveSelectedFileFromVfs(vfs, get().selectedFile),
-          previewUrl: null,
-          lastHealthyPreviewUrl: null,
-          revision: 0,
-          previewMode: null,
-          executorState: createInitialExecutorState(
-            normalizedFiles.length > 0 ? 'Files loaded, waiting for render' : 'Waiting for task'
-          ),
-          patchQueueDepth: 0,
-          injuryMode: false,
-          lastSurgeryRecord: null,
-        });
-      },
+          const vfs = getVFS();
+          vfs.initializeFiles(normalizedFiles);
+
+          return {
+            files: normalizedFiles,
+            fileTree: vfs.getFileTree(),
+            selectedFile: resolveSelectedFileFromVfs(vfs, state.selectedFile),
+            previewUrl: null,
+            lastHealthyPreviewUrl: null,
+            revision: 0,
+            previewMode: null,
+            executorState: createInitialExecutorState(
+              normalizedFiles.length > 0 ? 'Files loaded, waiting for render' : 'Waiting for task'
+            ),
+            patchQueueDepth: 0,
+            injuryMode: false,
+            lastSurgeryRecord: null,
+          };
+        }),
 
       setProjectType: type => set({ projectType: type }),
 
@@ -419,6 +446,6 @@ export const useProjectStore = create<CompilerState>()(
   )
 );
 
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
   (window as { projectStore?: typeof useProjectStore }).projectStore = useProjectStore;
 }

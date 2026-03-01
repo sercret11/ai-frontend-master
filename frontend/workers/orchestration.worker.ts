@@ -80,6 +80,7 @@ interface WorkerState {
   lastRevision: number;
   parserReady: boolean;
   parserInitStarted: boolean;
+  parserBypassed: boolean;
   pendingPatches: PatchBatchEnvelope[];
 }
 
@@ -88,6 +89,7 @@ const state: WorkerState = {
   lastRevision: 0,
   parserReady: false,
   parserInitStarted: false,
+  parserBypassed: false,
   pendingPatches: [],
 };
 
@@ -116,7 +118,7 @@ function isResearchDigest(value: unknown): value is ResearchDigestPayload {
 }
 
 function flushPendingPatches(): void {
-  if (!state.parserReady) {
+  if (!state.parserReady && !state.parserBypassed) {
     return;
   }
 
@@ -138,7 +140,7 @@ function flushPendingPatches(): void {
 }
 
 async function ensureParserReady(): Promise<void> {
-  if (state.parserReady || state.parserInitStarted) {
+  if (state.parserReady || state.parserInitStarted || state.parserBypassed) {
     return;
   }
   state.parserInitStarted = true;
@@ -155,10 +157,12 @@ async function ensureParserReady(): Promise<void> {
   } catch (error) {
     state.parserReady = false;
     state.parserInitStarted = false;
+    state.parserBypassed = true;
     post({
       type: 'PARSER_FAILED',
       error: error instanceof Error ? error.message : String(error),
     });
+    flushPendingPatches();
   }
 }
 
@@ -296,7 +300,7 @@ function handleRuntimeEvent(event: RuntimeEvent): void {
         return;
       }
 
-      if (!state.parserReady) {
+      if (!state.parserReady && !state.parserBypassed) {
         state.pendingPatches.push(envelope);
         void ensureParserReady();
         return;
@@ -367,6 +371,7 @@ self.onmessage = (message: MessageEvent<WorkerInput>) => {
     case 'RUN_START':
       state.activeRunId = payload.runId;
       state.lastRevision = 0;
+      state.parserBypassed = false;
       state.pendingPatches = [];
       post({
         type: 'PHASE_UPDATE',
@@ -382,6 +387,7 @@ self.onmessage = (message: MessageEvent<WorkerInput>) => {
       if (!payload.runId || payload.runId === state.activeRunId) {
         state.activeRunId = null;
         state.lastRevision = 0;
+        state.parserBypassed = false;
         state.pendingPatches = [];
         post({
           type: 'PHASE_UPDATE',

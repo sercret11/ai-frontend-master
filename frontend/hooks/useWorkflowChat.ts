@@ -79,7 +79,7 @@ function buildRuntimeApiUrl(
   backendSessionId: string | null,
   endpoint: RuntimeEndpoint
 ): string {
-  const runtimeSession = backendSessionId || 'new';
+  const runtimeSession = backendSessionId ? encodeURIComponent(backendSessionId) : 'new';
   const trimmedApiUrl = apiUrl.replace(/\/+$/, '');
   const runtimePath = endpoint === 'assemble' ? 'assemble' : 'stream';
 
@@ -304,7 +304,8 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
 
   const ackPatch = useCallback(
     async (sessionId: string, envelope: PatchBatchEnvelope) => {
-      const url = `${normalizedApiBaseUrl}/api/runtime/sessions/${sessionId}/patch/ack`;
+      const encodedSessionId = encodeURIComponent(sessionId);
+      const url = `${normalizedApiBaseUrl}/api/runtime/sessions/${encodedSessionId}/patch/ack`;
       await fetch(url, {
         method: 'POST',
         headers: withApiAuthHeaders({ 'Content-Type': 'application/json' }),
@@ -326,7 +327,8 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
       reason: string,
       causeCode?: string
     ) => {
-      const url = `${normalizedApiBaseUrl}/api/runtime/sessions/${sessionId}/patch/rollback`;
+      const encodedSessionId = encodeURIComponent(sessionId);
+      const url = `${normalizedApiBaseUrl}/api/runtime/sessions/${encodedSessionId}/patch/rollback`;
       const response = await fetch(url, {
         method: 'POST',
         headers: withApiAuthHeaders({ 'Content-Type': 'application/json' }),
@@ -406,13 +408,13 @@ export function useWorkflowChat(options: UseWorkflowChatOptions = {}) {
       }
 
       if (payload.type === 'PARSER_FAILED') {
-        setExecutorState({
-          phase: 'error',
-          executorId: 'sandpack-renderer',
-          message: 'Parser initialization failed',
-          error: payload.error,
-        });
-        addLog(`[oxc:error] ${payload.error}`);
+        setExecutorState(current => ({
+          phase: current.phase === 'idle' ? 'assembling' : current.phase,
+          executorId: current.executorId || 'sandpack-renderer',
+          message: 'Parser warmup failed, fallback patch pipeline enabled.',
+          error: null,
+        }));
+        addLog(`[oxc:warn] ${payload.error}`);
         return;
       }
 
