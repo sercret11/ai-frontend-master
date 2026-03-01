@@ -130,10 +130,6 @@ export class RetryEngine {
       return this.config.retryableStatuses.includes(status);
     }
 
-    if (this.isRetryableNetworkError(error)) {
-      return true;
-    }
-
     return false;
   }
 
@@ -164,54 +160,10 @@ export class RetryEngine {
     llmError.provider = 'openai'; // 默认值，实际使用时由上层覆盖
     llmError.statusCode =
       (error as any)?.statusCode ?? (error as any)?.status ?? 0;
-    llmError.retryable = this.isRetryable(error);
+    llmError.retryable = false;
     llmError.raw = error;
 
     return llmError;
-  }
-
-  private isRetryableNetworkError(error: unknown): boolean {
-    const errorRecord = error as {
-      name?: string;
-      message?: string;
-      code?: string | number;
-      cause?: { code?: string | number; message?: string };
-    };
-    const message = (errorRecord.message ?? '').toLowerCase();
-    const rawCode = errorRecord.code ?? errorRecord.cause?.code;
-    const code =
-      rawCode == null
-        ? ''
-        : typeof rawCode === 'string'
-          ? rawCode.toUpperCase()
-          : String(rawCode).toUpperCase();
-
-    if (
-      code &&
-      ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'ENOTFOUND', 'EAI_AGAIN'].includes(code)
-    ) {
-      return true;
-    }
-
-    if (
-      message.includes('fetch failed') ||
-      message.includes('network') ||
-      message.includes('socket hang up') ||
-      message.includes('timeout') ||
-      message.includes('timed out')
-    ) {
-      return true;
-    }
-
-    if (errorRecord.name === 'TimeoutError') {
-      return true;
-    }
-
-    if (errorRecord.name === 'TypeError' && message.includes('terminated')) {
-      return true;
-    }
-
-    return false;
   }
 
   private isLLMError(error: unknown): error is LLMError {

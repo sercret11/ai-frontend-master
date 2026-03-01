@@ -1,6 +1,5 @@
 import { createHash } from 'node:crypto';
 import { LLMService } from '../../llm/index';
-import type { ProviderID } from '../../llm/types';
 import { SessionManager } from '../../session/manager';
 import { FileStorage } from '../../storage/file-storage';
 import type {
@@ -36,7 +35,7 @@ function buildSelfAnalysisRetryPrompt(userMessage: string): string {
     'Re-analyze the request and immediately materialize a complete web prototype via write/apply_diff tool calls.',
     '- Generate multiple runtime artifacts in one pass (manifest, entry, routes/components, state hooks, styles).',
     '- Include interactive workflows with forms, data surfaces, and explicit loading/empty/error/success states.',
-    '- Ground routes, entities, and labels in the request semantics instead of generic placeholder names.',
+    '- Keep naming generic/configurable and avoid hard business keywords copied from the user input.',
     '- Do not return narrative-only output. Tool-driven file mutations are mandatory.',
     `Original request: ${userMessage}`,
   ].join('\n');
@@ -78,16 +77,11 @@ export async function runLlmBackedAgent(
   fallbackAgentId: string,
   prompt: string
 ): Promise<AgentExecutionResult> {
-  const supportedProviders: ProviderID[] = [
-    'anthropic',
-    'openai',
-    'google',
-    'dashscope',
-    'zhipuai',
-  ];
   const normalizedModelProvider =
-    context.modelProvider && supportedProviders.includes(context.modelProvider as ProviderID)
-      ? (context.modelProvider as ProviderID)
+    context.modelProvider === 'anthropic' ||
+    context.modelProvider === 'openai' ||
+    context.modelProvider === 'google'
+      ? context.modelProvider
       : undefined;
 
   const streamAttempt = async (input: {
@@ -95,7 +89,7 @@ export async function runLlmBackedAgent(
     progressText: string;
     agentId: string;
     userMessage: string;
-    modelProvider?: ProviderID;
+    modelProvider?: 'anthropic' | 'openai' | 'google';
     modelId?: string;
   }): Promise<string> => {
     context.emitRuntimeEvent({

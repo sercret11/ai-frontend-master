@@ -5,11 +5,6 @@ export function resolveApiBearerToken(): string | null {
   }
 
   try {
-    const sessionToken = sessionStorage.getItem('api_auth_token');
-    if (sessionToken?.trim()) {
-      return sessionToken.trim();
-    }
-
     const storedToken = localStorage.getItem('api_auth_token');
     if (storedToken?.trim()) {
       return storedToken.trim();
@@ -31,3 +26,4 @@ export function withApiAuthHeaders(
   }
   return baseHeaders;
 }
+

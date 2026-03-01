@@ -21,17 +21,6 @@ interface WriteParams {
   mode?: 'scaffold_only' | 'allow_full_overwrite';
 }
 
-const DEFAULT_OVERWRITE_ALLOWED_AGENTS = new Set([
-  'planner-agent',
-  'scaffold-agent',
-  'page-agent',
-  'interaction-agent',
-  'state-agent',
-  'style-agent',
-  'quality-agent',
-  'repair-agent',
-]);
-
 export const WriteTool = Tool.define('write', {
   description:
     'Create a new file. Overwriting existing files is blocked by default and requires mode=allow_full_overwrite. For existing files, prefer apply_diff (SEARCH/REPLACE protocol).',
@@ -54,14 +43,12 @@ export const WriteTool = Tool.define('write', {
     try {
       const safePath = normalizeWorkspaceRelativePath(params.filePath);
       const existingFiles = FileStorage.getAllFiles(sessionID);
-      const agentId = typeof ctx.agent === 'string' ? ctx.agent : '';
-      const canOverwriteByAgent =
-        agentId.startsWith('frontend-') || DEFAULT_OVERWRITE_ALLOWED_AGENTS.has(agentId);
+      const isFrontendAgent = typeof ctx.agent === 'string' && ctx.agent.startsWith('frontend-');
       const session = SessionStorage.getSession(sessionID);
       const isCreatorSession = session?.mode === 'creator';
       const defaultMode =
-        canOverwriteByAgent || isCreatorSession ? 'allow_full_overwrite' : 'scaffold_only';
-      const requestedMode = params.mode ?? defaultMode;
+        isFrontendAgent || isCreatorSession ? 'allow_full_overwrite' : 'scaffold_only';
+      const mode = params.mode ?? defaultMode;
 
       const contractDecision = evaluateContractWrite(sessionID, safePath);
       if (!contractDecision.allowed) {
@@ -74,10 +61,6 @@ export const WriteTool = Tool.define('write', {
       }
       const targetPath = runtimePathDecision.normalizedPath;
       const existing = existingFiles.find(file => file.path === targetPath || file.path.endsWith(targetPath));
-      const mode =
-        existing && requestedMode !== 'allow_full_overwrite' && (canOverwriteByAgent || isCreatorSession)
-          ? 'allow_full_overwrite'
-          : requestedMode;
       if (existing && mode !== 'allow_full_overwrite') {
         throw new Error(
           `Overwrite blocked for existing file "${targetPath}". Use apply_diff (SEARCH/REPLACE) or set mode=allow_full_overwrite.`

@@ -53,14 +53,6 @@ const HIGH_RISK_ALLOWED_AGENTS = new Set([
   'frontend-creator',
   'frontend-implementer',
   'self-repair',
-  'planner-agent',
-  'scaffold-agent',
-  'page-agent',
-  'interaction-agent',
-  'state-agent',
-  'style-agent',
-  'quality-agent',
-  'repair-agent',
 ]);
 
 const MAX_TOOL_ARGS_PREVIEW_LENGTH = 2000;

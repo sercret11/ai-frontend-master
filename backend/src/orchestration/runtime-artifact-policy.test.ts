@@ -32,32 +32,29 @@ describe('runtime-artifact-policy', () => {
     expect(normalized.map(file => file.path)).toEqual(['package.json', 'src/App.tsx']);
   });
 
-  it('does not strip non-synthetic common roots such as src', () => {
-    const existingFiles = [createStoredFile('package.json')];
-    const normalized = normalizeGeneratedArtifactPaths(
-      [
-        { path: 'src/main.tsx' },
-        { path: 'src/router.tsx' },
-        { path: 'src/stores/authStore.ts' },
-      ],
-      existingFiles
-    );
+  it('blocks backend and reserved source segments', () => {
+    const existingFiles = [createStoredFile('package.json'), createStoredFile('src/App.tsx')];
+    const backendPath = evaluateRuntimeArtifactPath('backend/src/server.ts', existingFiles);
+    expect(backendPath.allowed).toBe(false);
+    expect(backendPath.reason).toContain('RUNTIME_ARTIFACT_PATH_BLOCKED');
 
-    expect(normalized.map(file => file.path)).toEqual([
-      'src/main.tsx',
-      'src/router.tsx',
-      'src/stores/authStore.ts',
-    ]);
+    const frontendPath = evaluateRuntimeArtifactPath('frontend/src/App.tsx', existingFiles);
+    expect(frontendPath.allowed).toBe(true);
+    expect(frontendPath.normalizedPath).toBe('src/App.tsx');
+
+    const reservedSrcPath = evaluateRuntimeArtifactPath('src/orchestration/contract-policy.ts', existingFiles);
+    expect(reservedSrcPath.allowed).toBe(false);
+    expect(reservedSrcPath.reason).toContain('RUNTIME_ARTIFACT_PATH_BLOCKED');
   });
 
-  it('keeps allowed frontend paths and filters only invalid workspace-relative files', () => {
+  it('keeps allowed frontend paths and filters blocked files', () => {
     const existingFiles = [createStoredFile('package.json'), createStoredFile('src/App.tsx')];
     const result = filterRuntimeArtifactFiles(
       [
         { path: 'src/main.tsx', content: 'ok-root-file' },
         { path: 'src/ui/AppShell.tsx', content: 'ok-ui-file' },
         { path: 'src/components/OrderList.tsx', content: 'ok' },
-        { path: '../outside.ts', content: 'blocked' },
+        { path: 'src/orchestration/contract-policy.ts', content: 'blocked' },
       ],
       existingFiles
     );
@@ -67,7 +64,7 @@ describe('runtime-artifact-policy', () => {
     expect(result.accepted[1]?.path).toBe('src/ui/AppShell.tsx');
     expect(result.accepted[2]?.path).toBe('src/components/OrderList.tsx');
     expect(result.blocked).toHaveLength(1);
-    expect(result.blocked[0]?.path).toBe('../outside.ts');
+    expect(result.blocked[0]?.path).toBe('src/orchestration/contract-policy.ts');
   });
 
   it('allows emergent src segments that are outside reserved backend namespaces', () => {
@@ -84,17 +81,21 @@ describe('runtime-artifact-policy', () => {
     expect(bootstrapPath.normalizedPath).toBe('src/prototype/state/types.ts');
   });
 
-  it('allows unknown frontend root files when bootstrapping an empty session', () => {
-    const rootFile = evaluateRuntimeArtifactPath('web-delivery-admin.html', []);
-    expect(rootFile.allowed).toBe(true);
-    expect(rootFile.normalizedPath).toBe('web-delivery-admin.html');
+  it('blocks standalone html path when bootstrapping an empty session', () => {
+    const blocked = evaluateRuntimeArtifactPath('web-delivery-admin.html', []);
+    expect(blocked.allowed).toBe(false);
+    expect(blocked.reason).toContain('RUNTIME_ARTIFACT_PATH_BLOCKED');
+
+    const allowedIndex = evaluateRuntimeArtifactPath('index.html', []);
+    expect(allowedIndex.allowed).toBe(true);
+    expect(allowedIndex.normalizedPath).toBe('index.html');
 
     const allowedApp = evaluateRuntimeArtifactPath('src/App.tsx', []);
     expect(allowedApp.allowed).toBe(true);
     expect(allowedApp.normalizedPath).toBe('src/App.tsx');
   });
 
-  it('unwraps one synthetic root folder for bootstrap writes', () => {
+  it('unwraps one synthetic root folder for bootstrap writes while preserving runtime scope guards', () => {
     const wrappedPackage = evaluateRuntimeArtifactPath('web-prototype/package.json', []);
     expect(wrappedPackage.allowed).toBe(true);
     expect(wrappedPackage.normalizedPath).toBe('package.json');
@@ -120,19 +121,9 @@ describe('runtime-artifact-policy', () => {
     expect(wrappedResearch.normalizedPath).toBe(
       'research/waimai-admin-framework-constraints.md'
     );
-  });
 
-  it('blocks invalid workspace-relative paths', () => {
-    const traversal = evaluateRuntimeArtifactPath('../outside.ts', []);
-    expect(traversal.allowed).toBe(false);
-    expect(traversal.reason).toContain('RUNTIME_ARTIFACT_PATH_BLOCKED');
-
-    const absoluteUnix = evaluateRuntimeArtifactPath('/absolute/path.ts', []);
-    expect(absoluteUnix.allowed).toBe(false);
-    expect(absoluteUnix.reason).toContain('RUNTIME_ARTIFACT_PATH_BLOCKED');
-
-    const absoluteWindows = evaluateRuntimeArtifactPath('C:/absolute/path.ts', []);
-    expect(absoluteWindows.allowed).toBe(false);
-    expect(absoluteWindows.reason).toContain('RUNTIME_ARTIFACT_PATH_BLOCKED');
+    const blockedBackendPath = evaluateRuntimeArtifactPath('web-prototype/backend/src/server.ts', []);
+    expect(blockedBackendPath.allowed).toBe(false);
+    expect(blockedBackendPath.reason).toContain('RUNTIME_ARTIFACT_PATH_BLOCKED');
   });
 });

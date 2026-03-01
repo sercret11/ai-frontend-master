@@ -9,15 +9,8 @@ import * as dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 
-// Load environment variables:
-// 1) project root .env (if present) for shared local credentials
-// 2) backend/.env as fallback template defaults
-const rootEnvPath = path.resolve(process.cwd(), '..', '.env');
-const localEnvPath = path.resolve(process.cwd(), '.env');
-if (fs.existsSync(rootEnvPath)) {
-  dotenv.config({ path: rootEnvPath });
-}
-dotenv.config({ path: localEnvPath });
+// Load environment variables
+dotenv.config();
 
 /**
  * AI Provider Configuration

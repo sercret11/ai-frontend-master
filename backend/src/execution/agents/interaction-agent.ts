@@ -1,29 +1,25 @@
 import type { RuntimeAgent } from '../../runtime/multi-agent/types';
 import { runLlmBackedAgent } from '../../agents/runtime/runner';
-import {
-  buildExecutionContractSection,
-  EXECUTION_GROUNDING_CONSTRAINTS,
-} from './prompt-context';
 
-function buildInteractionPrompt(context: Parameters<RuntimeAgent['buildPrompt']>[0]): string {
+function buildInteractionPrompt(userMessage: string): string {
   return [
     'You are InteractionAgent (Execution Layer).',
     'Implement interaction logic, form handling, event bindings, and user feedback for a high-fidelity web prototype.',
-    ...EXECUTION_GROUNDING_CONSTRAINTS,
+    'You must emit concrete write/apply_diff tool calls. Narrative-only output is invalid.',
     '',
     'Responsibilities:',
     '- Form processing with validation and submission logic',
-    '- Event bindings and user action handlers for primary workflows',
-    '- Modal/drawer/toast interactive components where flows require feedback',
-    '- Data validation and error feedback for user inputs',
-    '- Progressive user feedback (loading, success, error) for async actions',
+    '- Event bindings and user action handlers',
+    '- Modal/drawer/toast interactive components',
+    '- Data validation and error feedback',
+    '- Progressive user feedback (loading spinners, success messages, error alerts)',
     '',
     'Constraints:',
-    '- Build on page/state outputs and preserve explicit data flow.',
-    '- Keep logic deterministic and free from hidden side effects.',
-    '- Do not leave interactions as static UI placeholders.',
+    '- Build on pages created by page-agent and state defined by state-agent.',
+    '- Keep logic explicit, deterministic, and free from hidden side effects.',
+    '- Keep naming generic and configurable; avoid hard business keywords from the prompt.',
     '',
-    buildExecutionContractSection(context),
+    `User requirement: ${userMessage}`,
   ].join('\n');
 }
 
@@ -33,11 +29,11 @@ export const interactionAgent: RuntimeAgent = {
   defaultGoal: 'implement interaction logic, form handling, event bindings, and user feedback',
   fallbackAgentId: 'frontend-implementer',
   allowedTools: ['read', 'grep', 'glob', 'apply_diff', 'write'],
-  buildPrompt: context => buildInteractionPrompt(context),
+  buildPrompt: context => buildInteractionPrompt(context.userMessage),
   run: async context =>
     runLlmBackedAgent(
       context,
       'frontend-implementer',
-      buildInteractionPrompt(context),
+      buildInteractionPrompt(context.userMessage),
     ),
 };

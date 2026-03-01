@@ -112,8 +112,8 @@ export class MultiAgentKernel {
     // ------------------------------------------------------------------
     // 1. Build LLMClient from environment configuration
     // ------------------------------------------------------------------
-    const provider = (this.input.modelProvider ?? process.env.AI_DEFAULT_PROVIDER ?? 'openai') as ProviderID;
-    const model = this.input.modelId ?? process.env.AI_DEFAULT_MODEL ?? 'gpt-4o';
+    const provider = (process.env.AI_DEFAULT_PROVIDER ?? 'openai') as ProviderID;
+    const model = process.env.AI_DEFAULT_MODEL ?? 'gpt-4o';
 
     const adapters = new Map<ProviderID, ProviderAdapter>();
     adapters.set(
@@ -122,7 +122,6 @@ export class MultiAgentKernel {
         baseUrl: process.env.OPENAI_BASE_URL,
         apiKey: process.env.OPENAI_API_KEY ?? '',
         protocol: 'responses',
-        providerId: 'openai',
       }),
     );
     adapters.set(
@@ -137,24 +136,6 @@ export class MultiAgentKernel {
       new GoogleAdapter({
         baseUrl: process.env.GOOGLE_BASE_URL,
         apiKey: process.env.GOOGLE_API_KEY ?? '',
-      }),
-    );
-    adapters.set(
-      'zhipuai',
-      new OpenAIAdapter({
-        baseUrl: process.env.ZHIPUAI_BASE_URL,
-        apiKey: process.env.ZHIPUAI_API_KEY ?? '',
-        protocol: 'chat-completions',
-        providerId: 'zhipuai',
-      }),
-    );
-    adapters.set(
-      'dashscope',
-      new OpenAIAdapter({
-        baseUrl: process.env.DASHSCOPE_BASE_URL,
-        apiKey: process.env.DASHSCOPE_API_KEY ?? '',
-        protocol: 'chat-completions',
-        providerId: 'dashscope',
       }),
     );
 
@@ -200,7 +181,6 @@ export class MultiAgentKernel {
     const originalEmit = this.input.emitRuntimeEvent;
     const wrappedInput: MultiAgentKernelInput = {
       ...this.input,
-      runtimeBudget: this.input.runtimeBudget,
       emitRuntimeEvent: (event) => {
         const runtimeEvent = originalEmit(event);
         this.eventBus.publish(runtimeEvent);

@@ -29,8 +29,8 @@ type ReadBudgetState = {
 };
 
 const READ_BUDGET_BY_MESSAGE = new Map<string, ReadBudgetState>();
-const MAX_READ_CALLS_PER_MESSAGE = 24;
-const MAX_UNIQUE_READ_PATHS_PER_MESSAGE = 12;
+const MAX_READ_CALLS_PER_MESSAGE = 8;
+const MAX_UNIQUE_READ_PATHS_PER_MESSAGE = 4;
 
 type ValidatedReadPath = {
   canonicalInputPath: string;

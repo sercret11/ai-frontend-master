@@ -10,7 +10,7 @@
  */
 
 import { v4 as uuidv4 } from 'uuid';
-import { ParsedError, ErrorContext, RepairResult, RepairSession, RepairSessionStatus, RepairProgress, RepairIterationResult, ErrorCategory, ToolCallSummary } from '@ai-frontend/shared-types';
+import { ParsedError, ErrorContext, RepairResult, RepairSession, RepairSessionStatus, RepairProgress, RepairIterationResult, ErrorCategory, ToolCallSummary, PermissionRequest } from '@ai-frontend/shared-types';
 import { ErrorClassifier } from './error-classifier';
 import { ErrorContextBuilder } from './error-context-builder';
 import { CommandRunner } from './command-runner';
@@ -23,6 +23,8 @@ import {
 } from './search-augmented-repair';
 import { config } from '../config';
 import { LLMService } from '../llm/index';
+import { ToolRegistry } from '../tool/registry';
+import { enforcePermission } from '../tool/permission-policy';
 import type { RepairAttempt } from './repair-types';
 import { FileStorage } from '../storage/file-storage';
 import { createContractBundle, formatContractBundle } from '../orchestration/contract-freezer';
@@ -773,33 +775,7 @@ export namespace SelfRepairAgent {
 
       // 2. Call LLM service with tools
       const toolCalls: ToolCallSummary[] = [];
-      const toolCallByID = new Map<string, ToolCallSummary>();
-
-      const upsertToolCallSummary = (
-        toolName: string,
-        callID: string
-      ): { summary: ToolCallSummary; isNew: boolean } => {
-        const existing = toolCallByID.get(callID);
-        if (existing) {
-          return {
-            summary: existing,
-            isNew: false,
-          };
-        }
-
-        const summary: ToolCallSummary = {
-          toolName,
-          callID,
-          timestamp: Date.now(),
-        };
-        toolCallByID.set(callID, summary);
-        toolCalls.push(summary);
-
-        return {
-          summary,
-          isNew: true,
-        };
-      };
+      let toolCallCount = 0;
 
       // 3. Stream response and handle tool calls
       const response = await LLMService.stream({
@@ -807,54 +783,39 @@ export namespace SelfRepairAgent {
         messageID: `repair-${sessionID}-${attemptNumber}-${Date.now()}`,
         userMessage: prompt,
         sessionID,
-        onToolCall: (call) => {
-          const { isNew } = upsertToolCallSummary(call.toolName, call.callID);
-          if (isNew) {
-            console.log(`[SelfRepairAgent] Tool call #${toolCalls.length}: ${call.toolName}`);
-          }
-        },
-        onToolResult: (result) => {
-          const { summary } = upsertToolCallSummary(result.toolName, result.callID);
-          const metadata =
-            result.metadata && typeof result.metadata === 'object'
-              ? (result.metadata as Record<string, unknown>)
-              : undefined;
-          const executionFailed = metadata?.['toolExecutionFailed'] === true;
+        onToolCall: async (call) => {
+          toolCallCount++;
+          console.log(`[SelfRepairAgent] Tool call #${toolCallCount}: ${call.toolName}`);
 
-          if (executionFailed) {
+          const summary: ToolCallSummary = {
+            toolName: call.toolName,
+            callID: call.callID,
+            timestamp: Date.now(),
+          };
+
+          toolCalls.push(summary);
+
+          // Execute tool and save result
+          try {
+            const result = await executeToolCall(sessionID, call);
+            summary.success = true;
+
+            // write/apply_diff 工具已在自身执行逻辑中持久化文件
+          } catch (error) {
+            console.error(`[SelfRepairAgent] Tool call failed:`, error);
             summary.success = false;
-            summary.error =
-              typeof metadata?.['error'] === 'string' && metadata['error'].trim().length > 0
-                ? String(metadata['error'])
-                : result.output;
-            return;
+            summary.error = error instanceof Error ? error.message : 'Unknown error';
           }
-
-          summary.success = true;
-          summary.error = undefined;
         },
       });
 
       // 4. Wait for completion
-      for await (const _delta of response.textStream) {
-        // Drain text stream so tool execution callbacks run to completion.
-      }
       await response.text;
-      const completedToolCalls = await response.toolCalls;
-      for (const call of completedToolCalls) {
-        upsertToolCallSummary(call.toolName, call.toolCallId);
-      }
-
-      for (const summary of toolCalls) {
-        if (summary.success === undefined) {
-          summary.success = false;
-          summary.error = summary.error || 'Tool execution completed without a success result';
-        }
-      }
+      await response.toolCalls;
 
       const duration = Date.now() - startTime;
 
-      console.log(`[SelfRepairAgent] Repair iteration ${attemptNumber} completed: ${toolCalls.length} tool calls in ${duration}ms`);
+      console.log(`[SelfRepairAgent] Repair iteration ${attemptNumber} completed: ${toolCallCount} tool calls in ${duration}ms`);
 
       return {
         attemptNumber,
@@ -872,6 +833,49 @@ export namespace SelfRepairAgent {
         duration: Date.now() - startTime,
       };
     }
+  }
+
+  /**
+   * Execute a tool call
+   */
+  async function executeToolCall(
+    sessionID: string,
+    call: { toolName: string; callID: string; args: Record<string, unknown> }
+  ): Promise<any> {
+    const tool = await ToolRegistry.getById(call.toolName);
+
+    if (!tool) {
+      throw new Error(`Tool not found: ${call.toolName}`);
+    }
+
+    // Initialize tool
+    const initialized = await tool.init();
+
+    // Execute tool with proper context
+    const result = await initialized.execute(call.args, {
+      sessionID,
+      messageID: call.callID,
+      agent: 'self-repair',
+      abort: new AbortController().signal,
+      callID: call.callID,
+      metadata: (input: { title?: string; metadata?: any }) => {
+        // Set metadata for tool execution
+        console.log(`[SelfRepairAgent] Tool metadata: ${input.title || call.toolName}`);
+      },
+      ask: async (permission: PermissionRequest) => {
+        await enforcePermission(permission, {
+          source: 'self-repair',
+          agent: 'self-repair',
+          sessionID,
+          messageID: call.callID,
+          callID: call.callID,
+          toolName: call.toolName,
+        });
+      },
+      onToolCall: undefined,
+    } as any);
+
+    return result;
   }
 
   /**

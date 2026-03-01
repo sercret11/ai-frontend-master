@@ -425,25 +425,6 @@ describe('PlanningLayer - Invalid Agent ID Rejection', () => {
   });
 });
 
-describe('PlanningLayer - Prompt Quality Contract', () => {
-  it('embeds high-fidelity and single-router constraints in system prompt', () => {
-    const blackboard = new MultiAgentBlackboard();
-    const layer = new PlanningLayer({
-      llmClient: {} as any,
-      provider: 'openai',
-      model: 'test',
-      blackboard,
-    });
-
-    const prompt = (layer as any).buildSystemPrompt(createMockSessionDocuments()) as string;
-
-    expect(prompt).toContain('Quality Contract (Non-negotiable)');
-    expect(prompt).toContain('Do not generate plans that leave TODO/待实现/placeholder/skeleton-only deliverables.');
-    expect(prompt).toContain('Router provider must be mounted exactly once at the application entry (src/main.tsx).');
-    expect(prompt).toContain('grounded in the 4 analysis documents');
-  });
-});
-
 describe('PlanningLayer - Dependency Contract And ID Invariants', () => {
   it('accepts dependencies alias and normalizes into dependsOn', async () => {
     const mockLLMClient = {

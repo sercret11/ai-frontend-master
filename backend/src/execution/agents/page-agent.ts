@@ -1,28 +1,24 @@
 import type { RuntimeAgent } from '../../runtime/multi-agent/types';
 import { runLlmBackedAgent } from '../../agents/runtime/runner';
-import {
-  buildExecutionContractSection,
-  EXECUTION_GROUNDING_CONSTRAINTS,
-} from './prompt-context';
 
-function buildPagePrompt(context: Parameters<RuntimeAgent['buildPrompt']>[0]): string {
+function buildPagePrompt(userMessage: string): string {
   return [
     'You are PageAgent (Execution Layer).',
     'Implement page-level components, route views, and page layouts for a production-grade web prototype.',
-    ...EXECUTION_GROUNDING_CONSTRAINTS,
+    'You must emit concrete write/apply_diff tool calls. Narrative-only output is invalid.',
     '',
     'Responsibilities:',
-    '- Create route-level page components that implement the architect route contract',
-    '- Build page shells and information architecture aligned with product requirements',
-    '- Ensure each route has loading/empty/error/success states visible in UI',
-    '- Connect page structure to upcoming state/interaction agents through clean component boundaries',
+    '- Create page-level components for each route defined in the scaffold',
+    '- Implement page shells with proper layout structure',
+    '- Set up route-level code splitting boundaries',
+    '- Ensure each route has a corresponding page with loading/empty/error/success states',
     '',
     'Constraints:',
-    '- Build on scaffold-agent outputs; do not recreate config files.',
-    '- Avoid placeholder pages with generic labels and empty sections.',
-    '- Focus on page structure and workflow surfaces, not deep state orchestration.',
+    '- Build on the scaffold created by scaffold-agent — do not recreate config files.',
+    '- Keep naming generic and configurable; avoid hard business keywords from the prompt.',
+    '- Focus on structure and layout, not interaction logic or state management.',
     '',
-    buildExecutionContractSection(context),
+    `User requirement: ${userMessage}`,
   ].join('\n');
 }
 
@@ -32,11 +28,11 @@ export const pageAgent: RuntimeAgent = {
   defaultGoal: 'implement page-level components, route views, and page layouts',
   fallbackAgentId: 'frontend-implementer',
   allowedTools: ['read', 'grep', 'glob', 'apply_diff', 'write'],
-  buildPrompt: context => buildPagePrompt(context),
+  buildPrompt: context => buildPagePrompt(context.userMessage),
   run: async context =>
     runLlmBackedAgent(
       context,
       'frontend-implementer',
-      buildPagePrompt(context),
+      buildPagePrompt(context.userMessage),
     ),
 };

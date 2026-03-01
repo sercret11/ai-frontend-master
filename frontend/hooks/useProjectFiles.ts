@@ -15,63 +15,6 @@ import { normalizeApiBaseUrl } from '../utils/api-base';
 
 const START_POLLING_DEBOUNCE_MS = 500;
 const STABLE_FILE_TOTAL_ROUNDS = 120;
-const DEFAULT_FILE_PAGE_LIMIT = 50;
-const sharedRecentPollingStarts = new Map<string, number>();
-
-type PollingPagination = {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-  hasNext: boolean;
-  hasPrev: boolean;
-} | null;
-
-interface CoordinatorSnapshot {
-  files: StoredFile[];
-  isLoading: boolean;
-  isPolling: boolean;
-  stats: FileStorageStats | null;
-  pagination: PollingPagination;
-}
-
-interface CoordinatorRequest {
-  sessionID: string;
-  params: FileQueryParams;
-  signature: string;
-  apiBaseUrl: string;
-  pollInterval: number;
-  maxRetries: number;
-  requestedAt: number;
-}
-
-interface ActivePollingJob extends CoordinatorRequest {
-  intervalId: ReturnType<typeof setInterval> | null;
-  retryCount: number;
-  stableRounds: number;
-  lastObservedTotal: number;
-  inFlight: boolean;
-  stopped: boolean;
-}
-
-interface CoordinatorSubscriber {
-  onSnapshot: (snapshot: CoordinatorSnapshot) => void;
-  onFilesLoaded?: (files: StoredFile[]) => void;
-  onError?: (error: Error) => void;
-}
-
-const coordinatorSubscribers = new Map<string, CoordinatorSubscriber>();
-const coordinatorRequests = new Map<string, CoordinatorRequest>();
-let coordinatorActiveJob: ActivePollingJob | null = null;
-let ownerSequence = 0;
-
-let coordinatorSnapshot: CoordinatorSnapshot = {
-  files: [],
-  isLoading: false,
-  isPolling: false,
-  stats: null,
-  pagination: null,
-};
 
 function normalizePollingParams(params: FileQueryParams = {}): string {
   const normalizedEntries = Object.entries(params)
@@ -131,7 +74,14 @@ export interface UseProjectFilesReturn {
   /** Stats */
   stats: FileStorageStats | null;
   /** Pagination */
-  pagination: PollingPagination;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasNext: boolean;
+    hasPrev: boolean;
+  } | null;
   /** Start polling for a session */
   startPolling: (sessionID: string, params?: FileQueryParams) => void;
   /** Stop polling */
@@ -144,444 +94,6 @@ export interface UseProjectFilesReturn {
   reset: () => void;
 }
 
-function nextOwnerId(): string {
-  ownerSequence += 1;
-  return `project-files-owner-${ownerSequence}`;
-}
-
-function cloneQueryParams(params: FileQueryParams = {}): FileQueryParams {
-  return { ...params };
-}
-
-function buildQueryParams(params: FileQueryParams = {}): URLSearchParams {
-  const queryParams = new URLSearchParams();
-  if (params.page) queryParams.append('page', params.page.toString());
-  if (params.limit) queryParams.append('limit', params.limit.toString());
-  if (params.search) queryParams.append('search', params.search);
-  if (params.language) queryParams.append('language', params.language);
-  if (params.sortBy) queryParams.append('sortBy', params.sortBy);
-  if (params.sortOrder) queryParams.append('sortOrder', params.sortOrder);
-  return queryParams;
-}
-
-function sortStoredFilesByPath(files: StoredFile[]): StoredFile[] {
-  return [...files].sort((left, right) => left.path.localeCompare(right.path));
-}
-
-function publishSnapshot(): void {
-  coordinatorSubscribers.forEach(subscriber => {
-    subscriber.onSnapshot(coordinatorSnapshot);
-  });
-}
-
-function updateSnapshot(patch: Partial<CoordinatorSnapshot>): void {
-  coordinatorSnapshot = {
-    ...coordinatorSnapshot,
-    ...patch,
-  };
-  publishSnapshot();
-}
-
-function notifyFilesLoaded(job: ActivePollingJob, files: StoredFile[]): void {
-  coordinatorSubscribers.forEach((subscriber, ownerId) => {
-    const request = coordinatorRequests.get(ownerId);
-    if (!request) {
-      return;
-    }
-    if (request.signature !== job.signature || request.apiBaseUrl !== job.apiBaseUrl) {
-      return;
-    }
-    subscriber.onFilesLoaded?.(files);
-  });
-}
-
-function notifyError(job: ActivePollingJob, error: Error): void {
-  coordinatorSubscribers.forEach((subscriber, ownerId) => {
-    const request = coordinatorRequests.get(ownerId);
-    if (!request) {
-      return;
-    }
-    if (request.signature !== job.signature || request.apiBaseUrl !== job.apiBaseUrl) {
-      return;
-    }
-    subscriber.onError?.(error);
-  });
-}
-
-function getCurrentTotal(data: FileBatchResponse): number {
-  return data.pagination?.total ?? data.files.length;
-}
-
-function areStoredFilesEqual(left: StoredFile[], right: StoredFile[]): boolean {
-  if (left.length !== right.length) {
-    return false;
-  }
-
-  const sortedLeft = sortStoredFilesByPath(left);
-  const sortedRight = sortStoredFilesByPath(right);
-
-  for (let index = 0; index < sortedLeft.length; index += 1) {
-    const leftFile = sortedLeft[index];
-    const rightFile = sortedRight[index];
-    if (!leftFile || !rightFile) {
-      return false;
-    }
-    if (
-      leftFile.sessionID !== rightFile.sessionID ||
-      leftFile.path !== rightFile.path ||
-      leftFile.content !== rightFile.content
-    ) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function shouldStopForStableSnapshot(job: ActivePollingJob, data: FileBatchResponse): boolean {
-  const currentTotal = getCurrentTotal(data);
-
-  if (currentTotal <= 0) {
-    job.lastObservedTotal = currentTotal;
-    job.stableRounds = 0;
-    return false;
-  }
-
-  if (job.lastObservedTotal === currentTotal) {
-    job.stableRounds += 1;
-  } else {
-    job.lastObservedTotal = currentTotal;
-    job.stableRounds = 0;
-  }
-
-  const reachedStableRounds = job.stableRounds >= STABLE_FILE_TOTAL_ROUNDS;
-  if (reachedStableRounds) {
-    console.log('[useProjectFiles] Stop polling after stable file total snapshot', {
-      sessionID: job.sessionID,
-      currentTotal,
-      stableRounds: job.stableRounds,
-    });
-  }
-  return reachedStableRounds;
-}
-
-function isActiveJob(job: ActivePollingJob): boolean {
-  return coordinatorActiveJob === job && !job.stopped;
-}
-
-function clearRequestsBySignature(signature: string, apiBaseUrl: string): void {
-  coordinatorRequests.forEach((request, ownerId) => {
-    if (request.signature === signature && request.apiBaseUrl === apiBaseUrl) {
-      coordinatorRequests.delete(ownerId);
-    }
-  });
-}
-
-function stopActiveJob(options: { clearRequests?: boolean } = {}): void {
-  const activeJob = coordinatorActiveJob;
-  if (!activeJob) {
-    updateSnapshot({ isPolling: false, isLoading: false });
-    return;
-  }
-
-  activeJob.stopped = true;
-  if (activeJob.intervalId) {
-    clearInterval(activeJob.intervalId);
-    activeJob.intervalId = null;
-  }
-
-  if (options.clearRequests) {
-    clearRequestsBySignature(activeJob.signature, activeJob.apiBaseUrl);
-  }
-
-  coordinatorActiveJob = null;
-  updateSnapshot({ isPolling: false, isLoading: false });
-}
-
-async function fetchFileBatch(job: ActivePollingJob): Promise<FileBatchResponse> {
-  const requestedLimit =
-    typeof job.params.limit === 'number' && Number.isFinite(job.params.limit) && job.params.limit > 0
-      ? job.params.limit
-      : DEFAULT_FILE_PAGE_LIMIT;
-  const requestedPage =
-    typeof job.params.page === 'number' && Number.isFinite(job.params.page) && job.params.page > 0
-      ? job.params.page
-      : 1;
-
-  const fetchPage = async (page: number): Promise<FileBatchResponse> => {
-    const encodedSessionId = encodeURIComponent(job.sessionID);
-    const queryParams = buildQueryParams({
-      ...job.params,
-      page,
-      limit: requestedLimit,
-    });
-    const response = await fetch(
-      `${job.apiBaseUrl}/api/sessions/${encodedSessionId}/files?${queryParams.toString()}`,
-      {
-        headers: withApiAuthHeaders(),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return (await response.json()) as FileBatchResponse;
-  };
-
-  const firstPage = await fetchPage(requestedPage);
-  const allFiles = [...firstPage.files];
-
-  let currentPage = firstPage.pagination.page;
-  const totalPages = firstPage.pagination.totalPages;
-
-  while (currentPage < totalPages && currentPage < 100) {
-    currentPage += 1;
-    const nextPage = await fetchPage(currentPage);
-    allFiles.push(...nextPage.files);
-  }
-
-  const mergedFiles = sortStoredFilesByPath(allFiles);
-
-  return {
-    sessionID: firstPage.sessionID,
-    files: mergedFiles,
-    pagination: {
-      ...firstPage.pagination,
-      page: requestedPage,
-      limit: mergedFiles.length,
-      hasNext: false,
-      hasPrev: false,
-      totalPages: 1,
-    },
-  };
-}
-
-async function fetchFileStats(request: CoordinatorRequest): Promise<FileStorageStats> {
-  const encodedSessionId = encodeURIComponent(request.sessionID);
-  const response = await fetch(`${request.apiBaseUrl}/api/sessions/${encodedSessionId}/files/stats`, {
-    headers: withApiAuthHeaders(),
-  });
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  return (await response.json()) as FileStorageStats;
-}
-
-async function runPollingTick(job: ActivePollingJob): Promise<void> {
-  if (!isActiveJob(job) || job.inFlight) {
-    return;
-  }
-
-  job.inFlight = true;
-  updateSnapshot({ isLoading: true });
-
-  try {
-    const data = await fetchFileBatch(job);
-
-    if (!isActiveJob(job)) {
-      return;
-    }
-
-    const normalizedFiles = sortStoredFilesByPath(data.files);
-    const filesChanged = !areStoredFilesEqual(coordinatorSnapshot.files, normalizedFiles);
-    const paginationChanged =
-      !coordinatorSnapshot.pagination
-      || coordinatorSnapshot.pagination.page !== data.pagination.page
-      || coordinatorSnapshot.pagination.limit !== data.pagination.limit
-      || coordinatorSnapshot.pagination.total !== data.pagination.total
-      || coordinatorSnapshot.pagination.totalPages !== data.pagination.totalPages
-      || coordinatorSnapshot.pagination.hasNext !== data.pagination.hasNext
-      || coordinatorSnapshot.pagination.hasPrev !== data.pagination.hasPrev;
-
-    if (filesChanged || paginationChanged) {
-      coordinatorSnapshot = {
-        ...coordinatorSnapshot,
-        files: normalizedFiles,
-        pagination: data.pagination,
-        stats: {
-          sessionID: job.sessionID,
-          fileCount: data.pagination.total,
-          totalSize: coordinatorSnapshot.stats?.totalSize || 0,
-          filesByLanguage: {},
-        },
-      };
-      publishSnapshot();
-    }
-
-    if (normalizedFiles.length > 0 && filesChanged) {
-      job.retryCount = 0;
-      notifyFilesLoaded(job, normalizedFiles);
-      console.log(`[useProjectFiles] Loaded ${normalizedFiles.length} files for session ${job.sessionID}`);
-    }
-
-    if (shouldStopForStableSnapshot(job, data)) {
-      stopActiveJob({ clearRequests: true });
-    }
-  } catch (error) {
-    if (!isActiveJob(job)) {
-      return;
-    }
-
-    const err = error instanceof Error ? error : new Error(String(error));
-    console.error('[useProjectFiles] Failed to fetch files:', err);
-    notifyError(job, err);
-
-    job.retryCount += 1;
-    if (job.retryCount >= job.maxRetries) {
-      console.warn(`[useProjectFiles] Max retries (${job.maxRetries}) reached`);
-      stopActiveJob({ clearRequests: true });
-    }
-  } finally {
-    job.inFlight = false;
-    if (isActiveJob(job)) {
-      updateSnapshot({ isLoading: false });
-    }
-  }
-}
-
-function startJob(request: CoordinatorRequest): void {
-  const job: ActivePollingJob = {
-    ...request,
-    intervalId: null,
-    retryCount: 0,
-    stableRounds: 0,
-    lastObservedTotal: -1,
-    inFlight: false,
-    stopped: false,
-  };
-
-  coordinatorActiveJob = job;
-  updateSnapshot({
-    isPolling: true,
-    isLoading: false,
-  });
-
-  runPollingTick(job).then(() => {
-    if (!isActiveJob(job)) {
-      return;
-    }
-
-    job.intervalId = setInterval(() => {
-      void runPollingTick(job);
-    }, job.pollInterval);
-  });
-}
-
-function selectLatestRequest(): CoordinatorRequest | null {
-  let latest: CoordinatorRequest | null = null;
-  coordinatorRequests.forEach(request => {
-    if (!latest || request.requestedAt > latest.requestedAt) {
-      latest = request;
-    }
-  });
-  return latest;
-}
-
-function reconcileActiveJob(): void {
-  const target = selectLatestRequest();
-  if (!target) {
-    stopActiveJob();
-    return;
-  }
-
-  const activeJob = coordinatorActiveJob;
-  if (
-    activeJob &&
-    activeJob.signature === target.signature &&
-    activeJob.apiBaseUrl === target.apiBaseUrl
-  ) {
-    activeJob.maxRetries = target.maxRetries;
-    if (activeJob.pollInterval !== target.pollInterval) {
-      activeJob.pollInterval = target.pollInterval;
-      if (activeJob.intervalId) {
-        clearInterval(activeJob.intervalId);
-      }
-      activeJob.intervalId = setInterval(() => {
-        void runPollingTick(activeJob);
-      }, activeJob.pollInterval);
-    }
-    updateSnapshot({ isPolling: true });
-    return;
-  }
-
-  stopActiveJob();
-  startJob(target);
-}
-
-function subscribeToCoordinator(ownerId: string, subscriber: CoordinatorSubscriber): () => void {
-  coordinatorSubscribers.set(ownerId, subscriber);
-  subscriber.onSnapshot(coordinatorSnapshot);
-
-  return () => {
-    coordinatorSubscribers.delete(ownerId);
-    coordinatorRequests.delete(ownerId);
-    reconcileActiveJob();
-  };
-}
-
-function requestStartPolling(ownerId: string, request: CoordinatorRequest): void {
-  coordinatorRequests.set(ownerId, request);
-  reconcileActiveJob();
-}
-
-function requestStopPolling(ownerId: string): void {
-  coordinatorRequests.delete(ownerId);
-  reconcileActiveJob();
-}
-
-async function requestRefresh(ownerId: string): Promise<void> {
-  const ownerRequest = coordinatorRequests.get(ownerId);
-  if (!ownerRequest) {
-    return;
-  }
-
-  reconcileActiveJob();
-  const activeJob = coordinatorActiveJob;
-  if (!activeJob) {
-    return;
-  }
-  if (
-    activeJob.signature !== ownerRequest.signature ||
-    activeJob.apiBaseUrl !== ownerRequest.apiBaseUrl
-  ) {
-    return;
-  }
-
-  await runPollingTick(activeJob);
-}
-
-async function requestFetchStats(ownerId: string): Promise<void> {
-  const ownerRequest = coordinatorRequests.get(ownerId);
-  if (!ownerRequest) {
-    return;
-  }
-
-  try {
-    const stats = await fetchFileStats(ownerRequest);
-    const latestRequest = coordinatorRequests.get(ownerId);
-    if (!latestRequest) {
-      return;
-    }
-    if (
-      latestRequest.signature !== ownerRequest.signature ||
-      latestRequest.apiBaseUrl !== ownerRequest.apiBaseUrl
-    ) {
-      return;
-    }
-    updateSnapshot({ stats });
-  } catch (error) {
-    const err = error instanceof Error ? error : new Error(String(error));
-    console.error('[useProjectFiles] Failed to fetch stats:', err);
-    const activeJob = coordinatorActiveJob;
-    if (activeJob) {
-      notifyError(activeJob, err);
-    }
-  }
-}
-
 export function useProjectFiles(options: UseProjectFilesOptions = {}): UseProjectFilesReturn {
   const {
     apiUrl = import.meta.env['VITE_API_URL'] || 'http://localhost:3001',
@@ -592,16 +104,34 @@ export function useProjectFiles(options: UseProjectFilesOptions = {}): UseProjec
   } = options;
   const normalizedApiBaseUrl = normalizeApiBaseUrl(apiUrl);
 
-  const [files, setFiles] = useState<StoredFile[]>(() => coordinatorSnapshot.files);
-  const [isLoading, setIsLoading] = useState(() => coordinatorSnapshot.isLoading);
-  const [isPolling, setIsPolling] = useState(() => coordinatorSnapshot.isPolling);
-  const [stats, setStats] = useState<FileStorageStats | null>(() => coordinatorSnapshot.stats);
-  const [pagination, setPagination] = useState<PollingPagination>(() => coordinatorSnapshot.pagination);
+  const [files, setFiles] = useState<StoredFile[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPolling, setIsPolling] = useState(false);
+  const [stats, setStats] = useState<FileStorageStats | null>(null);
+  const [pagination, setPagination] = useState<UseProjectFilesReturn['pagination']>(null);
   const onFilesLoadedRef = useRef(onFilesLoaded);
   const onErrorRef = useRef(onError);
   const recentPollingStartsRef = useRef<Map<string, number>>(new Map());
-  const ownerIdRef = useRef(nextOwnerId());
-  const ownerSignatureRef = useRef<string | null>(null);
+
+  const pollingRef = useRef<{
+    intervalId: NodeJS.Timeout | null;
+    retryCount: number;
+    sessionID: string | null;
+    params: FileQueryParams | null;
+    pollingKey: number;
+    active: boolean;
+    lastObservedTotal: number;
+    stableRounds: number;
+  }>({
+    intervalId: null,
+    retryCount: 0,
+    sessionID: null,
+    params: null,
+    pollingKey: 0,
+    active: false,
+    lastObservedTotal: -1,
+    stableRounds: 0,
+  });
 
   useEffect(() => {
     onFilesLoadedRef.current = onFilesLoaded;
@@ -611,45 +141,175 @@ export function useProjectFiles(options: UseProjectFilesOptions = {}): UseProjec
     onErrorRef.current = onError;
   }, [onError]);
 
-  useEffect(() => {
-    const ownerId = ownerIdRef.current;
-    const unsubscribe = subscribeToCoordinator(ownerId, {
-      onSnapshot: snapshot => {
-        setFiles(snapshot.files);
-        setIsLoading(snapshot.isLoading);
-        setIsPolling(snapshot.isPolling);
-        setStats(snapshot.stats);
-        setPagination(snapshot.pagination);
-      },
-      onFilesLoaded: loadedFiles => {
-        onFilesLoadedRef.current?.(loadedFiles);
-      },
-      onError: error => {
-        onErrorRef.current?.(error);
-      },
-    });
+  const shouldStopForStableSnapshot = useCallback((data: FileBatchResponse | null): boolean => {
+    if (!data) {
+      return false;
+    }
 
-    return () => {
-      unsubscribe();
-      const signature = ownerSignatureRef.current;
-      if (signature) {
-        recentPollingStartsRef.current.delete(signature);
-        sharedRecentPollingStarts.delete(signature);
-      }
-      recentPollingStartsRef.current.clear();
-      pruneRecentPollingStarts(sharedRecentPollingStarts, Date.now());
-    };
+    const currentTotal = data.pagination?.total ?? data.files.length;
+    if (currentTotal <= 0) {
+      pollingRef.current.lastObservedTotal = currentTotal;
+      pollingRef.current.stableRounds = 0;
+      return false;
+    }
+
+    if (pollingRef.current.lastObservedTotal === currentTotal) {
+      pollingRef.current.stableRounds += 1;
+    } else {
+      pollingRef.current.lastObservedTotal = currentTotal;
+      pollingRef.current.stableRounds = 0;
+    }
+
+    const reachedStableRounds = pollingRef.current.stableRounds >= STABLE_FILE_TOTAL_ROUNDS;
+    if (reachedStableRounds) {
+      console.log('[useProjectFiles] Stop polling after stable file total snapshot', {
+        currentTotal,
+        stableRounds: pollingRef.current.stableRounds,
+      });
+    }
+    return reachedStableRounds;
   }, []);
 
-  const stopPolling = useCallback(() => {
-    const ownerId = ownerIdRef.current;
-    const signature = ownerSignatureRef.current;
-    if (signature) {
-      recentPollingStartsRef.current.delete(signature);
-      sharedRecentPollingStarts.delete(signature);
+  const fetchFiles = useCallback(async (expectedPollingKey?: number) => {
+    const { sessionID, params, pollingKey } = pollingRef.current;
+    const requestPollingKey = expectedPollingKey ?? pollingKey;
+
+    if (!sessionID) {
+      console.warn('[useProjectFiles] No session ID, skipping fetch');
+      return null;
     }
-    ownerSignatureRef.current = null;
-    requestStopPolling(ownerId);
+
+    if (requestPollingKey !== pollingKey) {
+      console.log('[useProjectFiles] Polling key changed before fetch, skipping stale request');
+      return null;
+    }
+
+    console.log(`[useProjectFiles] Fetching files for session ${sessionID}`);
+    setIsLoading(true);
+
+    try {
+      const queryParams = new URLSearchParams();
+      if (params?.page) queryParams.append('page', params.page.toString());
+      if (params?.limit) queryParams.append('limit', params.limit.toString());
+      if (params?.search) queryParams.append('search', params.search);
+      if (params?.language) queryParams.append('language', params.language);
+      if (params?.sortBy) queryParams.append('sortBy', params.sortBy);
+      if (params?.sortOrder) queryParams.append('sortOrder', params.sortOrder);
+
+      const response = await fetch(`${normalizedApiBaseUrl}/api/sessions/${sessionID}/files?${queryParams.toString()}`, {
+        headers: withApiAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: FileBatchResponse = await response.json();
+
+      if (
+        pollingRef.current.pollingKey !== requestPollingKey ||
+        pollingRef.current.sessionID !== sessionID
+      ) {
+        console.log('[useProjectFiles] Ignoring stale files response', {
+          sessionID,
+          requestPollingKey,
+          currentSessionID: pollingRef.current.sessionID,
+          currentPollingKey: pollingRef.current.pollingKey,
+        });
+        return null;
+      }
+
+      console.log(`[useProjectFiles] Response received: ${data.files.length} files, pagination:`, data.pagination);
+
+      setFiles(data.files);
+      setPagination(data.pagination);
+      setStats(prev => ({
+        sessionID,
+        fileCount: data.pagination.total,
+        totalSize: prev?.totalSize || 0,
+        filesByLanguage: {},
+      }));
+
+      if (data.files.length > 0) {
+        pollingRef.current.retryCount = 0;
+        onFilesLoadedRef.current?.(data.files);
+        console.log(`[useProjectFiles] Loaded ${data.files.length} files for session ${sessionID}`);
+      }
+
+      return data;
+    } catch (error) {
+      if (
+        pollingRef.current.pollingKey !== requestPollingKey ||
+        pollingRef.current.sessionID !== sessionID
+      ) {
+        return null;
+      }
+
+      const err = error instanceof Error ? error : new Error(String(error));
+      console.error('[useProjectFiles] Failed to fetch files:', err);
+      onErrorRef.current?.(err);
+      return null;
+    } finally {
+      if (pollingRef.current.pollingKey === requestPollingKey) {
+        setIsLoading(false);
+      }
+    }
+  }, [normalizedApiBaseUrl]);
+
+  const fetchStats = useCallback(async () => {
+    const { sessionID, pollingKey } = pollingRef.current;
+
+    if (!sessionID) {
+      console.warn('[useProjectFiles] No session ID, skipping stats fetch');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${normalizedApiBaseUrl}/api/sessions/${sessionID}/files/stats`, {
+        headers: withApiAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data: FileStorageStats = await response.json();
+      if (
+        pollingRef.current.pollingKey !== pollingKey ||
+        pollingRef.current.sessionID !== sessionID
+      ) {
+        return;
+      }
+      setStats(data);
+    } catch (error) {
+      if (
+        pollingRef.current.pollingKey !== pollingKey ||
+        pollingRef.current.sessionID !== sessionID
+      ) {
+        return;
+      }
+
+      const err = error instanceof Error ? error : new Error(String(error));
+      console.error('[useProjectFiles] Failed to fetch stats:', err);
+      setStats(null);
+      onErrorRef.current?.(err);
+    }
+  }, [normalizedApiBaseUrl]);
+
+  const stopPolling = useCallback(() => {
+    console.log('[useProjectFiles] Stopping polling');
+
+    if (pollingRef.current.intervalId) {
+      clearInterval(pollingRef.current.intervalId);
+      pollingRef.current.intervalId = null;
+    }
+
+    pollingRef.current.retryCount = 0;
+    pollingRef.current.active = false;
+    pollingRef.current.lastObservedTotal = -1;
+    pollingRef.current.stableRounds = 0;
+    pollingRef.current.pollingKey += 1;
+    setIsPolling(false);
   }, []);
 
   const startPolling = useCallback((sessionID: string, params: FileQueryParams = {}) => {
@@ -657,59 +317,116 @@ export function useProjectFiles(options: UseProjectFilesOptions = {}): UseProjec
 
     const pollingSignature = buildPollingSignature(sessionID, params);
     const now = Date.now();
-    const localDebounced = shouldDebouncePollingStart(
-      recentPollingStartsRef.current,
-      pollingSignature,
-      now,
-    );
-    const sharedDebounced = shouldDebouncePollingStart(
-      sharedRecentPollingStarts,
-      pollingSignature,
-      now,
-    );
-    if (localDebounced || sharedDebounced) {
+    if (shouldDebouncePollingStart(recentPollingStartsRef.current, pollingSignature, now)) {
       console.log('[useProjectFiles] Polling request debounced', { sessionID, pollingSignature });
       return;
     }
 
-    recentPollingStartsRef.current.set(pollingSignature, now);
-    sharedRecentPollingStarts.set(pollingSignature, now);
+    const currentSignature =
+      pollingRef.current.sessionID !== null
+        ? buildPollingSignature(pollingRef.current.sessionID, pollingRef.current.params || {})
+        : null;
+    const hasActivePolling = pollingRef.current.active || pollingRef.current.intervalId !== null;
 
-    ownerSignatureRef.current = pollingSignature;
-    requestStartPolling(ownerIdRef.current, {
-      sessionID,
-      params: cloneQueryParams(params),
-      signature: pollingSignature,
-      apiBaseUrl: normalizedApiBaseUrl,
-      pollInterval,
-      maxRetries,
-      requestedAt: now,
+    if (hasActivePolling && currentSignature === pollingSignature) {
+      console.log('[useProjectFiles] Polling already active with same session and params, skipping');
+      return;
+    }
+
+    recentPollingStartsRef.current.set(pollingSignature, now);
+    stopPolling();
+
+    const nextPollingKey = pollingRef.current.pollingKey + 1;
+    pollingRef.current.sessionID = sessionID;
+    pollingRef.current.params = params;
+    pollingRef.current.retryCount = 0;
+    pollingRef.current.pollingKey = nextPollingKey;
+    pollingRef.current.active = true;
+    pollingRef.current.lastObservedTotal = -1;
+    pollingRef.current.stableRounds = 0;
+    setIsPolling(true);
+
+    fetchFiles(nextPollingKey).then(data => {
+      if (
+        pollingRef.current.pollingKey !== nextPollingKey ||
+        pollingRef.current.sessionID !== sessionID
+      ) {
+        return;
+      }
+
+      console.log(`[useProjectFiles] Initial fetch completed:`, data ? `${data.files.length} files` : 'null');
+
+      if (shouldStopForStableSnapshot(data)) {
+        stopPolling();
+      } else {
+        pollingRef.current.intervalId = setInterval(() => {
+          if (
+            pollingRef.current.pollingKey !== nextPollingKey ||
+            pollingRef.current.sessionID !== sessionID
+          ) {
+            return;
+          }
+
+          fetchFiles(nextPollingKey).then(nextData => {
+            if (
+              pollingRef.current.pollingKey !== nextPollingKey ||
+              pollingRef.current.sessionID !== sessionID
+            ) {
+              return;
+            }
+
+            if (shouldStopForStableSnapshot(nextData)) {
+              stopPolling();
+            } else {
+              pollingRef.current.retryCount++;
+              if (pollingRef.current.retryCount >= maxRetries) {
+                console.warn(`[useProjectFiles] Max retries (${maxRetries}) reached`);
+                stopPolling();
+              }
+            }
+          });
+        }, pollInterval);
+      }
     });
-  }, [normalizedApiBaseUrl, pollInterval, maxRetries]);
+  }, [pollInterval, maxRetries, fetchFiles, shouldStopForStableSnapshot, stopPolling]);
 
   const refresh = useCallback(async () => {
-    await requestRefresh(ownerIdRef.current);
-    await requestFetchStats(ownerIdRef.current);
-  }, []);
-
-  const fetchStats = useCallback(async () => {
-    await requestFetchStats(ownerIdRef.current);
-  }, []);
+    await fetchFiles();
+    await fetchStats();
+  }, [fetchFiles, fetchStats]);
 
   const reset = useCallback(() => {
-    const signature = ownerSignatureRef.current;
-    if (signature) {
-      recentPollingStartsRef.current.delete(signature);
-      sharedRecentPollingStarts.delete(signature);
+    const currentSessionID = pollingRef.current.sessionID;
+    const currentParams = pollingRef.current.params || {};
+    const nextPollingKey = pollingRef.current.pollingKey + 1;
+
+    if (currentSessionID) {
+      recentPollingStartsRef.current.delete(buildPollingSignature(currentSessionID, currentParams));
     }
-    ownerSignatureRef.current = null;
-    requestStopPolling(ownerIdRef.current);
+
+    stopPolling();
     setFiles([]);
     setIsLoading(false);
-    setIsPolling(false);
     setStats(null);
     setPagination(null);
-  }, []);
+    pollingRef.current = {
+      intervalId: null,
+      retryCount: 0,
+      sessionID: null,
+      params: null,
+      pollingKey: nextPollingKey,
+      active: false,
+      lastObservedTotal: -1,
+      stableRounds: 0,
+    };
+  }, [stopPolling]);
+
+  useEffect(() => {
+    return () => {
+      stopPolling();
+      recentPollingStartsRef.current.clear();
+    };
+  }, [stopPolling]);
 
   return {
     files,

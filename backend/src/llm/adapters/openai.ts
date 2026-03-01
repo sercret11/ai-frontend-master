@@ -1,12 +1,12 @@
-﻿/**
+/**
  * OpenAI Provider Adapter
  *
  * Implements the ProviderAdapter interface for OpenAI-compatible APIs.
  *
  * Supports two protocols:
- *   1. **Responses API** (`/v1/responses`) 鈥?the PRIMARY protocol.
+ *   1. **Responses API** (`/v1/responses`) – the PRIMARY protocol.
  *      The endpoint at `https://vpsairobot.com` ONLY supports this API.
- *   2. **Chat Completions API** (`/v1/chat/completions`) 鈥?fallback.
+ *   2. **Chat Completions API** (`/v1/chat/completions`) – fallback.
  *
  * The protocol is selected via the constructor `protocol` parameter.
  */
@@ -89,20 +89,14 @@ interface ChatCompletionBody {
 // ---------------------------------------------------------------------------
 
 export class OpenAIAdapter implements ProviderAdapter {
-  readonly id: ProviderID;
+  readonly id: ProviderID = 'openai';
 
   private baseUrl: string;
   private apiKey: string;
   private protocol: OpenAIProtocol;
 
-  constructor(opts: {
-    baseUrl?: string;
-    apiKey: string;
-    protocol?: OpenAIProtocol;
-    providerId?: ProviderID;
-  }) {
-    this.id = opts.providerId ?? 'openai';
-    this.baseUrl = this.normalizeBaseUrl(opts.baseUrl ?? 'https://api.openai.com');
+  constructor(opts: { baseUrl?: string; apiKey: string; protocol?: OpenAIProtocol }) {
+    this.baseUrl = (opts.baseUrl ?? 'https://api.openai.com').replace(/\/+$/, '');
     this.apiKey = opts.apiKey;
     this.protocol = opts.protocol ?? 'responses';
   }
@@ -174,7 +168,7 @@ export class OpenAIAdapter implements ProviderAdapter {
     const retryable = [429, 500, 502, 503, 504].includes(status);
 
     const err = new Error(message) as LLMError;
-    err.provider = this.id;
+    err.provider = 'openai';
     err.statusCode = status;
     err.retryable = retryable;
     err.raw = body;
@@ -204,7 +198,7 @@ export class OpenAIAdapter implements ProviderAdapter {
     if (params.topP !== undefined) body.top_p = params.topP;
 
     return {
-      url: this.buildVersionedUrl('/responses'),
+      url: `${this.baseUrl}/v1/responses`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${this.apiKey}`,
@@ -299,13 +293,8 @@ export class OpenAIAdapter implements ProviderAdapter {
       }
 
       case 'response.completed': {
-        const responseObject = parsed.response;
-        if (responseObject && typeof responseObject === 'object') {
-          return {
-            type: 'done',
-            response: this.parseResponsesResponse(responseObject),
-          };
-        }
+        // The full response object is in parsed.response – we don't emit 'done'
+        // here because the StreamHandler synthesizes it from the aggregated events.
         return null;
       }
 
@@ -389,7 +378,7 @@ export class OpenAIAdapter implements ProviderAdapter {
     if (params.topP !== undefined) body.top_p = params.topP;
 
     return {
-      url: this.buildVersionedUrl('/chat/completions'),
+      url: `${this.baseUrl}/v1/chat/completions`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${this.apiKey}`,
@@ -537,19 +526,4 @@ export class OpenAIAdapter implements ProviderAdapter {
         return 'stop';
     }
   }
-
-  private normalizeBaseUrl(baseUrl: string): string {
-    return baseUrl.replace(/\/+$/, '');
-  }
-
-  private buildVersionedUrl(endpointPath: string): string {
-    const normalizedEndpoint = endpointPath.startsWith('/')
-      ? endpointPath
-      : `/${endpointPath}`;
-    if (/\/v1$/i.test(this.baseUrl)) {
-      return `${this.baseUrl}${normalizedEndpoint}`;
-    }
-    return `${this.baseUrl}/v1${normalizedEndpoint}`;
-  }
 }
-

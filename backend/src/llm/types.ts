@@ -10,7 +10,7 @@
 // ============================================================================
 
 /** 支持的 LLM 提供商 */
-export type ProviderID = 'anthropic' | 'openai' | 'google' | 'dashscope' | 'zhipuai';
+export type ProviderID = 'anthropic' | 'openai' | 'google';
 
 /** 统一请求参数 */
 export interface LLMRequestParams {

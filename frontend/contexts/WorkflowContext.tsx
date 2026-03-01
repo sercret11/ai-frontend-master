@@ -64,16 +64,8 @@ const STORAGE_KEY_BACKEND_ID = 'workflow_backend_session'; // Legacy single-valu
 const STORAGE_KEY_BACKEND_ID_MAP = 'workflow_backend_session_map';
 const DEFAULT_SESSION_TITLE = 'Default Session';
 const MESSAGE_KEY_PREFIX = `${STORAGE_KEY_MESSAGES}_`;
-const MAX_STORED_MESSAGES_PER_SESSION = 200;
 
 const getMessageStorageKey = (sessionId: string): string => `${MESSAGE_KEY_PREFIX}${sessionId}`;
-
-const trimMessagesForStorage = (messages: StreamMessage[]): StreamMessage[] => {
-  if (messages.length <= MAX_STORED_MESSAGES_PER_SESSION) {
-    return messages;
-  }
-  return messages.slice(-MAX_STORED_MESSAGES_PER_SESSION);
-};
 
 const isSessionMetadata = (value: unknown): value is SessionMetadata => {
   if (!value || typeof value !== 'object') {
@@ -192,10 +184,7 @@ export const WorkflowProvider: React.FC<WorkflowProviderProps> = ({ children }) 
   }, []);
 
   const persistSessionMessages = useCallback((sessionId: string, sessionMessages: StreamMessage[]) => {
-    localStorage.setItem(
-      getMessageStorageKey(sessionId),
-      JSON.stringify(trimMessagesForStorage(sessionMessages))
-    );
+    localStorage.setItem(getMessageStorageKey(sessionId), JSON.stringify(sessionMessages));
   }, []);
 
   const createDefaultSessionState = useCallback(() => {

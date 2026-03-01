@@ -264,25 +264,13 @@ export namespace FileStorage {
     params: FileQueryParams = {}
   ): FileBatchResponse {
     const database = ensureDb();
-    const latestFilesSubquery = `
-      SELECT f.id, f.sessionID, f.path, f.content, f.language, f.size, f.createdAt
-      FROM files f
-      WHERE f.sessionID = ?
-        AND f.id = (
-          SELECT f2.id
-          FROM files f2
-          WHERE f2.sessionID = f.sessionID AND f2.path = f.path
-          ORDER BY f2.createdAt DESC, f2.rowid DESC
-          LIMIT 1
-        )
-    `;
 
     const page = params.page || 1;
     const limit = Math.min(params.limit || DEFAULT_LIMIT, MAX_LIMIT);
     const offset = (page - 1) * limit;
 
     // Build WHERE clause
-    const conditions: string[] = ['1 = 1'];
+    const conditions: string[] = ['sessionID = ?'];
     const values: any[] = [sessionID];
 
     if (params.search) {
@@ -301,13 +289,13 @@ export namespace FileStorage {
     const orderClause = resolveOrderClause(params);
 
     // Get total count
-    const countQuery = `SELECT COUNT(*) as total FROM (${latestFilesSubquery}) WHERE ${whereClause}`;
+    const countQuery = `SELECT COUNT(*) as total FROM files WHERE ${whereClause}`;
     const countResult = database.prepare(countQuery).get(...values) as { total: number };
     const total = countResult.total;
 
     // Get files
     const filesQuery = `
-      SELECT * FROM (${latestFilesSubquery})
+      SELECT * FROM files
       WHERE ${whereClause}
       ORDER BY ${orderClause}
       LIMIT ? OFFSET ?
@@ -346,19 +334,7 @@ export namespace FileStorage {
   export function getAllFiles(sessionID: string): StoredFile[] {
     const database = ensureDb();
     const rows = database
-      .prepare(`
-        SELECT f.*
-        FROM files f
-        WHERE f.sessionID = ?
-          AND f.id = (
-            SELECT f2.id
-            FROM files f2
-            WHERE f2.sessionID = f.sessionID AND f2.path = f.path
-            ORDER BY f2.createdAt DESC, f2.rowid DESC
-            LIMIT 1
-          )
-        ORDER BY f.path ASC
-      `)
+      .prepare('SELECT * FROM files WHERE sessionID = ? ORDER BY path ASC')
       .all(sessionID) as any[];
 
     return rows.map(row => ({
@@ -419,12 +395,7 @@ export namespace FileStorage {
   export function getFile(sessionID: string, path: string): StoredFile | null {
     const database = ensureDb();
     const row = database
-      .prepare(`
-        SELECT * FROM files
-        WHERE sessionID = ? AND path = ?
-        ORDER BY createdAt DESC, rowid DESC
-        LIMIT 1
-      `)
+      .prepare('SELECT * FROM files WHERE sessionID = ? AND path = ?')
       .get(sessionID, path) as any;
 
     if (!row) return null;

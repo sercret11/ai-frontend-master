@@ -64,13 +64,6 @@ import type {
 import { assemblySessionGraphService } from './rendering';
 import { parseScopes, verifyJwtToken } from './auth/jwt';
 import { MultiAgentKernel } from './runtime/multi-agent';
-import type { RuntimeExecutionBudget } from './runtime/multi-agent/types';
-import {
-  createRunTerminalEventTracker,
-  emitRunCompletedOnce,
-  emitRunErrorOnce,
-  withRunTerminalEventTracking,
-} from './runtime/run-terminal-events';
 
 // Load and validate configuration
 console.log('[Server] Loading configuration...');
@@ -182,8 +175,6 @@ const allowedOrigins = [
   config.frontend.url,
   'http://localhost:5190',
   'http://127.0.0.1:5190',
-  'http://localhost:5191',
-  'http://127.0.0.1:5191',
   'http://localhost:5174',
   'http://localhost:5173',
   'http://127.0.0.1:5174',
@@ -544,11 +535,6 @@ type RuntimeEventPayload = RuntimeEvent extends infer EventType
     : never
   : never;
 
-type RuntimeRunCompletedPayload = Extract<RuntimeEventPayload, { type: 'run.completed' }>;
-type RuntimeRunErrorPayload = Extract<RuntimeEventPayload, { type: 'run.error' }>;
-type AssemblyRunCompletedPayload = Extract<AssemblyRuntimeEventPayload, { type: 'run.completed' }>;
-type AssemblyRunErrorPayload = Extract<AssemblyRuntimeEventPayload, { type: 'run.error' }>;
-
 interface RuntimeEventEmitterOptions {
   runId: string;
   getSessionId: () => string;
@@ -711,27 +697,6 @@ function resolveRuntimeBudget(
     maxToolCalls,
     targetScore,
   };
-}
-
-function toRuntimeExecutionBudget(
-  budgetOverrides: RuntimeBudgetOverrides,
-): RuntimeExecutionBudget | undefined {
-  const runtimeBudget: RuntimeExecutionBudget = {};
-
-  if (typeof budgetOverrides.maxIterations === 'number') {
-    runtimeBudget.maxIterations = budgetOverrides.maxIterations;
-  }
-  if (typeof budgetOverrides.maxDurationMs === 'number') {
-    runtimeBudget.maxDurationMs = budgetOverrides.maxDurationMs;
-  }
-  if (typeof budgetOverrides.maxToolCalls === 'number') {
-    runtimeBudget.maxToolCalls = budgetOverrides.maxToolCalls;
-  }
-  if (typeof budgetOverrides.targetScore === 'number') {
-    runtimeBudget.targetScore = budgetOverrides.targetScore;
-  }
-
-  return Object.keys(runtimeBudget).length > 0 ? runtimeBudget : undefined;
 }
 
 function shouldEnforceRichPrototype(input: {
@@ -1120,7 +1085,6 @@ app.post('/api/runtime/sessions/:sessionId/stream', async (req, res) => {
   const reqSessionId = req.params.sessionId;
   let currentSessionId = reqSessionId || 'unknown';
   const connectionAbortController = new AbortController();
-  const runtimeTerminalTracker = createRunTerminalEventTracker();
 
   const handleConnectionClosed = () => {
     if (!connectionAbortController.signal.aborted) {
@@ -1139,31 +1103,16 @@ app.post('/api/runtime/sessions/:sessionId/stream', async (req, res) => {
     }
   };
 
-  const sendRuntimeEvent = withRunTerminalEventTracking(
-    createRuntimeEventEmitter({
-      runId,
-      getSessionId: () => currentSessionId,
-      emit: event => {
-        if (connectionAbortController.signal.aborted || res.writableEnded || res.destroyed) {
-          return;
-        }
-        writeSSEData(res, { event });
-      },
-    }),
-    runtimeTerminalTracker,
-  );
-  const sendRuntimeRunCompleted = (payload: Omit<RuntimeRunCompletedPayload, 'type'>) =>
-    emitRunCompletedOnce<RuntimeRunCompletedPayload, RuntimeEvent>(
-      sendRuntimeEvent,
-      runtimeTerminalTracker,
-      payload,
-    );
-  const sendRuntimeRunError = (payload: Omit<RuntimeRunErrorPayload, 'type'>) =>
-    emitRunErrorOnce<RuntimeRunErrorPayload, RuntimeEvent>(
-      sendRuntimeEvent,
-      runtimeTerminalTracker,
-      payload,
-    );
+  const sendRuntimeEvent = createRuntimeEventEmitter({
+    runId,
+    getSessionId: () => currentSessionId,
+    emit: event => {
+      if (connectionAbortController.signal.aborted || res.writableEnded || res.destroyed) {
+        return;
+      }
+      writeSSEData(res, { event });
+    },
+  });
 
   try {
     const { message, agentId, platform, techStack, modelProvider, modelId, framework, uiLibrary } = req.body;
@@ -1189,8 +1138,6 @@ app.post('/api/runtime/sessions/:sessionId/stream', async (req, res) => {
         message: budgetValidation.error,
       });
     }
-
-    const runtimeBudget = toRuntimeExecutionBudget(budgetValidation.budgetOverrides);
 
     if (!currentSessionId || currentSessionId === 'new') {
       const ownerId = getRequestOwnerId(req) || undefined;
@@ -1224,10 +1171,9 @@ app.post('/api/runtime/sessions/:sessionId/stream', async (req, res) => {
       : [];
     const requestedFramework = typeof framework === 'string' ? framework : undefined;
     const requestedUiLibrary = typeof uiLibrary === 'string' ? uiLibrary : undefined;
-    const openaiRuntimeModel = (process.env.AI_RUNTIME_OPENAI_MODEL || 'gpt-4o').trim();
 
-    let runtimeModelProvider = modelProvider || session.modelProvider || undefined;
-    let runtimeModelId = modelId || session.modelId || undefined;
+    let runtimeModelProvider = modelProvider || undefined;
+    let runtimeModelId = modelId || undefined;
     const enforceRichPrototype = shouldEnforceRichPrototype({
       userMessage: message,
       mode: session.mode,
@@ -1235,17 +1181,11 @@ app.post('/api/runtime/sessions/:sessionId/stream', async (req, res) => {
     });
     const preferToolCompatibleModel =
       enforceRichPrototype &&
-      (typeof runtimeModelId !== 'string' || runtimeModelId.trim().length === 0) &&
-      (typeof runtimeModelProvider !== 'string' || runtimeModelProvider === 'openai');
+      (typeof modelId !== 'string' || modelId.trim().length === 0) &&
+      (typeof modelProvider !== 'string' || modelProvider === 'openai');
     if (preferToolCompatibleModel) {
-      runtimeModelProvider = runtimeModelProvider || config.ai.defaultProvider || 'openai';
-      const normalizedRuntimeProvider =
-        typeof runtimeModelProvider === 'string' ? runtimeModelProvider : 'openai';
-      runtimeModelId =
-        runtimeModelId ||
-        (normalizedRuntimeProvider === 'openai'
-          ? openaiRuntimeModel
-          : config.ai.defaultModel);
+      runtimeModelProvider = modelProvider || config.ai.defaultProvider || 'openai';
+      runtimeModelId = modelId || config.ai.defaultModel;
     }
 
     sendRuntimeEvent({
@@ -1283,8 +1223,15 @@ app.post('/api/runtime/sessions/:sessionId/stream', async (req, res) => {
         status: 'failed',
         message: clarificationMessage,
       });
-      sendRuntimeRunError({
+      sendRuntimeEvent({
+        type: 'run.error',
         error: clarificationMessage,
+      });
+      sendRuntimeEvent({
+        type: 'run.completed',
+        success: false,
+        filesCount: 0,
+        terminationReason: 'error',
       });
       if (!res.writableEnded && !res.destroyed) {
         res.end();
@@ -1339,18 +1286,11 @@ app.post('/api/runtime/sessions/:sessionId/stream', async (req, res) => {
       modelId: runtimeModelId,
       platform: normalizedPlatform,
       techStack: normalizedTechStack,
-      runtimeBudget,
       emitRuntimeEvent: sendRuntimeEvent,
       abortSignal: connectionAbortController.signal,
     });
 
     await kernel.run();
-
-    if (!connectionAbortController.signal.aborted && !res.writableEnded && !res.destroyed) {
-      sendRuntimeRunCompleted({
-        success: true,
-      });
-    }
 
     if (!res.writableEnded && !res.destroyed) {
       res.end();
@@ -1405,18 +1345,17 @@ app.post('/api/runtime/sessions/:sessionId/stream', async (req, res) => {
 
     if (res.headersSent) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      if (!runtimeTerminalTracker.hasTerminalEvent()) {
-        sendRuntimeEvent({
-          type: 'render.pipeline.stage',
-          adapter: 'sandpack-renderer',
-          stage: 'build',
-          status: 'failed',
-          message: errorMessage,
-        });
-        sendRuntimeRunError({
-          error: errorMessage,
-        });
-      }
+      sendRuntimeEvent({
+        type: 'render.pipeline.stage',
+        adapter: 'sandpack-renderer',
+        stage: 'build',
+        status: 'failed',
+        message: errorMessage,
+      });
+      sendRuntimeEvent({
+        type: 'run.error',
+        error: errorMessage,
+      });
       if (!res.writableEnded && !res.destroyed) {
         res.end();
       }
@@ -1441,35 +1380,19 @@ app.post('/api/runtime/sessions/:sessionId/assemble', async (req, res) => {
   const reqSessionId = req.params.sessionId;
   let currentSessionId = reqSessionId || 'unknown';
   let sequence = 0;
-  const assemblyTerminalTracker = createRunTerminalEventTracker();
 
-  const sendAssemblyEvent = withRunTerminalEventTracking(
-    (event: AssemblyRuntimeEventPayload): void => {
-      sequence += 1;
-      writeSSEData(res, {
-        event: {
-          ...event,
-          sessionId: currentSessionId,
-          runId,
-          sequence,
-          timestamp: Date.now(),
-        },
-      });
-    },
-    assemblyTerminalTracker,
-  );
-  const sendAssemblyRunCompleted = (payload: Omit<AssemblyRunCompletedPayload, 'type'>) =>
-    emitRunCompletedOnce<AssemblyRunCompletedPayload, void>(
-      sendAssemblyEvent,
-      assemblyTerminalTracker,
-      payload,
-    );
-  const sendAssemblyRunError = (payload: Omit<AssemblyRunErrorPayload, 'type'>) =>
-    emitRunErrorOnce<AssemblyRunErrorPayload, void>(
-      sendAssemblyEvent,
-      assemblyTerminalTracker,
-      payload,
-    );
+  const sendAssemblyEvent = (event: AssemblyRuntimeEventPayload) => {
+    sequence += 1;
+    writeSSEData(res, {
+      event: {
+        ...event,
+        sessionId: currentSessionId,
+        runId,
+        sequence,
+        timestamp: Date.now(),
+      },
+    });
+  };
 
   try {
     if (!currentSessionId || currentSessionId === 'new') {
@@ -1550,7 +1473,8 @@ app.post('/api/runtime/sessions/:sessionId/assemble', async (req, res) => {
     }
 
     const finalSnapshot = assemblySessionGraphService.getSnapshot(currentSessionId, runId);
-    sendAssemblyRunCompleted({
+    sendAssemblyEvent({
+      type: 'run.completed',
       success: true,
       filesCount: patchesInput.length,
       terminationReason: 'single_iteration',
@@ -1564,7 +1488,8 @@ app.post('/api/runtime/sessions/:sessionId/assemble', async (req, res) => {
 
     if (res.headersSent) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      sendAssemblyRunError({
+      sendAssemblyEvent({
+        type: 'run.error',
         error: errorMessage,
       });
       res.end();
@@ -1979,51 +1904,20 @@ async function handleStreamStart(ws: WebSocket, sessionID: string, data: any) {
   }
 
   const runId = `ws-run-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-  const runtimeTerminalTracker = createRunTerminalEventTracker();
-  const sendRuntimeEvent = withRunTerminalEventTracking(
-    createRuntimeEventEmitter({
-      runId,
-      getSessionId: () => sessionID,
-      emit: event => {
-        if (!sendWSRuntimeEvent(ws, event) && !abortController.signal.aborted) {
-          abortController.abort();
-        }
-      },
-    }),
-    runtimeTerminalTracker,
-  );
-  const sendRuntimeRunCompleted = (payload: Omit<RuntimeRunCompletedPayload, 'type'>) =>
-    emitRunCompletedOnce<RuntimeRunCompletedPayload, RuntimeEvent>(
-      sendRuntimeEvent,
-      runtimeTerminalTracker,
-      payload,
-    );
-  const sendRuntimeRunError = (payload: Omit<RuntimeRunErrorPayload, 'type'>) =>
-    emitRunErrorOnce<RuntimeRunErrorPayload, RuntimeEvent>(
-      sendRuntimeEvent,
-      runtimeTerminalTracker,
-      payload,
-    );
+  const sendRuntimeEvent = createRuntimeEventEmitter({
+    runId,
+    getSessionId: () => sessionID,
+    emit: event => {
+      if (!sendWSRuntimeEvent(ws, event) && !abortController.signal.aborted) {
+        abortController.abort();
+      }
+    },
+  });
 
   const isStreamClosed = () => abortController.signal.aborted || ws.readyState !== WebSocket.OPEN;
 
   try {
     const normalizedMessage = typeof message === 'string' ? message : '';
-    const runtimeBudgetInput =
-      data?.autonomy && typeof data.autonomy === 'object' ? data.autonomy : data ?? {};
-    const budgetValidation = validateRuntimeBudgetInput({
-      maxIterations: (runtimeBudgetInput as RuntimeBudgetOverrides).maxIterations,
-      maxDurationMs: (runtimeBudgetInput as RuntimeBudgetOverrides).maxDurationMs,
-      maxToolCalls: (runtimeBudgetInput as RuntimeBudgetOverrides).maxToolCalls,
-      targetScore: (runtimeBudgetInput as RuntimeBudgetOverrides).targetScore,
-    });
-    if (!budgetValidation.valid) {
-      sendRuntimeRunError({
-        error: budgetValidation.error ?? 'invalid runtime budget',
-      });
-      return;
-    }
-    const runtimeBudget = toRuntimeExecutionBudget(budgetValidation.budgetOverrides);
 
     const session = SessionManager.get(sessionID);
     if (!session) {
@@ -2064,8 +1958,15 @@ async function handleStreamStart(ws: WebSocket, sessionID: string, data: any) {
         status: 'failed',
         message: clarificationMessage,
       });
-      sendRuntimeRunError({
+      sendRuntimeEvent({
+        type: 'run.error',
         error: clarificationMessage,
+      });
+      sendRuntimeEvent({
+        type: 'run.completed',
+        success: false,
+        filesCount: 0,
+        terminationReason: 'error',
       });
       return;
     }
@@ -2125,22 +2026,18 @@ async function handleStreamStart(ws: WebSocket, sessionID: string, data: any) {
       modelId: modelId || undefined,
       platform: maPlatform,
       techStack: maTechStack,
-      runtimeBudget,
       emitRuntimeEvent: sendRuntimeEvent,
       abortSignal: abortController.signal,
     });
     await kernel.run();
 
-    if (!isStreamClosed() && !runtimeTerminalTracker.hasTerminalEvent()) {
+    if (!isStreamClosed()) {
       sendRuntimeEvent({
         type: 'render.pipeline.stage',
         adapter: 'sandpack-renderer',
         stage: 'publish',
         status: 'completed',
         message: 'runtime stream completed',
-      });
-      sendRuntimeRunCompleted({
-        success: true,
       });
     }
   } catch (error) {
@@ -2151,18 +2048,17 @@ async function handleStreamStart(ws: WebSocket, sessionID: string, data: any) {
 
     console.error('[WS] Stream error:', error);
     const errorMessage = error instanceof Error ? error.message : String(error);
-    if (!runtimeTerminalTracker.hasTerminalEvent()) {
-      sendRuntimeEvent({
-        type: 'render.pipeline.stage',
-        adapter: 'sandpack-renderer',
-        stage: 'build',
-        status: 'failed',
-        message: errorMessage,
-      });
-      sendRuntimeRunError({
-        error: errorMessage,
-      });
-    }
+    sendRuntimeEvent({
+      type: 'render.pipeline.stage',
+      adapter: 'sandpack-renderer',
+      stage: 'build',
+      status: 'failed',
+      message: errorMessage,
+    });
+    sendRuntimeEvent({
+      type: 'run.error',
+      error: errorMessage,
+    });
   } finally {
     finalizeWSRuntimeStream(ws, abortController);
   }
